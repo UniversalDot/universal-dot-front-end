@@ -1,6 +1,6 @@
 # Substrate Front End Template
 
-[![CircleCI](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/master.svg?style=svg)](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/master)
+[![CircleCI](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master.svg?style=svg)](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master)
 
 This template allows you to create a front-end application that connects to a
 [Substrate](https://github.com/paritytech/substrate) node back-end with minimal
