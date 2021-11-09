@@ -13,6 +13,7 @@ import Interactor from './Interactor';
 import Metadata from './Metadata';
 import NodeInfo from './NodeInfo';
 import TemplateModule from './TemplateModule';
+import ProofExistance from './ProofExistance';
 import Transfer from './Transfer';
 import Upgrade from './Upgrade';
 
@@ -74,6 +75,9 @@ function Main () {
           </Grid.Row>
           <Grid.Row>
             <TemplateModule accountPair={accountPair} />
+          </Grid.Row>
+          <Grid.Row>
+            <ProofExistance accountPair={accountPair} />
           </Grid.Row>
         </Grid>
       </Container>
