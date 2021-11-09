@@ -11,7 +11,7 @@ import { TxButton } from './substrate-lib/components'
 import { blake2AsHex } from '@polkadot/util-crypto'
 
 // Main Proof Of Existence component is exported.
-export function Main(props) {
+export function Main (props) {
   // Establish an API to talk to the Substrate node.
   const { api } = useSubstrate()
   // Get the selected user from the `AccountSelector` component.
@@ -63,7 +63,7 @@ export function Main(props) {
   }, [digest, api.query.existance])
 
   // We can say a file digest is claimed if the stored block number is not 0
-  function isClaimed() {
+  function isClaimed () {
     return block !== 0
   }
 
@@ -128,7 +128,7 @@ export function Main(props) {
   )
 }
 
-export default function Existance(props) {
+export default function Existance (props) {
   const { api } = useSubstrate()
   return api.query.existance && api.query.existance.proofs ? (
     <Main {...props} />
