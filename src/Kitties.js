@@ -86,5 +86,9 @@ const subscribeKitties = () => {
       setKittyHashes(hashes)
     })
   }
-  
-}
+
+  // return the unsubscription cleanup function
+  return () => {
+    unsub && unsub();
+  };
+};
