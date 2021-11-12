@@ -29,3 +29,27 @@ export default function Kitties (props) {
   const [kitties, setKitties] = useState([]);
   const [status, setStatus] = useState('');
 // snip
+
+// Subscription function for setting Kitty IDs
+const subscribeKittyCnt = () => {
+    let unsub = null
+  
+    const asyncFetch = async () => {
+      // Query KittyCnt from runtime
+      unsub = await api.query.substrateKitties.kittyCnt(async cnt => {
+        // Fetch all Kitty objects using entries()
+        const entries = await api.query.substrateKitties.kitties.entries()
+        // Retrieve only the Kitty ID and set to state
+        const hashes = entries.map(convertToKittyHash)
+        setKittyHashes(hashes)
+      })
+    }
+  
+    asyncFetch()
+  
+    // return the unsubscription cleanup function
+    return () => {
+      unsub && unsub()
+    }
+  }
+}
