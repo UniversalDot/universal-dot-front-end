@@ -92,3 +92,6 @@ const subscribeKitties = () => {
     unsub && unsub();
   };
 };
+
+useEffect(subscribeKittyCnt, [api, keyring])
+useEffect(subscribeKitties, [api, kittyHashes])
