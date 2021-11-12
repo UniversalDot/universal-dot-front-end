@@ -52,4 +52,39 @@ const subscribeKittyCnt = () => {
       unsub && unsub()
     }
   }
+
+
+  // Subscription function to construct a Kitty object
+const subscribeKitties = () => {
+    let unsub = null
+  
+    const asyncFetch = async () => {
+      // Get Kitty objects from storage
+      unsub = await api.query.substrateKitties.multi(kittyHashes, kitties => {
+        // Create an array of Kitty objects from `constructKitty`
+        const kittyArr = kitties.map((kitty, ind) =>
+          constructKitty(kittyHashes[ind], kitty.value)
+        )
+        // Set the array of Kitty objects to state
+        setKitties(kittyArr)
+      })
+    }
+  
+    asyncFetch()
+  
+    // return the unsubscription cleanup function
+    return () => {
+      unsub && unsub()
+    }
+  }
+
+  const asyncFetch = async () => {
+    unsub = await api.query.substrateKitties.kitties.kittyCnt(async cnt => {
+      // Fetch all kitty keys
+      const entries = await api.query.substrateKitties.kitties.entries()
+      const hashes = entries.map(convertToKittyHash)
+      setKittyHashes(hashes)
+    })
+  }
+  
 }
