@@ -8,12 +8,12 @@ import {
   Container,
   Icon,
   Image,
-  Label
+  Label,
 } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import { useSubstrate } from '../../../substrate-lib';
 
-function Main (props) {
+function Main(props) {
   const { keyring } = useSubstrate();
   const { setAccountAddress } = props;
   const [accountSelected, setAccountSelected] = useState('');
@@ -23,7 +23,7 @@ function Main (props) {
     key: account.address,
     value: account.address,
     text: account.meta.name.toUpperCase(),
-    icon: 'user'
+    icon: 'user',
   }));
 
   const initialAddress =
@@ -43,38 +43,41 @@ function Main (props) {
 
   return (
     <Menu
-      attached='top'
+      attached="top"
       tabular
       style={{
         backgroundColor: '#fff',
         borderColor: '#fff',
         paddingTop: '1em',
-        paddingBottom: '1em'
+        paddingBottom: '1em',
       }}
     >
       <Container>
         <Menu.Menu>
-          <Image src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`} size='mini' />
+          <Image
+            src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`}
+            size="mini"
+          />
         </Menu.Menu>
-        <Menu.Menu position='right' style={{ alignItems: 'center' }}>
-          { !accountSelected
-            ? <span>
+        <Menu.Menu position="right" style={{ alignItems: 'center' }}>
+          {!accountSelected ? (
+            <span>
               Add your account with the{' '}
               <a
-                target='_blank'
-                rel='noopener noreferrer'
-                href='https://github.com/polkadot-js/extension'
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://github.com/polkadot-js/extension"
               >
                 Polkadot JS Extension
               </a>
             </span>
-            : null }
+          ) : null}
           <CopyToClipboard text={accountSelected}>
             <Button
               basic
               circular
-              size='large'
-              icon='user'
+              size="large"
+              icon="user"
               color={accountSelected ? 'green' : 'red'}
             />
           </CopyToClipboard>
@@ -82,7 +85,7 @@ function Main (props) {
             search
             selection
             clearable
-            placeholder='Select an account'
+            placeholder="Select an account"
             options={keyringOptions}
             onChange={(_, dropdown) => {
               onChange(dropdown.value);
@@ -96,7 +99,7 @@ function Main (props) {
   );
 }
 
-function BalanceAnnotation (props) {
+function BalanceAnnotation(props) {
   const { accountSelected } = props;
   const { api } = useSubstrate();
   const [accountBalance, setAccountBalance] = useState(0);
@@ -107,9 +110,10 @@ function BalanceAnnotation (props) {
 
     // If the user has selected an address, create a new subscription
     accountSelected &&
-      api.query.system.account(accountSelected, balance => {
-        setAccountBalance(balance.data.free.toHuman());
-      })
+      api.query.system
+        .account(accountSelected, balance => {
+          setAccountBalance(balance.data.free.toHuman());
+        })
         .then(unsub => {
           unsubscribe = unsub;
         })
@@ -118,15 +122,15 @@ function BalanceAnnotation (props) {
     return () => unsubscribe && unsubscribe();
   }, [api, accountSelected]);
 
-  return accountSelected
-    ? <Label pointing='left'>
-        <Icon name='money' color='green' />
-        {accountBalance}
-      </Label>
-    : null;
+  return accountSelected ? (
+    <Label pointing="left">
+      <Icon name="money" color="green" />
+      {accountBalance}
+    </Label>
+  ) : null;
 }
 
-export default function AccountSelector (props) {
+export default function AccountSelector(props) {
   const { api, keyring } = useSubstrate();
   return keyring.getPairs && api.query ? <Main {...props} /> : null;
 }

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Form, Dropdown, Input, Label } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
-import { TxButton, TxGroupButton } from './substrate-lib/components';
+import { useSubstrate } from '../../../substrate-lib';
+import { TxButton, TxGroupButton } from '../../../substrate-lib/components';
 
-const argIsOptional = (arg) =>
-  arg.type.toString().startsWith('Option<');
+const argIsOptional = arg => arg.type.toString().startsWith('Option<');
 
-function Main (props) {
+function Main(props) {
   const { api, jsonrpc } = useSubstrate();
   const { accountPair } = props;
   const [status, setStatus] = useState(null);
@@ -20,7 +19,7 @@ function Main (props) {
   const initFormState = {
     palletRpc: '',
     callable: '',
-    inputParams: []
+    inputParams: [],
   };
 
   const [formState, setFormState] = useState(initFormState);
@@ -39,17 +38,23 @@ function Main (props) {
   };
 
   const updatePalletRPCs = () => {
-    if (!api) { return; }
+    if (!api) {
+      return;
+    }
     const apiType = getApiType(api, interxType);
-    const palletRPCs = Object.keys(apiType).sort()
+    const palletRPCs = Object.keys(apiType)
+      .sort()
       .filter(pr => Object.keys(apiType[pr]).length > 0)
       .map(pr => ({ key: pr, value: pr, text: pr }));
     setPalletRPCs(palletRPCs);
   };
 
   const updateCallables = () => {
-    if (!api || palletRpc === '') { return; }
-    const callables = Object.keys(getApiType(api, interxType)[palletRpc]).sort()
+    if (!api || palletRpc === '') {
+      return;
+    }
+    const callables = Object.keys(getApiType(api, interxType)[palletRpc])
+      .sort()
       .map(c => ({ key: c, value: c, text: c }));
     setCallables(callables);
   };
@@ -67,21 +72,26 @@ function Main (props) {
       if (metaType.isPlain) {
         // Do nothing as `paramFields` is already set to []
       } else if (metaType.isMap) {
-        paramFields = [{
-          name: metaType.asMap.key.toString(),
-          type: metaType.asMap.key.toString(),
-          optional: false
-        }];
+        paramFields = [
+          {
+            name: metaType.asMap.key.toString(),
+            type: metaType.asMap.key.toString(),
+            optional: false,
+          },
+        ];
       } else if (metaType.isDoubleMap) {
-        paramFields = [{
-          name: metaType.asDoubleMap.key1.toString(),
-          type: metaType.asDoubleMap.key1.toString(),
-          optional: false
-        }, {
-          name: metaType.asDoubleMap.key2.toString(),
-          type: metaType.asDoubleMap.key2.toString(),
-          optional: false
-        }];
+        paramFields = [
+          {
+            name: metaType.asDoubleMap.key1.toString(),
+            type: metaType.asDoubleMap.key1.toString(),
+            optional: false,
+          },
+          {
+            name: metaType.asDoubleMap.key2.toString(),
+            type: metaType.asDoubleMap.key2.toString(),
+            optional: false,
+          },
+        ];
       }
     } else if (interxType === 'EXTRINSIC') {
       const metaArgs = api.tx[palletRpc][callable].meta.args;
@@ -90,7 +100,7 @@ function Main (props) {
         paramFields = metaArgs.map(arg => ({
           name: arg.name.toString(),
           type: arg.type.toString(),
-          optional: argIsOptional(arg)
+          optional: argIsOptional(arg),
         }));
       }
     } else if (interxType === 'RPC') {
@@ -104,7 +114,7 @@ function Main (props) {
         paramFields = metaParam.map(arg => ({
           name: arg.name,
           type: arg.type,
-          optional: arg.isOptional || false
+          optional: arg.isOptional || false,
         }));
       }
     } else if (interxType === 'CONSTANT') {
@@ -124,7 +134,10 @@ function Main (props) {
       const { state, value } = data;
       if (typeof state === 'object') {
         // Input parameter updated
-        const { ind, paramField: { type } } = state;
+        const {
+          ind,
+          paramField: { type },
+        } = state;
         const inputParams = [...formState.inputParams];
         inputParams[ind] = { type, value };
         res = { ...formState, inputParams };
@@ -143,7 +156,7 @@ function Main (props) {
     setFormState(initFormState);
   };
 
-  const getOptionalMsg = (interxType) =>
+  const getOptionalMsg = interxType =>
     interxType === 'RPC'
       ? 'Optional Parameter'
       : 'Leaving this field as blank will submit a NONE value';
@@ -155,87 +168,92 @@ function Main (props) {
         <Form.Group style={{ overflowX: 'auto' }} inline>
           <label>Interaction Type</label>
           <Form.Radio
-            label='Extrinsic'
-            name='interxType'
-            value='EXTRINSIC'
+            label="Extrinsic"
+            name="interxType"
+            value="EXTRINSIC"
             checked={interxType === 'EXTRINSIC'}
             onChange={onInterxTypeChange}
           />
           <Form.Radio
-            label='Query'
-            name='interxType'
-            value='QUERY'
+            label="Query"
+            name="interxType"
+            value="QUERY"
             checked={interxType === 'QUERY'}
             onChange={onInterxTypeChange}
           />
           <Form.Radio
-            label='RPC'
-            name='interxType'
-            value='RPC'
+            label="RPC"
+            name="interxType"
+            value="RPC"
             checked={interxType === 'RPC'}
             onChange={onInterxTypeChange}
           />
           <Form.Radio
-            label='Constant'
-            name='interxType'
-            value='CONSTANT'
+            label="Constant"
+            name="interxType"
+            value="CONSTANT"
             checked={interxType === 'CONSTANT'}
             onChange={onInterxTypeChange}
           />
         </Form.Group>
         <Form.Field>
           <Dropdown
-            placeholder='Pallets / RPC'
+            placeholder="Pallets / RPC"
             fluid
-            label='Pallet / RPC'
+            label="Pallet / RPC"
             onChange={onPalletCallableParamChange}
             search
             selection
-            state='palletRpc'
+            state="palletRpc"
             value={palletRpc}
             options={palletRPCs}
           />
         </Form.Field>
         <Form.Field>
           <Dropdown
-            placeholder='Callables'
+            placeholder="Callables"
             fluid
-            label='Callable'
+            label="Callable"
             onChange={onPalletCallableParamChange}
             search
             selection
-            state='callable'
+            state="callable"
             value={callable}
             options={callables}
           />
         </Form.Field>
-        {paramFields.map((paramField, ind) =>
+        {paramFields.map((paramField, ind) => (
           <Form.Field key={`${paramField.name}-${paramField.type}`}>
             <Input
               placeholder={paramField.type}
               fluid
-              type='text'
+              type="text"
               label={paramField.name}
               state={{ ind, paramField }}
-              value={ inputParams[ind] ? inputParams[ind].value : '' }
+              value={inputParams[ind] ? inputParams[ind].value : ''}
               onChange={onPalletCallableParamChange}
             />
-            { paramField.optional
-              ? <Label
+            {paramField.optional ? (
+              <Label
                 basic
                 pointing
-                color='teal'
-                content = { getOptionalMsg(interxType) }
+                color="teal"
+                content={getOptionalMsg(interxType)}
               />
-              : null
-            }
+            ) : null}
           </Form.Field>
-        )}
+        ))}
         <Form.Field style={{ textAlign: 'center' }}>
           <InteractorSubmit
             accountPair={accountPair}
             setStatus={setStatus}
-            attrs={{ interxType, palletRpc, callable, inputParams, paramFields }}
+            attrs={{
+              interxType,
+              palletRpc,
+              callable,
+              inputParams,
+              paramFields,
+            }}
           />
         </Form.Field>
         <div style={{ overflowWrap: 'break-word' }}>{status}</div>
@@ -244,28 +262,22 @@ function Main (props) {
   );
 }
 
-function InteractorSubmit (props) {
-  const { attrs: { interxType } } = props;
+function InteractorSubmit(props) {
+  const {
+    attrs: { interxType },
+  } = props;
   if (interxType === 'QUERY') {
-    return <TxButton
-      label = 'Query'
-      type = 'QUERY'
-      color = 'blue'
-      {...props}
-    />;
+    return <TxButton label="Query" type="QUERY" color="blue" {...props} />;
   } else if (interxType === 'EXTRINSIC') {
     return <TxGroupButton {...props} />;
   } else if (interxType === 'RPC' || interxType === 'CONSTANT') {
-    return <TxButton
-      label = 'Submit'
-      type = {interxType}
-      color = 'blue'
-      {...props}
-    />;
+    return (
+      <TxButton label="Submit" type={interxType} color="blue" {...props} />
+    );
   }
 }
 
-export default function Interactor (props) {
+export default function Interactor(props) {
   const { api } = useSubstrate();
   return api.tx ? <Main {...props} /> : null;
 }

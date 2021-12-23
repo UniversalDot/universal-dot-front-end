@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Feed, Grid, Button } from 'semantic-ui-react';
 
-import { useSubstrate } from './substrate-lib';
+import { useSubstrate } from '../../../substrate-lib';
 
 // Events to be filtered from feed
 const FILTERED_EVENTS = [
-  'system:ExtrinsicSuccess::(phase={"applyExtrinsic":0})'
+  'system:ExtrinsicSuccess::(phase={"applyExtrinsic":0})',
 ];
 
 const eventName = ev => `${ev.section}:${ev.method}`;
 const eventParams = ev => JSON.stringify(ev.data);
 
-function Main (props) {
+function Main(props) {
   const { api } = useSubstrate();
   const [eventFeed, setEventFeed] = useState([]);
 
@@ -33,12 +33,15 @@ function Main (props) {
 
           if (FILTERED_EVENTS.includes(evNamePhase)) return;
 
-          setEventFeed(e => [{
-            key: keyNum,
-            icon: 'bell',
-            summary: evName,
-            content: evParams
-          }, ...e]);
+          setEventFeed(e => [
+            {
+              key: keyNum,
+              icon: 'bell',
+              summary: evName,
+              content: evParams,
+            },
+            ...e,
+          ]);
 
           keyNum += 1;
         });
@@ -55,21 +58,25 @@ function Main (props) {
     <Grid.Column width={8}>
       <h1 style={{ float: 'left' }}>Events</h1>
       <Button
-        basic circular
-        size='mini'
-        color='grey'
-        floated='right'
-        icon='erase'
-        onClick={ _ => setEventFeed([]) }
+        basic
+        circular
+        size="mini"
+        color="grey"
+        floated="right"
+        icon="erase"
+        onClick={_ => setEventFeed([])}
       />
-      <Feed style={{ clear: 'both', overflow: 'auto', maxHeight: feedMaxHeight }} events={eventFeed} />
+      <Feed
+        style={{ clear: 'both', overflow: 'auto', maxHeight: feedMaxHeight }}
+        events={eventFeed}
+      />
     </Grid.Column>
   );
 }
 
-export default function Events (props) {
+export default function Events(props) {
   const { api } = useSubstrate();
-  return api.query && api.query.system && api.query.system.events
-    ? <Main {...props} />
-    : null;
+  return api.query && api.query.system && api.query.system.events ? (
+    <Main {...props} />
+  ) : null;
 }

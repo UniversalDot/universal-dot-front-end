@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Input, Grid } from 'semantic-ui-react';
-import { TxButton } from './substrate-lib/components';
+import { TxButton } from '../../../substrate-lib/components';
 
-export default function Main (props) {
+export default function Main(props) {
   const [status, setStatus] = useState('');
   const [proposal, setProposal] = useState({});
   const { accountPair } = props;
@@ -29,24 +29,24 @@ export default function Main (props) {
       <Form>
         <Form.Field>
           <Input
-            type='file'
-            id='file'
-            label='Wasm File'
-            accept='.wasm'
+            type="file"
+            id="file"
+            label="Wasm File"
+            accept=".wasm"
             onChange={e => handleFileChosen(e.target.files[0])}
           />
         </Form.Field>
         <Form.Field style={{ textAlign: 'center' }}>
           <TxButton
             accountPair={accountPair}
-            label='Upgrade'
-            type='UNCHECKED-SUDO-TX'
+            label="Upgrade"
+            type="UNCHECKED-SUDO-TX"
             setStatus={setStatus}
             attrs={{
               palletRpc: 'system',
               callable: 'setCode',
               inputParams: [proposal],
-              paramFields: [true]
+              paramFields: [true],
             }}
           />
         </Form.Field>
