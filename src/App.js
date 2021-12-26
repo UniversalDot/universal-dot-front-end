@@ -7,12 +7,14 @@ import { SubstrateContextProvider } from './substrate-lib';
 
 import { TemplateResources, SignUp, SignIn, Home } from './pages';
 
+import { Header } from './components';
+
 export default function App() {
   const loggedIn = true;
 
   return (
     <BrowserRouter>
-      {loggedIn && <div>NAVBAR</div>}
+      {loggedIn && <Header />}
       <Routes>
         <Route
           path="/*"

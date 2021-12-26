@@ -1,3 +1,8 @@
 .github-fork-ribbon.right-bottom:before {
-  background-color: #222
+  background-color: #222;
+}
+
+/* TODO: find a better solution to overwriting defaults */
+.item::before {
+  display: none;
 }
