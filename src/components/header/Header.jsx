@@ -8,6 +8,9 @@ import {
   Search,
   Dropdown,
 } from 'semantic-ui-react';
+import { useUser } from '../../hooks/useUser';
+import { useDispatch } from 'react-redux';
+import { changeUsername } from '../../store/slices/userSlice';
 
 const trigger = (
   <>
@@ -20,28 +23,33 @@ const trigger = (
   </>
 );
 
-const DropdownTriggerExample = () => (
-  <Dropdown trigger={trigger}>
-    <Dropdown.Menu style={{ top: '48px' }}>
-      <Dropdown.Item
-        disabled
-        text={
-          <span>
-            Signed in as <strong>Malcolm X</strong>
-          </span>
-        }
-      />
-      <Dropdown.Divider />
-      <Dropdown.Item text="Your Profile" />
-      <Dropdown.Item text="Help" />
-      <Dropdown.Item icon="setting" text="Settings" />
-      <Dropdown.Divider />
-      <Dropdown.Item icon="log out" text="Log Out" />
-    </Dropdown.Menu>
-  </Dropdown>
-);
+const DropdownTriggerExample = () => {
+  const { username } = useUser();
+  return (
+    <Dropdown trigger={trigger}>
+      <Dropdown.Menu style={{ top: '48px' }}>
+        <Dropdown.Item
+          disabled
+          text={
+            <span>
+              Signed in as <strong>{username}</strong>
+            </span>
+          }
+        />
+        <Dropdown.Divider />
+        <Dropdown.Item text="Your Profile" />
+        <Dropdown.Item text="Help" />
+        <Dropdown.Item icon="setting" text="Settings" />
+        <Dropdown.Divider />
+        <Dropdown.Item icon="log out" text="Log Out" />
+      </Dropdown.Menu>
+    </Dropdown>
+  );
+};
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   return (
     <Sticky>
       <Menu
@@ -84,6 +92,7 @@ const Header = () => {
           <Menu.Item
             style={{ minWidth: '0', fontWeight: 'bold', fontSize: '1.15rem' }}
             as={'span'}
+            onClick={() => dispatch(changeUsername('Malcolm Changed'))}
           >
             Malcolm
           </Menu.Item>
