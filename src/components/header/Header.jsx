@@ -19,7 +19,6 @@ const trigger = (
       spaced="right"
       src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
     />
-    {/* <Icon name="angle down" size="large" /> */}
   </>
 );
 
@@ -63,11 +62,11 @@ const Header = () => {
         }}
       >
         <Menu.Menu
-          style={{
-            width: '150px',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
+        // style={{
+        //   width: '150px',
+        //   display: 'flex',
+        //   justifyContent: 'center',
+        // }}
         >
           <Menu.Item style={{ minWidth: '0' }}>
             <Image
@@ -76,7 +75,9 @@ const Header = () => {
             />
           </Menu.Item>
         </Menu.Menu>
-        <Menu.Menu position="right">
+        <Menu.Menu
+        // position="right"
+        >
           <Menu.Item style={{ minWidth: '0' }} as={Button}>
             <Search />
           </Menu.Item>
@@ -96,14 +97,6 @@ const Header = () => {
           >
             Malcolm
           </Menu.Item>
-          {/* <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <Image
-              avatar
-              spaced="right"
-              src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
-            />
-            <Icon name="angle down" size="large" />
-          </Menu.Item> */}
           <Menu.Item style={{ minWidth: '0' }} as={Button}>
             <DropdownTriggerExample />
           </Menu.Item>

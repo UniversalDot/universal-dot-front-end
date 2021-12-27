@@ -23,24 +23,42 @@ export default function App() {
           }
         >
           <Route
-            path="profile"
+            path="activity"
             element={
               <div>
-                <h3>PROFILE PART</h3>
-                <Link to="/activity">
-                  <div>to activity link</div>
-                </Link>
+                <h3>Activity</h3>
               </div>
             }
           />
           <Route
-            path="activity"
+            path="dashboard"
             element={
               <div>
-                <h3>ACTIVITY PART</h3>
-                <Link to="/profile">
-                  <div>to profile link</div>
-                </Link>
+                <h3>Dashboard</h3>
+              </div>
+            }
+          />
+          <Route
+            path="tasks"
+            element={
+              <div>
+                <h3>Tasks</h3>
+              </div>
+            }
+          />
+          <Route
+            path="organizer"
+            element={
+              <div>
+                <h3>Organizer</h3>
+              </div>
+            }
+          />
+          <Route
+            path="calendar"
+            element={
+              <div>
+                <h3>Calendar</h3>
               </div>
             }
           />

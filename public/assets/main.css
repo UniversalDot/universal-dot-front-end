@@ -6,3 +6,7 @@
 .item::before {
   display: none;
 }
+
+.ui.vertical.sidebar.menu > a.item.menu-item-custom::before {
+  display: none !important;
+}
