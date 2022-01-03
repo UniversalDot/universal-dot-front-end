@@ -1,11 +1,21 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import 'semantic-ui-css/semantic.min.css';
 
 import { SubstrateContextProvider } from './substrate-lib';
 
-import { TemplateResources, SignUp, SignIn, Home } from './pages';
+import {
+  TemplateResources,
+  SignUp,
+  SignIn,
+  Home,
+  Profile,
+  Dashboard,
+  Tasks,
+  Organization,
+  Calendar,
+} from './pages';
 
 import { Header } from './components';
 
@@ -22,46 +32,11 @@ export default function App() {
             loggedIn ? <Home /> : <Navigate replace to="/auth/sign-in" />
           }
         >
-          <Route
-            path="activity"
-            element={
-              <div>
-                <h3>Activity</h3>
-              </div>
-            }
-          />
-          <Route
-            path="dashboard"
-            element={
-              <div>
-                <h3>Dashboard</h3>
-              </div>
-            }
-          />
-          <Route
-            path="tasks"
-            element={
-              <div>
-                <h3>Tasks</h3>
-              </div>
-            }
-          />
-          <Route
-            path="organizer"
-            element={
-              <div>
-                <h3>Organizer</h3>
-              </div>
-            }
-          />
-          <Route
-            path="calendar"
-            element={
-              <div>
-                <h3>Calendar</h3>
-              </div>
-            }
-          />
+          <Route path="profile" element={<Profile />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="organization" element={<Organization />} />
+          <Route path="calendar" element={<Calendar />} />
         </Route>
         <Route
           path="/auth/sign-in"

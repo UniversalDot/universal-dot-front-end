@@ -23,13 +23,13 @@ const SidebarComponent = () => {
         <Menu.Item
           style={{ minWidth: '0' }}
           as={Link}
-          to="/activity"
-          active={location.pathname === '/activity'}
+          to="/profile"
+          active={location.pathname === '/profile'}
           className="menu-item-custom"
         >
           <div style={{ display: 'flex' }}>
             <Icon name="block layout" />
-            <span style={{ marginLeft: '0.85rem' }}>Activity</span>
+            <span style={{ marginLeft: '0.85rem' }}>Profile</span>
           </div>
         </Menu.Item>
         <Menu.Item
@@ -52,10 +52,10 @@ const SidebarComponent = () => {
           <div style={{ display: 'flex' }}>
             <Icon name="tasks" />
             <span style={{ marginLeft: '0.85rem' }}>Tasks</span>
-            <Icon style={{ marginLeft: '0.85rem' }} name="caret down" />
+            {/* <Icon style={{ marginLeft: '0.85rem' }} name="caret down" /> */}
           </div>
         </Menu.Item>
-        {location.pathname.includes('/tasks') && (
+        {/* {location.pathname.includes('/tasks') && (
           <Menu.Item
             style={{ minWidth: '0', paddingLeft: '2rem' }}
             as={Link}
@@ -80,16 +80,16 @@ const SidebarComponent = () => {
               <span style={{ marginLeft: '0.85rem' }}>Designing</span>
             </div>
           </Menu.Item>
-        )}
+        )} */}
         <Menu.Item
           style={{ minWidth: '0' }}
           as={Link}
-          to="/organizer"
-          active={location.pathname === '/organizer'}
+          to="/organization"
+          active={location.pathname === '/organization'}
         >
           <div style={{ display: 'flex' }}>
             <Icon name="clipboard list" />
-            <span style={{ marginLeft: '0.85rem' }}>Organizer</span>
+            <span style={{ marginLeft: '0.85rem' }}>Organization</span>
           </div>
         </Menu.Item>
         <Menu.Item
