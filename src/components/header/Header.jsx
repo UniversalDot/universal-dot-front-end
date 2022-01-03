@@ -7,7 +7,9 @@ import {
   Icon,
   Search,
   Dropdown,
+  Container,
 } from 'semantic-ui-react';
+import { useLocation } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { changeUsername } from '../../store/slices/userSlice';
@@ -48,60 +50,107 @@ const DropdownTriggerExample = () => {
 
 const Header = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  const activePage = () => {
+    const current = location.pathname.split('/')[1];
+    const capitalized = current.charAt(0).toUpperCase() + current.slice(1);
+
+    console.log({ current });
+    return (
+      <>
+        <Icon name="block layout" />
+        <span style={{ marginLeft: '0.85rem', fontWeight: 'bold' }}>
+          {capitalized}
+        </span>
+      </>
+    );
+  };
 
   return (
     <Sticky>
-      <Menu
-        style={{
-          border: '0',
-          borderRadius: '0',
-          height: '68px',
-          display: 'flex',
-          justifyContent: 'center',
-          boxShadow: '0px 1px 11px 0 #22242626',
-        }}
-      >
-        <Menu.Menu
-        // style={{
-        //   width: '150px',
-        //   display: 'flex',
-        //   justifyContent: 'center',
-        // }}
+      <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            width: '150px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <Menu.Item style={{ minWidth: '0' }}>
-            <Image
-              src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`}
-              size="mini"
-            />
-          </Menu.Item>
-        </Menu.Menu>
-        <Menu.Menu
-        // position="right"
+          {' '}
+          <Image
+            src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`}
+            size="mini"
+          />
+        </div>
+        <div
+          style={{
+            border: '0',
+            borderRadius: '0',
+            height: '68px',
+            display: 'flex',
+            justifyContent: 'center',
+            boxShadow: '12px 0px 11px 0 #22242626',
+            width: 'calc(100% - 150px)',
+            // 300px = 150px of minWidth of activyPage item + sidebar
+            paddingRight: '300px',
+          }}
         >
-          <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <Search />
-          </Menu.Item>
-          <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <Icon name="bell outline" />
-          </Menu.Item>
-          <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <Icon name="setting" />
-          </Menu.Item>
-          <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <Icon name="folder outline" />
-          </Menu.Item>
-          <Menu.Item
-            style={{ minWidth: '0', fontWeight: 'bold', fontSize: '1.15rem' }}
-            as={'span'}
-            onClick={() => dispatch(changeUsername('Malcolm Changed'))}
+          <Menu
+            style={{
+              border: '0',
+              borderRadius: '0',
+              height: '68px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              boxShadow: 'none',
+            }}
           >
-            Malcolm
-          </Menu.Item>
-          <Menu.Item style={{ minWidth: '0' }} as={Button}>
-            <DropdownTriggerExample />
-          </Menu.Item>
-        </Menu.Menu>
-      </Menu>
+            <Menu.Menu>
+              <Menu.Item
+                style={{
+                  minWidth: '150px',
+                  marginLeft: '1rem',
+                  paddingLeft: '0',
+                }}
+                as={'span'}
+              >
+                <div style={{ display: 'flex' }}>{activePage()}</div>
+              </Menu.Item>
+            </Menu.Menu>
+            <Menu.Menu>
+              <Menu.Item style={{ minWidth: '0' }} as={Button}>
+                <Search />
+              </Menu.Item>
+              <Menu.Item style={{ minWidth: '0' }} as={Button}>
+                <Icon name="bell outline" />
+              </Menu.Item>
+              <Menu.Item style={{ minWidth: '0' }} as={Button}>
+                <Icon name="setting" />
+              </Menu.Item>
+              <Menu.Item style={{ minWidth: '0' }} as={Button}>
+                <Icon name="folder outline" />
+              </Menu.Item>
+              <Menu.Item
+                style={{
+                  minWidth: '0',
+                  fontWeight: 'bold',
+                  fontSize: '1.15rem',
+                }}
+                as={'span'}
+                onClick={() => dispatch(changeUsername('Malcolm Changed'))}
+              >
+                Malcolm
+              </Menu.Item>
+              <Menu.Item style={{ minWidth: '0' }} as={Button}>
+                <DropdownTriggerExample />
+              </Menu.Item>
+            </Menu.Menu>
+          </Menu>
+        </div>
+      </div>
     </Sticky>
   );
 };
