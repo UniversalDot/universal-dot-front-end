@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Menu, Segment, Sidebar, Label } from 'semantic-ui-react';
+import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
 
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
