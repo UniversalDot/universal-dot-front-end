@@ -1,0 +1,21 @@
+.sidebarComponent {
+  .sidebar {
+    border-top: 0;
+    border-right: 0;
+    padding-top: 1.5rem;
+
+    .menuItem_first {
+      &::before {
+        opacity: 0;
+      }
+    }
+
+    .menuItem_content {
+      display: flex;
+
+      .menuItem_content_text {
+        margin-left: 0.85rem;
+      }
+    }
+  }
+}

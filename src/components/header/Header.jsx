@@ -7,12 +7,12 @@ import {
   Icon,
   Search,
   Dropdown,
-  Container,
 } from 'semantic-ui-react';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import { useDispatch } from 'react-redux';
 import { changeUsername } from '../../store/slices/userSlice';
+import styles from './Header.module.scss';
 
 const trigger = (
   <>
@@ -56,68 +56,42 @@ const Header = () => {
     const current = location.pathname.split('/')[1];
     const capitalized = current.charAt(0).toUpperCase() + current.slice(1);
 
-    console.log({ current });
     return (
-      <>
+      <div style={{ display: 'flex' }}>
         <Icon name="block layout" />
         <span style={{ marginLeft: '0.85rem', fontWeight: 'bold' }}>
           {capitalized}
         </span>
-      </>
+      </div>
     );
   };
 
   return (
-    <Sticky>
-      <div style={{ display: 'flex' }}>
+    <Sticky className={styles.header}>
+      <div className={styles.contentContainer}>
         <div
+          className={styles.logoContainer}
           style={{
             width: '150px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
           }}
         >
-          {' '}
           <Image
             src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`}
             size="mini"
           />
         </div>
         <div
+          className={styles.mainContent}
           style={{
-            border: '0',
-            borderRadius: '0',
-            height: '68px',
-            display: 'flex',
-            justifyContent: 'center',
-            boxShadow: '12px 0px 11px 0 #22242626',
             width: 'calc(100% - 150px)',
             // 300px = 150px of minWidth of activyPage item + sidebar
             paddingRight: '300px',
           }}
         >
-          <Menu
-            style={{
-              border: '0',
-              borderRadius: '0',
-              height: '68px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              boxShadow: 'none',
-            }}
-          >
+          <Menu className={styles.menu}>
             <Menu.Menu>
-              <Menu.Item
-                style={{
-                  minWidth: '150px',
-                  marginLeft: '1rem',
-                  paddingLeft: '0',
-                }}
-                as={'span'}
-              >
-                <div style={{ display: 'flex' }}>{activePage()}</div>
+              <Menu.Item className={styles.menuItem_activePage} as={'span'}>
+                {activePage()}
               </Menu.Item>
             </Menu.Menu>
             <Menu.Menu>
@@ -134,11 +108,7 @@ const Header = () => {
                 <Icon name="folder outline" />
               </Menu.Item>
               <Menu.Item
-                style={{
-                  minWidth: '0',
-                  fontWeight: 'bold',
-                  fontSize: '1.15rem',
-                }}
+                className={styles.menuItem_username}
                 as={'span'}
                 onClick={() => dispatch(changeUsername('Malcolm Changed'))}
               >

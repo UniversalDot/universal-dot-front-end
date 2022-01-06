@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
-
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import styles from './SidebarComponent.module.scss';
 
 const SidebarComponent = () => {
   const [sidebarSize, setSidebarSize] = React.useState('thin');
@@ -9,7 +9,10 @@ const SidebarComponent = () => {
   const location = useLocation();
 
   return (
-    <Sidebar.Pushable style={{ height: `calc(100vh - 68px)` }}>
+    <Sidebar.Pushable
+      className={styles.sidebarComponent}
+      style={{ height: 'calc(100vh - 68px)' }}
+    >
       <Sidebar
         as={Menu}
         animation="push"
@@ -18,40 +21,37 @@ const SidebarComponent = () => {
         vertical
         visible
         width={sidebarSize}
-        style={{ borderTop: '0', borderRight: '0', paddingTop: '1.5rem' }}
+        className={styles.sidebar}
       >
         <Menu.Item
-          style={{ minWidth: '0' }}
           as={Link}
           to="/profile"
           active={location.pathname === '/profile'}
-          className="menu-item-custom"
+          className={styles.menuItem_first}
         >
-          <div style={{ display: 'flex' }}>
+          <div className={styles.menuItem_content}>
             <Icon name="block layout" />
-            <span style={{ marginLeft: '0.85rem' }}>Profile</span>
+            <span className={styles.menuItem_content_text}>Profile</span>
           </div>
         </Menu.Item>
         <Menu.Item
-          style={{ minWidth: '0' }}
           as={Link}
           to="/dashboard"
           active={location.pathname === '/dashboard'}
         >
-          <div style={{ display: 'flex' }}>
+          <div className={styles.menuItem_content}>
             <Icon name="briefcase" />
-            <span style={{ marginLeft: '0.85rem' }}>Dashboard</span>
+            <span className={styles.menuItem_content_text}>Dashboard</span>
           </div>
         </Menu.Item>
         <Menu.Item
-          style={{ minWidth: '0' }}
           as={Link}
           to="/tasks"
           active={location.pathname === '/tasks'}
         >
-          <div style={{ display: 'flex' }}>
+          <div className={styles.menuItem_content}>
             <Icon name="tasks" />
-            <span style={{ marginLeft: '0.85rem' }}>Tasks</span>
+            <span className={styles.menuItem_content_text}>Tasks</span>
             {/* <Icon style={{ marginLeft: '0.85rem' }} name="caret down" /> */}
           </div>
         </Menu.Item>
@@ -82,25 +82,23 @@ const SidebarComponent = () => {
           </Menu.Item>
         )} */}
         <Menu.Item
-          style={{ minWidth: '0' }}
           as={Link}
           to="/organization"
           active={location.pathname === '/organization'}
         >
-          <div style={{ display: 'flex' }}>
+          <div className={styles.menuItem_content}>
             <Icon name="clipboard list" />
-            <span style={{ marginLeft: '0.85rem' }}>Organization</span>
+            <span className={styles.menuItem_content_text}>Organization</span>
           </div>
         </Menu.Item>
         <Menu.Item
-          style={{ minWidth: '0' }}
           as={Link}
           to="/calendar"
           active={location.pathname === '/calendar'}
         >
-          <div style={{ display: 'flex' }}>
+          <div className={styles.menuItem_content}>
             <Icon name="calendar alternate outline" />
-            <span style={{ marginLeft: '0.85rem' }}>Calendar</span>
+            <span className={styles.menuItem_content_text}>Calendar</span>
           </div>
         </Menu.Item>
       </Sidebar>

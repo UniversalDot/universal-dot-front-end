@@ -5,8 +5,6 @@ import 'semantic-ui-css/semantic.min.css';
 
 import { SubstrateContextProvider } from './substrate-lib';
 
-import styles from './styles/testing.module.scss';
-
 import {
   TemplateResources,
   SignUp,
@@ -27,7 +25,6 @@ export default function App() {
   return (
     <BrowserRouter>
       {loggedIn && <Header />}
-      <div className={styles.testTwo}>testtttttttttt</div>
       <Routes>
         <Route
           path="/*"

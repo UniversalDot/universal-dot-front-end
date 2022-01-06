@@ -1,0 +1,42 @@
+.header {
+  .contentContainer {
+    display: flex;
+
+    .logoContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mainContent {
+      border: 0;
+      border-radius: 0;
+      height: 68px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 12px 0px 11px 0 #22242626;
+
+      .menu {
+        border: 0;
+        border-radius: 0;
+        height: 68px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        box-shadow: none;
+
+        .menuItem_activePage {
+          min-width: 150px;
+          margin-left: 1rem;
+          padding-left: 0;
+        }
+
+        .menuItem_username {
+          min-width: 0;
+          font-weight: 500;
+          font-size: 1.15rem;
+        }
+      }
+    }
+  }
+}
