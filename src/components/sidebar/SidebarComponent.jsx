@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './SidebarComponent.module.scss';
 
 const SidebarComponent = () => {
   const [sidebarSize, setSidebarSize] = React.useState('thin');
 
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      navigate('/profile');
+    }
+  }, [location, navigate]);
 
   return (
     <Sidebar.Pushable
