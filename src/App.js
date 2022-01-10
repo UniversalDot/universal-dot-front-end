@@ -9,7 +9,6 @@ import {
   TemplateResources,
   SignUp,
   SignIn,
-  Home,
   Profile,
   Dashboard,
   Tasks,
@@ -17,7 +16,7 @@ import {
   Calendar,
 } from './pages';
 
-import { Header } from './components';
+import { Header, Layout } from './components';
 
 export default function App() {
   const loggedIn = true;
@@ -29,7 +28,7 @@ export default function App() {
         <Route
           path="/*"
           element={
-            loggedIn ? <Home /> : <Navigate replace to="/auth/sign-in" />
+            loggedIn ? <Layout /> : <Navigate replace to="/auth/sign-in" />
           }
         >
           <Route path="profile" element={<Profile />} />

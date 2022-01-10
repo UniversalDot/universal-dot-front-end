@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import { Icon, Menu, Sidebar, Container } from 'semantic-ui-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './SidebarComponent.module.scss';
 
@@ -110,10 +110,13 @@ const SidebarComponent = () => {
         </Menu.Item>
       </Sidebar>
 
-      <Sidebar.Pusher>
-        <Segment basic>
+      <Sidebar.Pusher
+        style={{ width: 'calc(100% - 150px)' }}
+        className={styles.sidebarContent}
+      >
+        <Container fluid className={styles.contentContainer}>
           <Outlet />
-        </Segment>
+        </Container>
       </Sidebar.Pusher>
     </Sidebar.Pushable>
   );

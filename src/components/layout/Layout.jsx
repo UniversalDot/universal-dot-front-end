@@ -1,7 +1,7 @@
 import React from 'react';
 import { SidebarComponent } from '../../components';
 
-const Home = () => {
+const Layout = () => {
   return (
     <>
       <SidebarComponent />
@@ -9,6 +9,6 @@ const Home = () => {
   );
 };
 
-Home.displayName = 'Home';
+Layout.displayName = 'Layout';
 
-export { Home };
+export { Layout };

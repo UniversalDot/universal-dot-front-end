@@ -1,7 +1,12 @@
 import React from 'react';
+import { UserQuickInfo } from '../../components';
 
 const Profile = () => {
-  return <h1>Profile page</h1>;
+  return (
+    <>
+      <UserQuickInfo />
+    </>
+  );
 };
 
 Profile.displayName = 'Profile';
