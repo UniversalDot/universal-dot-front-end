@@ -9,13 +9,13 @@ const Interests = () => {
   ];
   const cols2 = [1, 1, 1, 1, 1, 1];
   const columns = cols.map((_, i) => (
-    <Label basic color="blue" style={{ margin: '0.5rem' }}>
+    <Label basic color="blue" style={{ margin: '0.5rem' }} key={i}>
       Blue
     </Label>
   ));
 
   const columns2 = cols2.map((_, i) => (
-    <Label basic color="grey" style={{ margin: '0.5rem' }}>
+    <Label basic color="grey" style={{ margin: '0.5rem' }} key={i}>
       Blue
     </Label>
   ));
