@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import 'semantic-ui-css/semantic.min.css';
+import './styles/styles.scss';
 
 import { SubstrateContextProvider } from './substrate-lib';
 
