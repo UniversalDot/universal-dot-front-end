@@ -4,7 +4,7 @@
   "private": true,
   "author": "Parity Technologies <admin@parity.io>",
   "license": "Unlicense",
-  "homepage": "https://substrate-developer-hub.github.io/substrate-front-end-template",
+  "homepage": "",
   "bugs": {
     "url": "https://github.com/substrate-developer-hub/substrate-front-end-template/issues"
   },
@@ -34,6 +34,7 @@
     "@polkadot/util": "^7.8.2",
     "@polkadot/util-crypto": "^7.8.2",
     "@reduxjs/toolkit": "^1.7.1",
+    "classnames": "^2.3.1",
     "node-sass": "^7.0.1",
     "prop-types": "^15.7.2",
     "query-string": "^7.0.1",

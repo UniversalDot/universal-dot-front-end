@@ -1,127 +1,104 @@
 import React from 'react';
-import { Card, Grid, Button, Icon } from 'semantic-ui-react';
+import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
+import { Task, Project, Log } from '../';
 
 const Timeline = () => {
+  const cards = [1, 2, 3, 4, 5];
+  const logsArr = [1, 2, 3];
+  const logsArr2 = [1, 2];
+  const logsArr3 = [1];
+
+  const tasks = cards.map(testNo => <Task key={testNo} />);
+  const projects = cards.map(testNo => <Project key={testNo} />);
+  const logs1 = logsArr.map((testNo, i) => (
+    <Log
+      key={testNo}
+      isFirst={i === 0}
+      isLast={logsArr.length - 1 === i && logsArr.length > 1}
+    />
+  ));
+  const logs2 = logsArr2.map((testNo, i) => (
+    <Log
+      key={testNo}
+      isFirst={i === 0}
+      isLast={logsArr2.length - 1 === i && logsArr2.length > 1}
+    />
+  ));
+  const logs3 = logsArr3.map((testNo, i) => (
+    <Log
+      key={testNo}
+      isFirst={i === 0}
+      isLast={logsArr3.length - 1 === i && logsArr3.length > 1}
+    />
+  ));
+
   return (
-    <Grid className={styles.grid} columns={3} stackable>
-      <Grid.Row className={styles.row}>
-        <Grid.Column className={styles.column}>
-          <Card fluid raised className={styles.card}>
-            <Card.Content className={styles.contentContainer}>
-              <div className={styles.header}>
-                <span className={styles.text}>
-                  <Icon name="folder outline" />
-                  Upcoming
-                </span>
-                <Button basic className={styles.button}>
-                  Details
-                </Button>
+    <>
+      <Grid className={styles.grid} columns={3} stackable>
+        <Grid.Row className={styles.row}>
+          <Grid.Column className={styles.column}>
+            <div className={styles.section}>
+              <div className={styles.contentContainer}>
+                <div className={styles.header}>
+                  <span className={styles.text}>
+                    <Icon name="folder outline" className={styles.icon} />
+                    Upcoming Tasks
+                  </span>
+                </div>
+                <div className={styles.body}>{tasks}</div>
               </div>
-              <Card.Description className={styles.description}>
-                <Card.Group>
-                  <Card fluid>
-                    <Card.Content>
-                      <Card.Header>Steve Sanders</Card.Header>
-                      <Card.Meta>Friends of Elliot</Card.Meta>
-                      <Card.Description>
-                        Steve wants to add you to the group{' '}
-                        <strong>best friends</strong>
-                      </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <div className="ui two buttons">
-                        <Button basic color="green">
-                          Approve
-                        </Button>
-                        <Button basic color="red">
-                          Decline
-                        </Button>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                  <Card fluid>
-                    <Card.Content>
-                      <Card.Header>Molly Thomas</Card.Header>
-                      <Card.Meta>New User</Card.Meta>
-                      <Card.Description>
-                        Molly wants to add you to the group{' '}
-                        <strong>musicians</strong>
-                      </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <div className="ui two buttons">
-                        <Button basic color="green">
-                          Approve
-                        </Button>
-                        <Button basic color="red">
-                          Decline
-                        </Button>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                  <Card fluid>
-                    <Card.Content>
-                      <Card.Header>Jenny Lawrence</Card.Header>
-                      <Card.Meta>New User</Card.Meta>
-                      <Card.Description>
-                        Jenny requested permission to view your contact details
-                      </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <div className="ui two buttons">
-                        <Button basic color="green">
-                          Approve
-                        </Button>
-                        <Button basic color="red">
-                          Decline
-                        </Button>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                </Card.Group>
-              </Card.Description>
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-        <Grid.Column className={styles.column}>
-          <Card fluid raised className={styles.card}>
-            <Card.Content className={styles.contentContainer}>
-              <div className={styles.header}>
-                <span className={styles.text}>
-                  <Icon name="folder outline" />
-                  Active
-                </span>
-                <Button basic className={styles.button}>
-                  Details
-                </Button>
+            </div>
+          </Grid.Column>
+          <Grid.Column className={styles.column}>
+            <div className={styles.section}>
+              <div className={styles.contentContainer}>
+                <div className={styles.header}>
+                  <span className={styles.text}>
+                    <Icon name="folder outline" className={styles.icon} />
+                    Active Projects
+                  </span>
+                </div>
+                <div className={styles.body}>{projects}</div>
               </div>
-              <Card.Description className={styles.description}>
-                ₿ 15
-              </Card.Description>
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-        <Grid.Column className={styles.column}>
-          <Card fluid raised className={styles.card}>
-            <Card.Content className={styles.contentContainer}>
-              <div className={styles.header}>
-                <span className={styles.text}>
-                  <Icon name="folder outline" />
-                  Log
-                </span>
-                <Button basic className={styles.button}>
-                  Details
-                </Button>
+            </div>
+          </Grid.Column>
+          <Grid.Column className={styles.column}>
+            <div className={styles.section}>
+              <div className={styles.contentContainer}>
+                <div className={styles.header}>
+                  <span className={styles.text}>
+                    <Icon name="folder outline" className={styles.icon} />
+                    Log
+                  </span>
+                </div>
+                <div className={styles.body}>
+                  <div className={styles.date}>
+                    <Label as="a" color="blue">
+                      Today
+                    </Label>
+                    {logs1}
+                  </div>
+
+                  <div className={styles.date}>
+                    <Label as="a" color="blue">
+                      Yesterday
+                    </Label>
+                    {logs2}
+                  </div>
+                  <div className={styles.date}>
+                    <Label as="a" color="blue">
+                      13.05.2022
+                    </Label>
+                    {logs3}
+                  </div>
+                </div>
               </div>
-              <Card.Description className={styles.description}>
-                ₿ 15
-              </Card.Description>
-            </Card.Content>
-          </Card>
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </>
   );
 };
 

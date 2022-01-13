@@ -1,0 +1,50 @@
+.log {
+  box-shadow: 0 0 0 1px #d4d4d5;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 2rem;
+
+  &.isFirst {
+    margin-top: 1rem;
+  }
+
+  &.isLast {
+    margin-bottom: 4rem;
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+      .owner {
+        text-align: left;
+        display: flex;
+        .icon {
+          margin-right: 0.5rem;
+        }
+        .title {
+          font-size: 1rem;
+          font-weight: 600;
+          text-align: left;
+        }
+      }
+      .info {
+        margin-top: 0.3rem;
+        margin-left: 1.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+
+        .type {
+          color: #2185d0;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .time {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+  }
+}

@@ -5,3 +5,7 @@ export * from './user-quick-info';
 export * from './funds';
 export * from './interests';
 export * from './timeline';
+export * from './task';
+export * from './project';
+export * from './log';
+export * from './text-editor';
