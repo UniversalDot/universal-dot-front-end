@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { useEffect } from 'react';
 import { Card, Grid, Button } from 'semantic-ui-react';
 import styles from './Funds.module.scss';
@@ -14,16 +15,18 @@ const Funds = () => {
   useEffect(() => {
     let unsubscribe;
 
-    // If the user has selected an address, create a new subscription
-    selectedAccountKey &&
-      api.query.system
-        .account(selectedAccountKey, balance => {
-          dispatch(setBalance(balance.data.free.toHuman()));
-        })
-        .then(unsub => {
-          unsubscribe = unsub;
-        })
-        .catch(console.error);
+    if (selectedAccountKey && api) {
+      // If the user has selected an address, create a new subscription
+      selectedAccountKey &&
+        api?.query?.system
+          ?.account(selectedAccountKey, balance => {
+            dispatch(setBalance(balance.data.free.toHuman()));
+          })
+          .then(unsub => {
+            unsubscribe = unsub;
+          })
+          .catch(console.error);
+    }
 
     return () => unsubscribe && unsubscribe();
   }, [selectedAccountKey, dispatch, api]);

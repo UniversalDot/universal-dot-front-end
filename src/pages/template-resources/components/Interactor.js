@@ -121,6 +121,8 @@ function Main(props) {
       paramFields = [];
     }
 
+    console.log('paramFielnds', paramFields);
+
     setParamFields(paramFields);
   };
 
@@ -141,6 +143,7 @@ function Main(props) {
         const inputParams = [...formState.inputParams];
         inputParams[ind] = { type, value };
         res = { ...formState, inputParams };
+        console.log('inputParams', inputParams);
       } else if (state === 'palletRpc') {
         res = { ...formState, [state]: value, callable: '', inputParams: [] };
       } else if (state === 'callable') {

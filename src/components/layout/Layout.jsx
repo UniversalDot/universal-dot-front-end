@@ -34,8 +34,10 @@ const Layout = () => {
     // setAccountSelected(initialUsername);
     dispatch(
       setAccountSelected({
-        selectedAccountKey: initialAddress,
-        selectedAccountUsername: initialUsername,
+        // selectedAccountKey: initialAddress,
+        selectedAccountKey: '5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc',
+        // selectedAccountUsername: initialUsername,
+        selectedAccountUsername: 'neznamkoj',
       })
     );
   }, [initialAddress, initialUsername, dispatch]);
