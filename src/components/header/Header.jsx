@@ -10,8 +10,6 @@ import {
 } from 'semantic-ui-react';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
-import { useDispatch } from 'react-redux';
-import { changeUsername } from '../../store/slices/userSlice';
 import styles from './Header.module.scss';
 
 const trigger = (
@@ -25,7 +23,7 @@ const trigger = (
 );
 
 const DropdownTriggerExample = () => {
-  const { username } = useUser();
+  const { selectedAccountUsername } = useUser();
   return (
     <Dropdown trigger={trigger}>
       <Dropdown.Menu style={{ top: '48px' }}>
@@ -33,7 +31,7 @@ const DropdownTriggerExample = () => {
           disabled
           text={
             <span>
-              Signed in as <strong>{username}</strong>
+              Signed in as <strong>{selectedAccountUsername}</strong>
             </span>
           }
         />
@@ -49,8 +47,8 @@ const DropdownTriggerExample = () => {
 };
 
 const Header = () => {
-  const dispatch = useDispatch();
   const location = useLocation();
+  const { selectedAccountUsername } = useUser();
 
   const activePage = () => {
     const current = location.pathname.split('/')[1];
@@ -107,12 +105,8 @@ const Header = () => {
               <Menu.Item style={{ minWidth: '0' }} as={Button}>
                 <Icon name="folder outline" />
               </Menu.Item>
-              <Menu.Item
-                className={styles.menuItem_username}
-                as={'span'}
-                onClick={() => dispatch(changeUsername('Malcolm Changed'))}
-              >
-                Malcolm
+              <Menu.Item className={styles.menuItem_username} as={'span'}>
+                {selectedAccountUsername}
               </Menu.Item>
               <Menu.Item style={{ minWidth: '0' }} as={Button}>
                 <DropdownTriggerExample />

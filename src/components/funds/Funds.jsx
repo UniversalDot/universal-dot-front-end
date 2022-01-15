@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Grid, Button } from 'semantic-ui-react';
 import styles from './Funds.module.scss';
+import { useUser } from '../../hooks/useUser';
+import { useSubstrate } from '../../substrate-lib';
+import { useDispatch } from 'react-redux';
+import { setBalance } from '../../store/slices/accountSlice';
 
 const Funds = () => {
+  const { selectedAccountKey, selectedAccountBalance } = useUser();
+  const { api } = useSubstrate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let unsubscribe;
+
+    // If the user has selected an address, create a new subscription
+    selectedAccountKey &&
+      api.query.system
+        .account(selectedAccountKey, balance => {
+          dispatch(setBalance(balance.data.free.toHuman()));
+        })
+        .then(unsub => {
+          unsubscribe = unsub;
+        })
+        .catch(console.error);
+
+    return () => unsubscribe && unsubscribe();
+  }, [selectedAccountKey, dispatch, api]);
+
   return (
     <Grid className={styles.grid}>
       <Grid.Row className={styles.row}>
@@ -21,7 +46,7 @@ const Funds = () => {
                 </Button>
               </div>
               <Card.Description className={styles.description}>
-                $500
+                ${selectedAccountBalance}
               </Card.Description>
             </Card.Content>
           </Card>
@@ -41,7 +66,7 @@ const Funds = () => {
                 </Button>
               </div>
               <Card.Description className={styles.description}>
-                ₿ 15
+                ₿{selectedAccountBalance}
               </Card.Description>
             </Card.Content>
           </Card>

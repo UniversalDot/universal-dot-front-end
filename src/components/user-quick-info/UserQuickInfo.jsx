@@ -1,8 +1,11 @@
 import React from 'react';
 import { Card, Image, Icon } from 'semantic-ui-react';
 import styles from './UserQuickInfo.module.scss';
+import { useUser } from '../../hooks/useUser';
 
 const UserQuickInfo = () => {
+  const { selectedAccountUsername } = useUser();
+
   return (
     <Card fluid raised className={styles.card}>
       <Card.Content className={styles.contentContainer}>
@@ -13,7 +16,9 @@ const UserQuickInfo = () => {
             src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
             circular
           />
-          <Card.Header className={styles.name}>Malcolm</Card.Header>
+          <Card.Header className={styles.name}>
+            {selectedAccountUsername}
+          </Card.Header>
         </div>
         <div className={styles.divider}></div>
         <div className={styles.role}>UX Designer at Designer Hub</div>

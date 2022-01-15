@@ -1,7 +1,7 @@
 import take from 'redux-saga';
-import { changeUsername } from '../slices/userSlice';
+import { setAccountSelected, setBalance } from '../slices/accountSlice';
 
 export default function* () {
-  yield take(changeUsername.toString());
-  console.log('This is the root saga.');
+  yield take(setAccountSelected.toString());
+  yield take(setBalance.toString());
 }
