@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
-import { Card, Search, Label, Input, Button } from 'semantic-ui-react';
+import { Card, Search, Label, Input, Button, Icon } from 'semantic-ui-react';
 import styles from './Interests.module.scss';
 import { useUser } from '../../hooks/useUser';
 import { useSubstrate } from '../../substrate-lib';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import utils from '../../substrate-lib/utils';
+import { Events } from '../';
 
 const Interests = () => {
   const [oneInterest, setOneInterest] = useState('');
-  const [status, setStatus] = useState('nothing yet....');
+  const [allInterests, setAllInterests] = useState([]);
+  const [status, setStatus] = useState('none');
 
   const { selectedAccountKey } = useUser();
   const { api, keyring, keyringState } = useSubstrate();
   const [unsub, setUnsub] = useState(null);
 
   const callable = 'createProfile';
+
+  const callableRemoveProfile = 'removeProfile';
+  const callableUpdateProfile = 'updateProfile';
 
   const palletRpc = 'profile';
 
@@ -40,11 +45,11 @@ const Interests = () => {
   };
 
   const TxButton = ({ label, color = 'blue', type }) => {
-    const transaction = async () => {
-      if (typeof unsub === 'function') {
-        unsub();
-        setUnsub(null);
-      }
+    const signedTx = async () => {
+      // if (typeof unsub === 'function') {
+      //   unsub();
+      //   setUnsub(null);
+      // }
 
       const accountPair =
         selectedAccountKey &&
@@ -128,25 +133,75 @@ const Interests = () => {
         }, []);
       };
 
+      const txResHandler = ({ status }) => {
+        const callStatus = status;
+
+        callStatus?.isFinalized
+          ? setStatus(
+              `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
+            )
+          : setStatus(`Current transaction status: ${callStatus?.type}`);
+      };
+
+      const txErrHandler = err =>
+        setStatus(`😞 Transaction Failed: ${err.toString()}`);
+
+      const paramFieldsPreparedForTransformed = () => [
+        { name: 'interests', optional: false, type: 'Bytes' },
+      ];
+      const inputParamsPreparedForTransformed = () => [
+        { type: 'Bytes', value: allInterests.join() },
+      ];
+
+      // Tuka dole e funkcijata, a gore se helperite;
+
       const fromAcct = await getFromAcct();
-      const transformed = transformParams(['test bob 123'], ['bobbb 123']);
-      // const transformed = oneInterest || 'testinggggg';
+      const transformed = transformParams(
+        paramFieldsPreparedForTransformed(),
+        inputParamsPreparedForTransformed()
+      );
       // transformed can be empty parameters
 
       console.log('transformed', transformed);
 
-      const txExecute = transformed
-        ? api.tx[palletRpc][callable](transformed)
-        : api.tx[palletRpc][callable]();
+      let txExecute;
+
+      if (type === 'CREATE') {
+        txExecute = transformed
+          ? api.tx[palletRpc][callable](...transformed)
+          : api.tx[palletRpc][callable]();
+      }
+      if (type === 'REMOVE') {
+        txExecute = api.tx[palletRpc][callableRemoveProfile]();
+      }
+
+      if (type === 'UPDATE') {
+        const mockUpdateDataForNow = ['mockData, mockTest'];
+        txExecute = transformed
+          ? api.tx[palletRpc][callableUpdateProfile](...mockUpdateDataForNow)
+          : api.tx[palletRpc][callableUpdateProfile]();
+      }
+
+      console.log('txExecute', txExecute);
 
       const unsubbbb = await txExecute
-        .signAndSend(fromAcct, () =>
-          console.log(
-            'txResHandler, we should probably set some status here...'
-          )
-        )
-        .catch(() => console.log('this is an error handler'));
+        .signAndSend(fromAcct, txResHandler)
+        .catch(txErrHandler);
+
+      console.log('unsubbbb  txExecute async call', unsubbbb);
+
       setUnsub(() => unsubbbb);
+    };
+
+    const transaction = async () => {
+      if (typeof unsub === 'function') {
+        unsub();
+        setUnsub(null);
+      }
+
+      setStatus('Sending...');
+
+      signedTx();
     };
 
     return (
@@ -269,24 +324,46 @@ const Interests = () => {
     );
   };
 
+  const handleAddInterest = () => {
+    if (oneInterest.length > 3) {
+      setAllInterests([...allInterests, oneInterest]);
+      setOneInterest('');
+    }
+  };
+
+  const handleRemoveInterest = interest => {
+    setAllInterests(
+      allInterests.filter(interestItem => interestItem !== interest)
+    );
+  };
+
   return (
     <Card fluid raised className={styles.card}>
       <Card.Content>
         <div>
           <Label>This is for testing create profile:</Label>
           <Input
-            placeholder="placeholder"
+            placeholder="Write your interest"
             fluid
             type="text"
-            label="label"
+            label="Interest"
             // state={{ ind, paramField }}
             value={oneInterest || ''}
             onChange={e => onPalletCallableParamChange(e)}
             style={{ padding: '1rem 0' }}
           />
-          <TxButton label="Create profile" type="SIGNED-TX" color="blue" />
+          <div style={{ marginBottom: '1rem' }}>
+            <Button onClick={handleAddInterest}>Add interest</Button>
+          </div>
+          <TxButton label="Create profile" color="blue" type="CREATE" />
+          <TxButton label="Remove profile" color="red" type="REMOVE" />
+          <TxButton label="Update profile" color="green" type="UPDATE" />
+          <div style={{ margin: '1rem 0' }}>
+            <Label>Status:</Label>
+            <Label>{status}</Label>
+          </div>
         </div>
-        <div
+        {/* <div
           style={{
             marginTop: '1rem',
             display: 'flex',
@@ -302,11 +379,31 @@ const Interests = () => {
             color="blue"
           />
           <Label>{status}</Label>
-        </div>
+        </div> */}
         <Search className={styles.search} />
         <div className={styles.pills}>
-          <div className={styles.selected}>{columns2}</div>
-          <div className={styles.options}>{columns}</div>
+          <Label>These are the interests you selected:</Label>
+          <div className={styles.selected}>
+            {allInterests.map((interest, i) => (
+              <Label
+                basic
+                color="blue"
+                style={{ margin: '0.5rem' }}
+                key={`${interest}+${i}`}
+              >
+                {interest}
+                <Icon
+                  name="delete"
+                  onClick={() => handleRemoveInterest(interest)}
+                />
+              </Label>
+            ))}
+          </div>
+          {/* <div className={styles.selected}>{columns2}</div> */}
+          {/* <div className={styles.options}>{columns}</div> */}
+        </div>
+        <div style={{ margin: '2rem 0' }}>
+          <Events />
         </div>
       </Card.Content>
     </Card>

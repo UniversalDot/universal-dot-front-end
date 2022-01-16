@@ -10,37 +10,50 @@ const Layout = () => {
 
   // const [accountAddress, setAccountAddress] = useState('');
   // const [accountSelected, setAccountSelected] = useState('');
-
-  // Get the list of accounts we possess the private key for
-  const keyringOptions = keyring?.getPairs()?.map(account => ({
-    key: account.address,
-    value: account.address,
-    text: account.meta.name.toUpperCase(),
-    icon: 'user',
-  }));
-  console.log('keyringOptions', keyringOptions);
+  const [keyringOptions, setKeyringOptions] = useState(undefined);
 
   // Initial username
-  const initialUsername =
-    keyringOptions?.length > 0 ? keyringOptions[0].text : '';
-
+  const [initialUsername, setInitialUsername] = useState('');
   // Initial account key
-  const initialAddress =
-    keyringOptions?.length > 0 ? keyringOptions[0].value : '';
+  const [initialAddress, setInitialAddress] = useState('');
+
+  useEffect(() => {
+    if (keyringOptions) {
+      setInitialUsername(
+        keyringOptions?.length > 0 ? keyringOptions[0].text : ''
+      );
+      setInitialAddress(
+        keyringOptions?.length > 0 ? keyringOptions[0].value : ''
+      );
+      console.log('keyRingOptions', keyringOptions);
+    }
+  }, [keyringOptions]);
+
+  useEffect(() => {
+    // Get the list of accounts we possess the private key for
+
+    if (keyring) {
+      const keyringOptionsToSet = keyring?.getPairs()?.map(account => ({
+        key: account.address,
+        value: account.address,
+        text: account.meta.name.toUpperCase(),
+        icon: 'user',
+      }));
+      setKeyringOptions(keyringOptionsToSet);
+    }
+  }, [keyring]);
 
   // Set the initial address
   useEffect(() => {
-    // setAccountAddress(initialAddress);
-    // setAccountSelected(initialUsername);
     dispatch(
       setAccountSelected({
-        // selectedAccountKey: initialAddress,
-        selectedAccountKey: '5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc',
-        // selectedAccountUsername: initialUsername,
-        selectedAccountUsername: 'neznamkoj',
+        selectedAccountKey: initialAddress,
+        // selectedAccountKey: '5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY',
+        selectedAccountUsername: initialUsername,
+        // selectedAccountUsername: 'alice stash',
       })
     );
-  }, [initialAddress, initialUsername, dispatch]);
+  }, [dispatch, keyring, initialAddress, initialUsername]);
 
   return (
     <>
