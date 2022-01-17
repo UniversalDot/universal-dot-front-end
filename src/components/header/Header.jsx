@@ -8,7 +8,7 @@ import {
   Search,
   Dropdown,
 } from 'semantic-ui-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import styles from './Header.module.scss';
 
@@ -36,7 +36,8 @@ const DropdownTriggerExample = () => {
           }
         />
         <Dropdown.Divider />
-        <Dropdown.Item text="Your Profile" />
+
+        <Dropdown.Item text="Your Profile" as={Link} to="profile/configure" />
         <Dropdown.Item text="Help" />
         <Dropdown.Item icon="setting" text="Settings" />
         <Dropdown.Divider />

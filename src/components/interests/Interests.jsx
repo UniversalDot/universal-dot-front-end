@@ -123,10 +123,12 @@ const Interests = () => {
           <TxButton label="Remove profile" color="red" actionType="REMOVE" />
         )}
 
-        <div style={{ margin: '1rem 0' }}>
-          <Label>Status:</Label>
-          <Label>{status}</Label>
-        </div>
+        {status && (
+          <div style={{ margin: '1rem 0' }}>
+            <Label>Status:</Label>
+            <Label>{status}</Label>
+          </div>
+        )}
 
         <div style={{ margin: '2rem 0' }}>
           <Events />
