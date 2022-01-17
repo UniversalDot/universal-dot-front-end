@@ -15,6 +15,7 @@ import {
   Tasks,
   Organization,
   Calendar,
+  ProfileConfigure,
 } from './pages';
 
 import { Header, Layout } from './components';
@@ -34,6 +35,8 @@ export default function App() {
             }
           >
             <Route path="profile" element={<Profile />} />
+            <Route path="profile/configure" element={<ProfileConfigure />} />
+
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="organization" element={<Organization />} />

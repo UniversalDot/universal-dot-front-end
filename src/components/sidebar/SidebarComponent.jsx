@@ -33,7 +33,7 @@ const SidebarComponent = () => {
         <Menu.Item
           as={Link}
           to="/profile"
-          active={location.pathname === '/profile'}
+          active={location.pathname.split('/').includes('profile')}
           className={styles.menuItem_first}
         >
           <div className={styles.menuItem_content}>

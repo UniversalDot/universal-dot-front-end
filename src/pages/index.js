@@ -5,4 +5,5 @@ export * from './calendar';
 export * from './dashboard';
 export * from './organization';
 export * from './profile';
+export * from './profile-configure';
 export * from './tasks';

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { UserQuickInfo, Funds, Interests } from '../../components';
 
 const Profile = () => {
