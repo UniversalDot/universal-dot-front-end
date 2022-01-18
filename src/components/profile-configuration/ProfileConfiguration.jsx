@@ -1,0 +1,193 @@
+/* eslint-disable indent */
+import React, { useState, useEffect } from 'react';
+import { Card, Label, Input, Button, Icon, Message } from 'semantic-ui-react';
+import styles from './ProfileConfiguration.module.scss';
+import { useProfile } from '../../hooks/useProfile';
+import { useStatus } from '../../hooks/useStatus';
+
+const ProfileConfiguration = () => {
+  const [oneInterest, setOneInterest] = useState('');
+
+  const {
+    getProfile,
+    profileData,
+    profileAction,
+    populateFormInterests,
+    interests,
+    actionLoading,
+  } = useProfile();
+  const { status, setStatus } = useStatus();
+
+  const onPalletCallableParamChange = e => {
+    setOneInterest(e.target.value);
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
+  useEffect(() => {
+    return () => setStatus('');
+  }, [setStatus]);
+
+  const TxButton = ({ label, color = 'blue', actionType, loading }) => {
+    return (
+      <Button
+        color={color}
+        type="submit"
+        onClick={() => {
+          profileAction(actionType);
+          setOneInterest('');
+        }}
+        loading={loading}
+        disabled={!!status && !status.includes('Finalized')}
+      >
+        {label}
+      </Button>
+    );
+  };
+
+  const handleAddInterest = () => {
+    if (oneInterest.length > 3) {
+      populateFormInterests([...interests, oneInterest]);
+      setOneInterest('');
+    }
+  };
+
+  const onEnter = e => {
+    if (e.keyCode === 13) {
+      populateFormInterests([...interests, oneInterest]);
+      setOneInterest('');
+    }
+  };
+
+  const handleRemoveInterest = interest => {
+    populateFormInterests(
+      interests.filter(interestItem => interestItem !== interest)
+    );
+  };
+
+  return (
+    <Card fluid raised className={styles.card}>
+      <Card.Content
+        header={profileData ? 'Your profile' : 'Create your profile'}
+      />
+      <Card.Content
+        description={
+          profileData
+            ? 'You can update or remove your profile in this panel'
+            : 'To create your profile add some interests first.'
+        }
+      />
+      <Card.Content>
+        {/* <Search className={styles.search} /> */}
+        <Input
+          placeholder="For ex. Web Development"
+          action={{
+            icon: 'plus',
+            onClick: handleAddInterest,
+          }}
+          fluid
+          type="text"
+          label="Enter your interest:"
+          value={oneInterest}
+          onChange={e => onPalletCallableParamChange(e)}
+          onKeyDown={onEnter}
+        />
+        <Card fluid>
+          <Card.Content header="Your interests" />
+          <Card.Content>
+            <div className={styles.pills}>
+              <div className={styles.selected}>
+                {interests.map((interest, i) => (
+                  <Label
+                    basic
+                    color="blue"
+                    style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
+                    key={`${interest}+${i}`}
+                  >
+                    {interest}
+                    <Icon
+                      name="delete"
+                      onClick={() => handleRemoveInterest(interest)}
+                    />
+                  </Label>
+                ))}
+                {!profileData && interests.length === 0 && (
+                  <span>Your added interests will show up here...</span>
+                )}
+              </div>
+              {profileData && (
+                <div className={styles.options}>
+                  <Label
+                    basic
+                    color="grey"
+                    style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
+                  >
+                    Interest from the block 1
+                    <Icon name="delete" />
+                  </Label>
+                  <Label
+                    basic
+                    color="grey"
+                    style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
+                  >
+                    From the block 2
+                    <Icon name="delete" />
+                  </Label>
+                  <Label
+                    basic
+                    color="grey"
+                    style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
+                  >
+                    From the block 3
+                    <Icon name="delete" />
+                  </Label>
+                </div>
+              )}
+            </div>
+          </Card.Content>
+        </Card>
+      </Card.Content>
+      <Card.Content extra>
+        <TxButton
+          label={profileData ? 'Update profile' : 'Create profile'}
+          color={profileData ? 'green' : 'blue'}
+          actionType={profileData ? 'UPDATE' : 'CREATE'}
+          loading={actionLoading}
+        />
+        {profileData && (
+          <TxButton label="Remove profile" color="red" actionType="REMOVE" />
+        )}
+      </Card.Content>
+      {status && (
+        <Card.Content extra>
+          <Message
+            positive={!!status && status.includes('Finalized')}
+            warning={
+              !!status &&
+              (status.includes('Current transaction status') ||
+                status.includes('Sending...'))
+            }
+            icon
+          >
+            {!!status &&
+              (status.includes('Current transaction status') ||
+                status.includes('Sending...')) && (
+                <Icon name="circle notched" loading />
+              )}
+            {!!status && status.includes('Finalized') && <Icon name="check" />}
+            <Message.Content>
+              <Message.Header>Profile status</Message.Header>
+              {status}
+            </Message.Content>
+          </Message>
+        </Card.Content>
+      )}
+    </Card>
+  );
+};
+
+ProfileConfiguration.displayName = 'ProfileConfiguration';
+
+export { ProfileConfiguration };

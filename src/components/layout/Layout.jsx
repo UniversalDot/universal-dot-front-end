@@ -8,8 +8,6 @@ const Layout = () => {
   const dispatch = useDispatch();
   const { keyring } = useSubstrate();
 
-  // const [accountAddress, setAccountAddress] = useState('');
-  // const [accountSelected, setAccountSelected] = useState('');
   const [keyringOptions, setKeyringOptions] = useState(undefined);
 
   // Initial username
@@ -48,9 +46,7 @@ const Layout = () => {
     dispatch(
       setAccountSelected({
         selectedAccountKey: initialAddress,
-        // selectedAccountKey: '5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY',
         selectedAccountUsername: initialUsername,
-        // selectedAccountUsername: 'alice stash',
       })
     );
   }, [dispatch, keyring, initialAddress, initialUsername]);

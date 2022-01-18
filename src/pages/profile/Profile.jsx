@@ -1,8 +1,7 @@
 import React from 'react';
 import { Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-
-import { UserQuickInfo, Funds, Interests } from '../../components';
+import { UserQuickInfo, Funds } from '../../components';
 import { useProfile } from '../../hooks/useProfile';
 
 const Profile = () => {
@@ -20,7 +19,6 @@ const Profile = () => {
       )}
       <UserQuickInfo />
       <Funds />
-      <Interests />
     </>
   );
 };

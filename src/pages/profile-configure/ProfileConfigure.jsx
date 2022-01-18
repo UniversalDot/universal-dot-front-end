@@ -1,8 +1,8 @@
 import React from 'react';
-import { Interests } from '../../components';
+import { ProfileConfiguration } from '../../components';
 
 const ProfileConfigure = () => {
-  return <Interests />;
+  return <ProfileConfiguration />;
 };
 
 ProfileConfigure.displayName = 'ProfileConfigure';

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Feed, Button, Card } from 'semantic-ui-react';
-
-import styles from './Events.module.scss';
-
+// import styles from './Events.module.scss';
 import { useSubstrate } from '../../substrate-lib';
 
 // Events to be filtered from feed
@@ -57,9 +55,7 @@ const Events = () => {
     }
 
     return () => unsub && unsub();
-  }, [api?.query?.system]);
-
-  const maxHeight = 250;
+  }, [api.query.system]);
 
   // eslint-disable-next-line multiline-ternary
   return api?.query?.system?.events ? (
@@ -80,13 +76,13 @@ const Events = () => {
       </Card.Content>
       <Card.Content>
         <Feed
-          style={{ clear: 'both', overflow: 'auto', maxHeight }}
+          style={{ clear: 'both', overflow: 'auto', maxHeight: 250 }}
           events={eventFeed}
         />
       </Card.Content>
     </Card>
   ) : (
-    <div>no events ...</div>
+    <div>There are no events...</div>
   );
 };
 

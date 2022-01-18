@@ -3,7 +3,7 @@ export * from './sidebar';
 export * from './layout';
 export * from './user-quick-info';
 export * from './funds';
-export * from './interests';
+export * from './profile-configuration';
 export * from './timeline';
 export * from './task';
 export * from './project';

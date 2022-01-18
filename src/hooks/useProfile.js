@@ -6,8 +6,7 @@ import { useSubstrate } from '../substrate-lib';
 import utils from '../substrate-lib/utils';
 
 import { useUser } from './useUser';
-
-import { setStatus } from '../store/slices/statusSlice';
+import { useStatus } from './useStatus';
 import { setProfile, setFormInterests } from '../store/slices/profileSlice';
 
 const useProfile = () => {
@@ -17,6 +16,7 @@ const useProfile = () => {
   const [actionLoading, setActionLoading] = useState(false);
 
   const { selectedAccountKey } = useUser();
+  const { setStatus } = useStatus();
 
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
@@ -146,20 +146,17 @@ const useProfile = () => {
       const callStatus = status;
 
       callStatus?.isFinalized
-        ? dispatch(
-            setStatus(
-              `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-            )
+        ? setStatus(
+            `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
           )
-        : dispatch(
-            setStatus(`Current transaction status: ${callStatus?.type}`)
-          );
+        : setStatus(`Current transaction status: ${callStatus?.type}`);
       setActionLoading(false);
     };
 
     const txErrHandler = err =>
-      dispatch(setStatus(`😞 Transaction Failed: ${err.toString()}`));
+      setStatus(`😞 Transaction Failed: ${err.toString()}`);
 
+    // TODO: verify if I did this correctly;
     const paramFieldsPreparedForTransformed = () => [
       { name: 'interests', optional: false, type: 'Bytes' },
     ];
@@ -167,14 +164,14 @@ const useProfile = () => {
       { type: 'Bytes', value: interests.join() },
     ];
 
-    // Tuka dole e funkcijata, a gore se helperite;
+    // Function below;
 
     const fromAcct = await getFromAcct();
+    // transformed can be empty parameters;
     const transformed = transformParams(
       paramFieldsPreparedForTransformed(),
       inputParamsPreparedForTransformed()
     );
-    // transformed can be empty parameters
 
     let txExecute;
 

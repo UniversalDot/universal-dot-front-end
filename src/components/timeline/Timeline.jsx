@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
-import { Task, Project, Log } from '../';
+import { Task, Project, Log, Events } from '../';
 
 const Timeline = () => {
   const cards = [1, 2, 3, 4, 5];
@@ -77,6 +77,12 @@ const Timeline = () => {
                     <Label as="a" color="blue">
                       Today
                     </Label>
+                    <Events />
+                  </div>
+                  {/* <div className={styles.date}>
+                    <Label as="a" color="blue">
+                      Today
+                    </Label>
                     {logs1}
                   </div>
 
@@ -91,7 +97,7 @@ const Timeline = () => {
                       13.05.2022
                     </Label>
                     {logs3}
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

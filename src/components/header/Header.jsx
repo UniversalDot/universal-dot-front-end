@@ -12,41 +12,6 @@ import { useLocation, Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
 import styles from './Header.module.scss';
 
-const trigger = (
-  <>
-    <Image
-      avatar
-      spaced="right"
-      src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
-    />
-  </>
-);
-
-const DropdownTriggerExample = () => {
-  const { selectedAccountUsername } = useUser();
-  return (
-    <Dropdown trigger={trigger}>
-      <Dropdown.Menu style={{ top: '48px' }}>
-        <Dropdown.Item
-          disabled
-          text={
-            <span>
-              Signed in as <strong>{selectedAccountUsername}</strong>
-            </span>
-          }
-        />
-        <Dropdown.Divider />
-
-        <Dropdown.Item text="Your Profile" as={Link} to="profile/configure" />
-        <Dropdown.Item text="Help" />
-        <Dropdown.Item icon="setting" text="Settings" />
-        <Dropdown.Divider />
-        <Dropdown.Item icon="log out" text="Log Out" />
-      </Dropdown.Menu>
-    </Dropdown>
-  );
-};
-
 const Header = () => {
   const location = useLocation();
   const { selectedAccountUsername } = useUser();
@@ -62,6 +27,42 @@ const Header = () => {
           {capitalized}
         </span>
       </div>
+    );
+  };
+
+  const AccountDropdown = () => {
+    const { selectedAccountUsername } = useUser();
+
+    const trigger = (
+      <>
+        <Image
+          avatar
+          spaced="right"
+          src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
+        />
+      </>
+    );
+
+    return (
+      <Dropdown trigger={trigger}>
+        <Dropdown.Menu style={{ top: '48px' }}>
+          <Dropdown.Item
+            disabled
+            text={
+              <span>
+                Signed in as <strong>{selectedAccountUsername}</strong>
+              </span>
+            }
+          />
+          <Dropdown.Divider />
+
+          <Dropdown.Item text="Your Profile" as={Link} to="profile/configure" />
+          <Dropdown.Item text="Help" />
+          <Dropdown.Item icon="setting" text="Settings" />
+          <Dropdown.Divider />
+          <Dropdown.Item icon="log out" text="Log Out" />
+        </Dropdown.Menu>
+      </Dropdown>
     );
   };
 
@@ -110,7 +111,7 @@ const Header = () => {
                 {selectedAccountUsername}
               </Menu.Item>
               <Menu.Item style={{ minWidth: '0' }} as={Button}>
-                <DropdownTriggerExample />
+                <AccountDropdown />
               </Menu.Item>
             </Menu.Menu>
           </Menu>
