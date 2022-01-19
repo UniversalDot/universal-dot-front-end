@@ -1,11 +1,30 @@
-.card {
-  .search {
-    margin-top: 1rem;
+.profileConfigurationContainer {
+  max-width: 1000px;
+  margin: 0 auto 0 auto;
+  .breadcrumb {
+    margin-bottom: 1rem;
   }
-  .pills {
-    .selected {
+
+  .gridContainer {
+    margin: 0;
+    + .gridContainer {
+      margin: 0;
     }
-    .options {
+  }
+
+  .card {
+    .body {
+      padding: 1rem 0;
+    }
+
+    .search {
+      margin-top: 1rem;
+    }
+    .pills {
+      .selected {
+      }
+      .options {
+      }
     }
   }
 }
