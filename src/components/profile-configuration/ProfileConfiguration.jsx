@@ -261,19 +261,17 @@ const ProfileConfiguration = () => {
             </Placeholder>
           </Card.Content>
         )}
-        {status && (
-          <Card.Content extra>
-            <Message positive={!showLoader} warning={showLoader} icon>
-              {showLoader && <Icon name="circle notched" loading />}
-              {!showLoader && <Icon name="check" />}
-              <Message.Content>
-                <Message.Header>Profile status</Message.Header>
-                {status}
-              </Message.Content>
-            </Message>
-          </Card.Content>
-        )}
       </Card>
+      {status && (
+        <Message positive={!showLoader} warning={showLoader} icon>
+          {showLoader && <Icon name="circle notched" loading />}
+          {!showLoader && <Icon name="check" />}
+          <Message.Content>
+            <Message.Header>Profile status</Message.Header>
+            {status}
+          </Message.Content>
+        </Message>
+      )}
     </div>
   );
 };
