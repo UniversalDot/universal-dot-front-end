@@ -7,7 +7,6 @@ import {
   Button,
   Icon,
   Message,
-  Segment,
   Breadcrumb,
   Grid,
   Placeholder,
@@ -22,7 +21,6 @@ const ProfileConfiguration = () => {
   const [showLoader, setShowLoader] = useState(false);
 
   const {
-    getProfile,
     profileData,
     profileAction,
     populateFormInterests,
@@ -34,14 +32,6 @@ const ProfileConfiguration = () => {
   const onPalletCallableParamChange = e => {
     setOneInterest(e.target.value);
   };
-
-  useEffect(() => {
-    getProfile();
-  }, [getProfile]);
-
-  useEffect(() => {
-    getProfile();
-  }, [getProfile]);
 
   useEffect(() => {
     if (

@@ -1,13 +1,15 @@
+/* eslint-disable multiline-ternary */
 import React from 'react';
-import { Message } from 'semantic-ui-react';
+import { Message, Dimmer, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { UserQuickInfo, Funds } from '../../components';
 import { useProfile } from '../../hooks/useProfile';
 
 const Profile = () => {
-  const { profileData } = useProfile();
+  const { profileData, queryLoading } = useProfile();
 
-  return (
+  // TODO: should also add !accountLoading type of loader;
+  return !queryLoading ? (
     <>
       {!profileData && (
         <Message info>
@@ -19,6 +21,12 @@ const Profile = () => {
       )}
       <UserQuickInfo />
       <Funds />
+    </>
+  ) : (
+    <>
+      <Dimmer active>
+        <Loader size="small">Loading account...</Loader>
+      </Dimmer>
     </>
   );
 };

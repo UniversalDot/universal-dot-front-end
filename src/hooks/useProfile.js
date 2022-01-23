@@ -1,13 +1,14 @@
 /* eslint-disable indent */
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
-import utils from '../substrate-lib/utils';
 
+import { setProfile, setFormInterests } from '../store/slices/profileSlice';
+import { setQueryLoader } from '../store/slices/loadersSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
-import { setProfile, setFormInterests } from '../store/slices/profileSlice';
+import { useUtils } from './useUtils';
 
 const useProfile = () => {
   const dispatch = useDispatch();
@@ -17,9 +18,22 @@ const useProfile = () => {
 
   const { selectedAccountKey } = useUser();
   const { setStatus } = useStatus();
+  const { transformParams } = useUtils();
+
+  const palletRpc = 'profile';
+  const callables = useMemo(
+    () => ({
+      PROFILES: 'profiles',
+      CREATE_PROFILE: 'createProfile',
+      UPDATE_PROFILE: 'updateProfile',
+      REMOVE_PROFILE: 'removeProfile',
+    }),
+    []
+  );
 
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
+  const queryLoading = useSelector(state => state.loaders.queryLoading);
 
   const populateFormInterests = useCallback(
     interestsArray => {
@@ -29,21 +43,17 @@ const useProfile = () => {
   );
 
   const getProfile = useCallback(() => {
-    const palletRpc = 'profile';
-    const callable = 'profiles';
-
+    dispatch(setQueryLoader(true));
     if (selectedAccountKey) {
-      const payload = [selectedAccountKey];
-
       const queryResHandler = result => {
+        dispatch(setQueryLoader(false));
         result.isNone
           ? dispatch(setProfile(null))
           : dispatch(setProfile(result.toString()));
       };
-
       const query = async () => {
-        const unsub = await api?.query[palletRpc][callable](
-          ...payload,
+        const unsub = await api.query[palletRpc][callables.PROFILES](
+          selectedAccountKey,
           queryResHandler
         );
         const cb = () => unsub;
@@ -52,14 +62,9 @@ const useProfile = () => {
 
       query();
     }
-  }, [selectedAccountKey, api, dispatch]);
+  }, [api, dispatch, selectedAccountKey, callables]);
 
   const signedTx = async actionType => {
-    const palletRpc = 'profile';
-    const callableCreateProfile = 'createProfile';
-    const callableRemoveProfile = 'removeProfile';
-    const callableUpdateProfile = 'updateProfile';
-
     const accountPair =
       selectedAccountKey &&
       keyringState === 'READY' &&
@@ -84,64 +89,6 @@ const useProfile = () => {
       return fromAcct;
     };
 
-    const transformParams = (
-      paramFields,
-      inputParams,
-      opts = { emptyAsNull: true }
-    ) => {
-      const isNumType = type =>
-        utils.paramConversion.num.some(el => type.indexOf(el) >= 0);
-      // if `opts.emptyAsNull` is true, empty param value will be added to res as `null`.
-      //   Otherwise, it will not be added
-      const paramVal = inputParams.map(inputParam => {
-        // To cater the js quirk that `null` is a type of `object`.
-        if (
-          typeof inputParam === 'object' &&
-          inputParam !== null &&
-          typeof inputParam.value === 'string'
-        ) {
-          return inputParam.value.trim();
-        } else if (typeof inputParam === 'string') {
-          return inputParam.trim();
-        }
-        return inputParam;
-      });
-      const params = paramFields.map((field, ind) => ({
-        ...field,
-        value: paramVal[ind] || null,
-      }));
-
-      return params.reduce((memo, { type = 'string', value }) => {
-        if (value == null || value === '') {
-          return opts.emptyAsNull ? [...memo, null] : memo;
-        }
-
-        let converted = value;
-
-        // Deal with a vector
-        if (type.indexOf('Vec<') >= 0) {
-          converted = converted.split(',').map(e => e.trim());
-          converted = converted.map(single =>
-            isNumType(type)
-              ? single.indexOf('.') >= 0
-                ? Number.parseFloat(single)
-                : Number.parseInt(single)
-              : single
-          );
-          return [...memo, converted];
-        }
-
-        // Deal with a single value
-        if (isNumType(type)) {
-          converted =
-            converted.indexOf('.') >= 0
-              ? Number.parseFloat(converted)
-              : Number.parseInt(converted);
-        }
-        return [...memo, converted];
-      }, []);
-    };
-
     const txResHandler = ({ status }) => {
       const callStatus = status;
 
@@ -164,8 +111,6 @@ const useProfile = () => {
       { type: 'Bytes', value: interests.join() },
     ];
 
-    // Function below;
-
     const fromAcct = await getFromAcct();
     // transformed can be empty parameters;
     const transformed = transformParams(
@@ -177,19 +122,19 @@ const useProfile = () => {
 
     if (actionType === 'CREATE') {
       txExecute = transformed
-        ? api.tx[palletRpc][callableCreateProfile](...transformed)
-        : api.tx[palletRpc][callableCreateProfile]();
+        ? api.tx[palletRpc][callables.CREATE_PROFILE](...transformed)
+        : api.tx[palletRpc][callables.CREATE_PROFILE]();
     }
 
     if (actionType === 'REMOVE') {
-      txExecute = api.tx[palletRpc][callableRemoveProfile]();
+      txExecute = api.tx[palletRpc][callables.REMOVE_PROFILE]();
     }
 
     if (actionType === 'UPDATE') {
       const mockUpdateDataForNow = ['mockData, mockTest'];
       txExecute = transformed
-        ? api.tx[palletRpc][callableUpdateProfile](...mockUpdateDataForNow)
-        : api.tx[palletRpc][callableUpdateProfile]();
+        ? api.tx[palletRpc][callables.UPDATE_PROFILE](...mockUpdateDataForNow)
+        : api.tx[palletRpc][callables.UPDATE_PROFILE]();
     }
 
     const unsub = await txExecute
@@ -218,6 +163,8 @@ const useProfile = () => {
     interests,
     profileAction,
     actionLoading,
+    setActionLoading,
+    queryLoading,
   };
 };
 

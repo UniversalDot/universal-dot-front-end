@@ -3,6 +3,8 @@ import createSagaMiddleware from 'redux-saga';
 import accountReducer from './slices/accountSlice';
 import profileReducer from './slices/profileSlice';
 import statusReducer from './slices/statusSlice';
+import tasksReducer from './slices/tasksSlice';
+import loadersReducer from './slices/loadersSlice';
 import rootSaga from './saga/index';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -12,6 +14,8 @@ const store = configureStore({
     account: accountReducer,
     profile: profileReducer,
     status: statusReducer,
+    tasks: tasksReducer,
+    loaders: loadersReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),

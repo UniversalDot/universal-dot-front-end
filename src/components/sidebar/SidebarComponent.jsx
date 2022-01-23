@@ -51,7 +51,7 @@ const SidebarComponent = () => {
             <span className={styles.menuItem_content_text}>Dashboard</span>
           </div>
         </Menu.Item>
-        <Menu.Item
+        {/* <Menu.Item
           as={Link}
           to="/tasks"
           active={location.pathname === '/tasks'}
@@ -59,9 +59,9 @@ const SidebarComponent = () => {
           <div className={styles.menuItem_content}>
             <Icon name="tasks" />
             <span className={styles.menuItem_content_text}>Tasks</span>
-            {/* <Icon style={{ marginLeft: '0.85rem' }} name="caret down" /> */}
+            <Icon style={{ marginLeft: '0.85rem' }} name="caret down" />
           </div>
-        </Menu.Item>
+        </Menu.Item> */}
         {/* {location.pathname.includes('/tasks') && (
           <Menu.Item
             style={{ minWidth: '0', paddingLeft: '2rem' }}

@@ -130,11 +130,9 @@ function Main(props) {
 
   const onPalletCallableParamChange = (_, data) => {
     setFormState(formState => {
-      console.log('formState', formState);
       let res;
       const { state, value } = data;
-      console.log('state', state);
-      console.log('value', value);
+
       if (typeof state === 'object') {
         // Input parameter updated
         const {
@@ -144,7 +142,6 @@ function Main(props) {
         const inputParams = [...formState.inputParams];
         inputParams[ind] = { type, value };
         res = { ...formState, inputParams };
-        console.log('inputParams', inputParams);
       } else if (state === 'palletRpc') {
         res = { ...formState, [state]: value, callable: '', inputParams: [] };
       } else if (state === 'callable') {
@@ -164,9 +161,6 @@ function Main(props) {
     interxType === 'RPC'
       ? 'Optional Parameter'
       : 'Leaving this field as blank will submit a NONE value';
-
-  console.log('inputParams', inputParams);
-  console.log('paramFields', paramFields);
 
   return (
     <Grid.Column width={8}>

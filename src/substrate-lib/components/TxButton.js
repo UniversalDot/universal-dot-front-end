@@ -102,6 +102,8 @@ function TxButton({
     const transformed = transformParams(paramFields, inputParams);
     // transformed can be empty parameters
 
+    console.log('paramFields', paramFields);
+    console.log('inputParams', inputParams);
     console.log('transformed', transformed);
 
     const txExecute = transformed
