@@ -10,3 +10,5 @@ export * from './project';
 export * from './log';
 export * from './text-editor';
 export * from './events';
+export * from './page-container';
+export * from './kanban-board';

@@ -44,6 +44,7 @@ export default function App() {
     }
   }, [status, setStatus]);
 
+  // TODO: bug - when you open a page in a new tab or directly with some routes, and not / api is null or undefined and app crashes;
   useEffect(() => {
     getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps

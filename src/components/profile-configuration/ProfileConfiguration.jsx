@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import styles from './ProfileConfiguration.module.scss';
 import { useProfile } from '../../hooks/useProfile';
 import { useStatus } from '../../hooks/useStatus';
+import { PageContainer } from '../';
 
 const ProfileConfiguration = () => {
   const [oneInterest, setOneInterest] = useState('');
@@ -88,7 +89,7 @@ const ProfileConfiguration = () => {
   };
 
   return (
-    <div className={styles.profileConfigurationContainer}>
+    <PageContainer>
       <Breadcrumb size="big" className={styles.breadcrumb}>
         <Breadcrumb.Section link as={Link} to="/profile">
           Profile
@@ -262,7 +263,7 @@ const ProfileConfiguration = () => {
           </Message.Content>
         </Message>
       )}
-    </div>
+    </PageContainer>
   );
 };
 
