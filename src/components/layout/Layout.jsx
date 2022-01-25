@@ -6,7 +6,7 @@ import { setAccountSelected } from '../../store/slices/accountSlice';
 
 const Layout = () => {
   const dispatch = useDispatch();
-  const { keyring, api } = useSubstrate();
+  const { keyring } = useSubstrate();
 
   const [keyringOptions, setKeyringOptions] = useState(undefined);
 
@@ -29,9 +29,6 @@ const Layout = () => {
 
   useEffect(() => {
     // Get the list of accounts we possess the private key for
-
-    console.log('there is api', api);
-
     if (keyring) {
       const keyringOptionsToSet = keyring?.getPairs()?.map(account => ({
         key: account.address,
@@ -41,7 +38,7 @@ const Layout = () => {
       }));
       setKeyringOptions(keyringOptionsToSet);
     }
-  }, [keyring, api]);
+  }, [keyring]);
 
   // Set the initial address
   useEffect(() => {
