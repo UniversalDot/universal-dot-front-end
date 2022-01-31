@@ -49,7 +49,7 @@ const useProfile = () => {
         dispatch(setQueryLoader(false));
         result.isNone
           ? dispatch(setProfile(null))
-          : dispatch(setProfile(result.toString()));
+          : dispatch(setProfile(result.toJSON()));
       };
       const query = async () => {
         const unsub = await api.query[palletRpc][callables.PROFILES](
