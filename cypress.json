@@ -1,1 +1,4 @@
-{}
+{
+    "waitForAnimations": true,
+    "animationDistanceThreshold": 50
+  }
