@@ -61,6 +61,30 @@ describe('profile', () => {
       .should('have.text', typedText)
   })
 
+  it('user can create profile', () => {
+
+    const typedText = 'example'
+
+    // Verify that the user can create a profile
+    cy.get('div.ui.info.message a')
+      .should('have.attr', 'href')
+
+    cy.get('div.ui.info.message a')
+      .click()
+
+    cy.get('div.ui.fluid.action.labeled.input')
+      .type(typedText)
+
+    cy.get('button.ui.icon.button')
+      .click({force: true})
+
+    cy.get('div.ui.blue.basic.label')
+      .should('have.text', typedText)
+
+    cy.get('button.ui.blue.button')
+      .click({force: true})
+  })
+
   it('displays current user information', () => {
 
     // Verify that the user information is shown
