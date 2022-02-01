@@ -67,6 +67,27 @@ When writing and deploying your own front end, you should configure:
 * `DEVELOPMENT_KEYRING` in `src/config/common.json` be set to `false`.
   See [Keyring](https://polkadot.js.org/api/start/keyring.html).
 
+
+## Testing
+
+This project uses Cypress for testing. 
+
+Cypress is a next generation front end testing tool built for the modern web. Cypress is most often compared to Selenium; however Cypress is both fundamentally and architecturally different. Cypress is not constrained by the same restrictions as Selenium.This enables you to write faster, easier and more reliable tests. Cypress can test anything that runs in a browser.
+
+Cypress enables you to write all types of tests:
+
+* End-to-end tests
+* Integration tests
+* Unit tests
+
+To launch the Cypress Test Runner run this command:
+
+```bash
+yarn run cypress open
+```
+
+
+
 ### Specifying Connecting Node
 
 There are two ways to specify it:
