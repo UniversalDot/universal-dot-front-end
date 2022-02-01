@@ -4,7 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
 
-import { setTasks } from '../store/slices/tasksSlice';
+import {
+  setTasks,
+  setTaskRequirements,
+  setTaskBudget,
+  setTaskDeadline,
+  resetTask,
+  insertTask,
+} from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
 import { useUtils } from './useUtils';
@@ -33,44 +40,38 @@ const useTasks = () => {
     []
   );
 
-  const populateTasks = useCallback(
-    tasksArray => {
-      dispatch(setTasks(tasksArray));
+  // TODO: reformat it to be DRY;
+  const taskValues = useSelector(state => state.tasks.task);
+  const isEditMode = useSelector(state => state.tasks.isEditMode);
+  const tasks = useSelector(state => state.tasks.tasks);
+
+  const populateTask = useCallback(
+    ({ key, value }) => {
+      if (key === 'requirements') {
+        dispatch(setTaskRequirements(value));
+      }
+      if (key === 'budget') {
+        dispatch(setTaskBudget(value));
+      }
+      if (key === 'deadline') {
+        dispatch(setTaskDeadline(value));
+      }
     },
     [dispatch]
   );
 
-  const getAllTasks = useCallback(() => {
-    if (selectedAccountKey) {
-      const payload = [selectedAccountKey];
-
-      const queryResHandler = result => {
-        // TODO: check if result is array;
-        result.isNone ? dispatch(setTasks([])) : dispatch(setTasks(result));
-      };
-
-      const query = async () => {
-        const unsub = await api?.query[palletRpc][callables.TASKS_OWNED](
-          ...payload,
-          queryResHandler
-        );
-        const cb = () => unsub;
-        cb();
-      };
-
-      query();
-    }
-  }, [selectedAccountKey, api, dispatch, callables]);
-
   const getTask = useCallback(
     taskId => {
       // MOCKED;
-      taskId =
-        '0x4c1ac6d320abd535ed5b345f0ded8b15b1a5f65d693fe381cd3fddb8360a05d3';
+      // taskId =
+      //   '0x4c1ac6d320abd535ed5b345f0ded8b15b1a5f65d693fe381cd3fddb8360a05d3';
 
       // TODO: for BE: the response object doesn't include the task's own ID in the object; it is useful to have it;
+      // const queryResHandler = result => {
+      //   result.isNone ? setSingleTask(null) : setSingleTask(result.toString());
+      // };
       const queryResHandler = result => {
-        result.isNone ? setSingleTask(null) : setSingleTask(result.toString());
+        return !result.isNone && dispatch(insertTask(result.toHuman()));
       };
 
       const query = async () => {
@@ -84,10 +85,49 @@ const useTasks = () => {
 
       query();
     },
-    [api, callables]
+    [api, callables, dispatch]
   );
 
-  const signedTx = async actionType => {
+  const getAllTasks = useCallback(() => {
+    if (selectedAccountKey) {
+      const payload = [selectedAccountKey];
+
+      const queryResHandler = result => {
+        // TODO: check if result is array;
+        if (result.isNone) {
+          dispatch(setTasks([]));
+        }
+
+        const tasksHashes = result.toHuman();
+        tasksHashes
+          .filter(
+            hashed =>
+              // TODO: this one is inserted too many times as mock, need to be removed
+              hashed !==
+              '0x25e291c251890a68c58241263f3a7daaf14380e1d268261aa0157397502ef6d1'
+          )
+          .forEach(taskHash => {
+            console.log('single hash task', taskHash);
+            getTask(taskHash);
+          });
+
+        // dispatch(setTasks(result.toHuman()));
+      };
+
+      const query = async () => {
+        const unsub = await api?.query[palletRpc][callables.TASKS_OWNED](
+          ...payload,
+          queryResHandler
+        );
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    }
+  }, [selectedAccountKey, api, dispatch, callables, getTask]);
+
+  const signedTx = async (actionType, taskPayload) => {
     const accountPair =
       selectedAccountKey &&
       keyringState === 'READY' &&
@@ -128,6 +168,15 @@ const useTasks = () => {
 
     const fromAcct = await getFromAcct();
 
+    console.log('taskPayload', taskPayload);
+
+    const transformedPayloadWIP = [
+      taskPayload?.requirements || '',
+      taskPayload?.budget || '',
+      taskPayload?.deadline || '',
+    ];
+
+    // TODO: taskPayload goes here;
     const transformedForCreateTask = transformParams(
       [
         {
@@ -183,7 +232,7 @@ const useTasks = () => {
 
     if (actionType === 'CREATE') {
       txExecute = transformedForCreateTask
-        ? api.tx[palletRpc][callables.CREATE_TASK](...transformedForCreateTask)
+        ? api.tx[palletRpc][callables.CREATE_TASK](...transformedPayloadWIP)
         : api.tx[palletRpc][callables.CREATE_TASK]();
     }
 
@@ -212,7 +261,7 @@ const useTasks = () => {
     setUnsub(() => unsub);
   };
 
-  const profileAction = async actionType => {
+  const taskAction = async (actionType, taskPayload) => {
     if (typeof unsub === 'function') {
       unsub();
       setUnsub(null);
@@ -221,14 +270,20 @@ const useTasks = () => {
     setStatus('Sending...');
     setActionLoading(true);
 
-    signedTx(actionType);
+    signedTx(actionType, taskPayload);
+    dispatch(resetTask());
   };
 
   return {
     getTask,
     singleTask,
-    profileAction,
+    taskAction,
     actionLoading,
+    populateTask,
+    taskValues,
+    isEditMode,
+    getAllTasks,
+    tasks,
   };
 };
 

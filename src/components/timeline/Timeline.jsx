@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
 import { Task, Project, Log, Events } from '../';
-
+import { useTasks } from '../../hooks/useTasks';
 const Timeline = () => {
+  const { getAllTasks, tasks: allTasksReceived } = useTasks();
   const cards = [1, 2, 3, 4, 5];
   const logsArr = [1, 2, 3];
   const logsArr2 = [1, 2];
   const logsArr3 = [1];
 
-  const tasks = cards.map(testNo => <Task key={testNo} />);
+  useEffect(() => {
+    getAllTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log('allTasksReceived', allTasksReceived);
+  }, [allTasksReceived]);
+
+  const tasks = useMemo(() => {
+    return allTasksReceived.map((task, i) => {
+      console.log('task', task);
+      return <Task data={task} key={`task#${i}`} />;
+    });
+  }, [allTasksReceived]);
+
+  // const tasks = cards.map(testNo => <Task key={testNo} />);
   const projects = cards.map(testNo => <Project key={testNo} />);
   const logs1 = logsArr.map((testNo, i) => (
     <Log

@@ -51,7 +51,7 @@ const KanbanBoard = () => {
   };
 
   const custom = props => {
-    console.log('props lane', props);
+    // console.log('props lane', props);
     if (props.id === 'lane1') {
       return (
         <div

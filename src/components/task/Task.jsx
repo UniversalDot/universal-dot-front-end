@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import styles from './Task.module.scss';
 
-const Task = () => {
+const Task = ({ data }) => {
   return (
     <div className={styles.task}>
       <div className={styles.content}>
@@ -21,6 +21,14 @@ const Task = () => {
         <div className={styles.taskDescription}>
           <div className={styles.content}>
             This is where the task description goes.
+            <div style={{ marginTop: '1rem' }}>
+              Requirements: {data?.requirements}
+            </div>
+            <div>budget: {data?.budget}</div>
+            <div>Deadline: {data?.deadline}</div>
+            <div style={{ wordBreak: 'break-all' }}>
+              Initiator: {data?.initiator}
+            </div>
           </div>
         </div>
       </div>
