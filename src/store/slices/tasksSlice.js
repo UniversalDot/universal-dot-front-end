@@ -20,6 +20,9 @@ const tasksSlice = createSlice({
     insertTask(state, action) {
       state.tasks = [...state.tasks, action.payload];
     },
+    resetTasks(state, action) {
+      state.tasks = [];
+    },
     setTaskRequirements(state, action) {
       state.task.requirements = action.payload;
     },
@@ -48,6 +51,7 @@ export const {
   setTaskIsEditMode,
   resetTask,
   insertTask,
+  resetTasks,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

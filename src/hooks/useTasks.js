@@ -11,6 +11,8 @@ import {
   setTaskDeadline,
   resetTask,
   insertTask,
+  resetTasks,
+  setTaskIsEditMode,
 } from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
@@ -45,6 +47,8 @@ const useTasks = () => {
   const isEditMode = useSelector(state => state.tasks.isEditMode);
   const tasks = useSelector(state => state.tasks.tasks);
 
+  const resetAllTasks = useCallback(() => dispatch(resetTasks()), [dispatch]);
+
   const populateTask = useCallback(
     ({ key, value }) => {
       if (key === 'requirements') {
@@ -70,9 +74,8 @@ const useTasks = () => {
       // const queryResHandler = result => {
       //   result.isNone ? setSingleTask(null) : setSingleTask(result.toString());
       // };
-      const queryResHandler = result => {
-        return !result.isNone && dispatch(insertTask(result.toHuman()));
-      };
+      const queryResHandler = result =>
+        !result.isNone && dispatch(insertTask({ taskId, ...result.toHuman() }));
 
       const query = async () => {
         const unsub = await api?.query[palletRpc][callables.GET_TASK](
@@ -87,6 +90,31 @@ const useTasks = () => {
     },
     [api, callables, dispatch]
   );
+
+  // const getTaskToEdit = useCallback(
+  //   taskId => {
+  //     const queryResHandler = result => {
+  //       if (!result.isNone) {
+  //         dispatch(setTaskIsEditMode(true));
+  //         dispatch(setTaskRequirements(result.toHuman().requirements));
+  //         dispatch(setTaskBudget(result.toHuman().budget));
+  //         dispatch(setTaskDeadline(result.toHuman().deadline));
+  //       }
+  //     };
+
+  //     const query = async () => {
+  //       const unsub = await api?.query[palletRpc][callables.GET_TASK](
+  //         taskId,
+  //         queryResHandler
+  //       );
+  //       const cb = () => unsub;
+  //       cb();
+  //     };
+
+  //     query();
+  //   },
+  //   [api, callables, dispatch]
+  // );
 
   const getAllTasks = useCallback(() => {
     if (selectedAccountKey) {
@@ -211,6 +239,8 @@ const useTasks = () => {
       ]
     );
 
+    const transformedPayloadWIPForRemove = [taskPayload];
+
     const transformedForStartOrCompleteOrRemoveTask = transformParams(
       [
         {
@@ -250,7 +280,7 @@ const useTasks = () => {
 
     if (actionType === 'REMOVE') {
       txExecute = api.tx[palletRpc][callables.REMOVE_TASK](
-        ...transformedForStartOrCompleteOrRemoveTask
+        ...transformedPayloadWIPForRemove
       );
     }
 
@@ -284,6 +314,7 @@ const useTasks = () => {
     isEditMode,
     getAllTasks,
     tasks,
+    resetAllTasks,
   };
 };
 

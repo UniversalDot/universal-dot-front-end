@@ -1,17 +1,26 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
-import { Task, Project, Log, Events } from '../';
+import { Task, Project, Log, Events, TextEditor } from '../';
 import { useTasks } from '../../hooks/useTasks';
+
 const Timeline = () => {
-  const { getAllTasks, tasks: allTasksReceived } = useTasks();
+  const {
+    getAllTasks,
+    tasks: allTasksReceived,
+    resetAllTasks,
+    taskAction,
+  } = useTasks();
   const cards = [1, 2, 3, 4, 5];
   const logsArr = [1, 2, 3];
   const logsArr2 = [1, 2];
   const logsArr3 = [1];
 
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     getAllTasks();
+    return () => resetAllTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -20,11 +29,26 @@ const Timeline = () => {
   }, [allTasksReceived]);
 
   const tasks = useMemo(() => {
+    const handleOptionsOnClick = (actionType, taskId) => {
+      console.log('taskId clicked', taskId);
+      // setOpen(true);
+
+      if (actionType === 'delete') {
+        taskAction('REMOVE', taskId);
+      }
+    };
+
     return allTasksReceived.map((task, i) => {
       console.log('task', task);
-      return <Task data={task} key={`task#${i}`} />;
+      return (
+        <Task
+          data={task}
+          optionsOnClick={handleOptionsOnClick}
+          key={`task#${i}`}
+        />
+      );
     });
-  }, [allTasksReceived]);
+  }, [allTasksReceived, taskAction]);
 
   // const tasks = cards.map(testNo => <Task key={testNo} />);
   const projects = cards.map(testNo => <Project key={testNo} />);
@@ -49,6 +73,10 @@ const Timeline = () => {
       isLast={logsArr3.length - 1 === i && logsArr3.length > 1}
     />
   ));
+
+  const handleCloseTextEditor = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -121,6 +149,7 @@ const Timeline = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <TextEditor open={open} onClose={() => handleCloseTextEditor()} />
     </>
   );
 };
