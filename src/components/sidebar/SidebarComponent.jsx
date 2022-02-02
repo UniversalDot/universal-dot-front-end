@@ -111,7 +111,11 @@ const SidebarComponent = () => {
       </Sidebar>
 
       <Sidebar.Pusher
-        style={{ width: 'calc(100% - 150px)' }}
+        style={{
+          width: 'calc(100% - 150px)',
+          height: '100%',
+          overflowY: 'auto',
+        }}
         className={styles.sidebarContent}
       >
         <Container fluid className={styles.contentContainer}>

@@ -10,9 +10,8 @@ import {
   setTaskBudget,
   setTaskDeadline,
   resetTask,
-  insertTask,
   resetTasks,
-  setTaskIsEditMode,
+  // setTaskIsEditMode,
 } from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
@@ -23,7 +22,6 @@ const useTasks = () => {
   const { api, keyring, keyringState } = useSubstrate();
   const [unsub, setUnsub] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [singleTask, setSingleTask] = useState(null);
 
   const { selectedAccountKey } = useUser();
   const { setStatus } = useStatus();
@@ -65,22 +63,11 @@ const useTasks = () => {
   );
 
   const getTask = useCallback(
-    taskId => {
-      // MOCKED;
-      // taskId =
-      //   '0x4c1ac6d320abd535ed5b345f0ded8b15b1a5f65d693fe381cd3fddb8360a05d3';
-
-      // TODO: for BE: the response object doesn't include the task's own ID in the object; it is useful to have it;
-      // const queryResHandler = result => {
-      //   result.isNone ? setSingleTask(null) : setSingleTask(result.toString());
-      // };
-      const queryResHandler = result =>
-        !result.isNone && dispatch(insertTask({ taskId, ...result.toHuman() }));
-
+    (taskId, responseHandler) => {
       const query = async () => {
         const unsub = await api?.query[palletRpc][callables.GET_TASK](
           taskId,
-          queryResHandler
+          responseHandler
         );
         const cb = () => unsub;
         cb();
@@ -88,7 +75,7 @@ const useTasks = () => {
 
       query();
     },
-    [api, callables, dispatch]
+    [api, callables]
   );
 
   // const getTaskToEdit = useCallback(
@@ -116,36 +103,25 @@ const useTasks = () => {
   //   [api, callables, dispatch]
   // );
 
+  const queryResponseHandler = useCallback(
+    result => {
+      if (result.isNone) {
+        dispatch(setTasks([]));
+      }
+
+      dispatch(setTasks(result.toHuman()));
+    },
+    [dispatch]
+  );
+
   const getAllTasks = useCallback(() => {
     if (selectedAccountKey) {
       const payload = [selectedAccountKey];
 
-      const queryResHandler = result => {
-        // TODO: check if result is array;
-        if (result.isNone) {
-          dispatch(setTasks([]));
-        }
-
-        const tasksHashes = result.toHuman();
-        tasksHashes
-          .filter(
-            hashed =>
-              // TODO: this one is inserted too many times as mock, need to be removed
-              hashed !==
-              '0x25e291c251890a68c58241263f3a7daaf14380e1d268261aa0157397502ef6d1'
-          )
-          .forEach(taskHash => {
-            console.log('single hash task', taskHash);
-            getTask(taskHash);
-          });
-
-        // dispatch(setTasks(result.toHuman()));
-      };
-
       const query = async () => {
         const unsub = await api?.query[palletRpc][callables.TASKS_OWNED](
           ...payload,
-          queryResHandler
+          queryResponseHandler
         );
         const cb = () => unsub;
         cb();
@@ -153,7 +129,7 @@ const useTasks = () => {
 
       query();
     }
-  }, [selectedAccountKey, api, dispatch, callables, getTask]);
+  }, [selectedAccountKey, api, callables, queryResponseHandler]);
 
   const signedTx = async (actionType, taskPayload) => {
     const accountPair =
@@ -180,113 +156,74 @@ const useTasks = () => {
       return fromAcct;
     };
 
-    const txResHandler = ({ status }) => {
-      const callStatus = status;
-
-      callStatus?.isFinalized
-        ? setStatus(
-            `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-          )
-        : setStatus(`Current transaction status: ${callStatus?.type}`);
-      setActionLoading(false);
-    };
-
-    const txErrHandler = err =>
-      setStatus(`😞 Transaction Failed: ${err.toString()}`);
-
     const fromAcct = await getFromAcct();
 
-    console.log('taskPayload', taskPayload);
-
-    const transformedPayloadWIP = [
+    const transformedPayloadForCreate = [
       taskPayload?.requirements || '',
       taskPayload?.budget || '',
       taskPayload?.deadline || '',
     ];
 
-    // TODO: taskPayload goes here;
-    const transformedForCreateTask = transformParams(
-      [
-        {
-          name: 'requirements',
-          type: 'Bytes',
-          optional: false,
-        },
-        {
-          name: 'budget',
-          type: 'u128',
-          optional: false,
-        },
-        {
-          name: 'deadline',
-          type: 'u64',
-          optional: false,
-        },
-      ],
-      [
-        {
-          type: 'Bytes',
-          value: 'webapp',
-        },
-        {
-          type: 'u128',
-          value: '12345',
-        },
-        {
-          type: 'u64',
-          value: '55555',
-        },
-      ]
-    );
-
-    const transformedPayloadWIPForRemove = [taskPayload];
-
-    const transformedForStartOrCompleteOrRemoveTask = transformParams(
-      [
-        {
-          name: 'taskId',
-          type: 'H256',
-          optional: false,
-        },
-      ],
-      [
-        {
-          type: 'H256',
-          value:
-            '0x4c1ac6d320abd535ed5b345f0ded8b15b1a5f65d693fe381cd3fddb8360a05d3',
-        },
-      ]
-    );
+    const transformedPayloadForStartCompleteRemove = [taskPayload];
 
     let txExecute;
 
     if (actionType === 'CREATE') {
-      txExecute = transformedForCreateTask
-        ? api.tx[palletRpc][callables.CREATE_TASK](...transformedPayloadWIP)
-        : api.tx[palletRpc][callables.CREATE_TASK]();
+      txExecute = api.tx[palletRpc][callables.CREATE_TASK](
+        ...transformedPayloadForCreate
+      );
     }
 
     if (actionType === 'START') {
       txExecute = api.tx[palletRpc][callables.START_TASK](
-        ...transformedForStartOrCompleteOrRemoveTask
+        ...transformedPayloadForStartCompleteRemove
       );
     }
 
     if (actionType === 'COMPLETE') {
       txExecute = api.tx[palletRpc][callables.COMPLETE_TASK](
-        ...transformedForStartOrCompleteOrRemoveTask
+        ...transformedPayloadForStartCompleteRemove
       );
     }
 
     if (actionType === 'REMOVE') {
       txExecute = api.tx[palletRpc][callables.REMOVE_TASK](
-        ...transformedPayloadWIPForRemove
+        ...transformedPayloadForStartCompleteRemove
       );
     }
 
+    const transactionResponseHandler = ({ status }) => {
+      const callStatus = status;
+
+      if (callStatus?.isFinalized) {
+        getAllTasks();
+      }
+
+      console.log('status', status);
+
+      // callStatus?.isFinalized
+      //   ? setStatus(
+      //       `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
+      //     )
+      //   : callStatus?.isInBlock
+      //   ? setStatus(`Is in block true?: ${callStatus?.type}`)
+      //   : setStatus(`Current transaction status: ${callStatus?.type}`);
+
+      callStatus?.isFinalized
+        ? setStatus('')
+        : callStatus?.isInBlock
+        ? setStatus(`Is in block true?: ${callStatus?.type}`)
+        : setStatus(`Current transaction status: ${callStatus?.type}`);
+
+      setActionLoading(false);
+    };
+
+    const transactionErrorHandler = err =>
+      setStatus(`😞 Transaction Failed: ${err.toString()}`);
+
     const unsub = await txExecute
-      .signAndSend(fromAcct, txResHandler)
-      .catch(txErrHandler);
+      .signAndSend(fromAcct, transactionResponseHandler)
+      .catch(transactionErrorHandler);
 
     setUnsub(() => unsub);
   };
@@ -306,7 +243,6 @@ const useTasks = () => {
 
   return {
     getTask,
-    singleTask,
     taskAction,
     actionLoading,
     populateTask,

@@ -10,6 +10,7 @@ const Timeline = () => {
     tasks: allTasksReceived,
     resetAllTasks,
     taskAction,
+    actionLoading,
   } = useTasks();
   const cards = [1, 2, 3, 4, 5];
   const logsArr = [1, 2, 3];
@@ -19,30 +20,34 @@ const Timeline = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    getAllTasks();
+    if (!actionLoading) {
+      getAllTasks();
+    }
     return () => resetAllTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log('allTasksReceived', allTasksReceived);
-  }, [allTasksReceived]);
-
   const tasks = useMemo(() => {
     const handleOptionsOnClick = (actionType, taskId) => {
-      console.log('taskId clicked', taskId);
       // setOpen(true);
 
       if (actionType === 'delete') {
         taskAction('REMOVE', taskId);
       }
+
+      if (actionType === 'start') {
+        taskAction('START', taskId);
+      }
+
+      if (actionType === 'complete') {
+        taskAction('COMPLETE', taskId);
+      }
     };
 
-    return allTasksReceived.map((task, i) => {
-      console.log('task', task);
+    return allTasksReceived.map((taskId, i) => {
       return (
         <Task
-          data={task}
+          id={taskId}
           optionsOnClick={handleOptionsOnClick}
           key={`task#${i}`}
         />

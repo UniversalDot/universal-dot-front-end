@@ -42,19 +42,23 @@ const useProfile = () => {
     [dispatch]
   );
 
+  const queryResponseHandler = useCallback(
+    result => {
+      dispatch(setQueryLoader(false));
+      result.isNone
+        ? dispatch(setProfile(null))
+        : dispatch(setProfile(result.toJSON()));
+    },
+    [dispatch]
+  );
+
   const getProfile = useCallback(() => {
     dispatch(setQueryLoader(true));
     if (selectedAccountKey) {
-      const queryResHandler = result => {
-        dispatch(setQueryLoader(false));
-        result.isNone
-          ? dispatch(setProfile(null))
-          : dispatch(setProfile(result.toJSON()));
-      };
       const query = async () => {
         const unsub = await api.query[palletRpc][callables.PROFILES](
           selectedAccountKey,
-          queryResHandler
+          queryResponseHandler
         );
         const cb = () => unsub;
         cb();
@@ -62,9 +66,25 @@ const useProfile = () => {
 
       query();
     }
-  }, [api, dispatch, selectedAccountKey, callables]);
+  }, [api, dispatch, selectedAccountKey, callables, queryResponseHandler]);
 
-  const signedTx = async actionType => {
+  const transactionResponseHandler = ({ status }) => {
+    const callStatus = status;
+
+    callStatus?.isFinalized
+      ? setStatus(
+          `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
+        )
+      : callStatus?.isInBlock
+      ? setStatus(`Is in block true?: ${callStatus?.type}`)
+      : setStatus(`Current transaction status: ${callStatus?.type}`);
+    setActionLoading(false);
+  };
+
+  const transactionErrorHandler = err =>
+    setStatus(`😞 Transaction Failed: ${err.toString()}`);
+
+  const signedTransaction = async actionType => {
     const accountPair =
       selectedAccountKey &&
       keyringState === 'READY' &&
@@ -89,41 +109,25 @@ const useProfile = () => {
       return fromAcct;
     };
 
-    const txResHandler = ({ status }) => {
-      const callStatus = status;
+    const fromAcct = await getFromAcct();
 
-      callStatus?.isFinalized
-        ? setStatus(
-            `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-          )
-        : setStatus(`Current transaction status: ${callStatus?.type}`);
-      setActionLoading(false);
-    };
-
-    const txErrHandler = err =>
-      setStatus(`😞 Transaction Failed: ${err.toString()}`);
-
-    // TODO: verify if I did this correctly;
-    const paramFieldsPreparedForTransformed = () => [
+    // TODO: verify if correct;
+    const paramFieldsForTransformed = () => [
       { name: 'interests', optional: false, type: 'Bytes' },
     ];
-    const inputParamsPreparedForTransformed = () => [
+    const inputParamsForTransformed = () => [
       { type: 'Bytes', value: interests.join() },
     ];
 
-    const fromAcct = await getFromAcct();
-    // transformed can be empty parameters;
     const transformed = transformParams(
-      paramFieldsPreparedForTransformed(),
-      inputParamsPreparedForTransformed()
+      paramFieldsForTransformed(),
+      inputParamsForTransformed()
     );
 
     let txExecute;
 
     if (actionType === 'CREATE') {
-      txExecute = transformed
-        ? api.tx[palletRpc][callables.CREATE_PROFILE](...transformed)
-        : api.tx[palletRpc][callables.CREATE_PROFILE]();
+      txExecute = api.tx[palletRpc][callables.CREATE_PROFILE](...transformed);
     }
 
     if (actionType === 'REMOVE') {
@@ -132,14 +136,14 @@ const useProfile = () => {
 
     if (actionType === 'UPDATE') {
       const mockUpdateDataForNow = ['mockData, mockTest'];
-      txExecute = transformed
-        ? api.tx[palletRpc][callables.UPDATE_PROFILE](...mockUpdateDataForNow)
-        : api.tx[palletRpc][callables.UPDATE_PROFILE]();
+      txExecute = api.tx[palletRpc][callables.UPDATE_PROFILE](
+        ...mockUpdateDataForNow
+      );
     }
 
     const unsub = await txExecute
-      .signAndSend(fromAcct, txResHandler)
-      .catch(txErrHandler);
+      .signAndSend(fromAcct, transactionResponseHandler)
+      .catch(transactionErrorHandler);
 
     setUnsub(() => unsub);
   };
@@ -153,7 +157,7 @@ const useProfile = () => {
     setStatus('Sending...');
     setActionLoading(true);
     dispatch(setFormInterests([]));
-    signedTx(actionType);
+    signedTransaction(actionType);
   };
 
   return {

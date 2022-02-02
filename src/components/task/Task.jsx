@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import styles from './Task.module.scss';
+import { useTasks } from '../../hooks/useTasks';
 
-const Task = ({ data, optionsOnClick }) => {
+const Task = ({ id, optionsOnClick }) => {
+  const { getTask } = useTasks();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      const handleResponse = dataFromResponse =>
+        !dataFromResponse.isNone &&
+        setData({ taskId: id, ...dataFromResponse.toHuman() });
+
+      getTask(id, handleResponse);
+    }
+  }, [id, getTask]);
+
   const OptionsDropdown = () => {
     const trigger = (
       <Button
@@ -16,8 +30,14 @@ const Task = ({ data, optionsOnClick }) => {
     return (
       <Dropdown trigger={trigger} icon={false} direction="left">
         <Dropdown.Menu style={{ top: '48px' }}>
-          <Dropdown.Item text="Start" />
-          <Dropdown.Item text="Complete" />
+          <Dropdown.Item
+            text="Start"
+            onClick={() => optionsOnClick('start', data?.taskId)}
+          />
+          <Dropdown.Item
+            text="Complete"
+            onClick={() => optionsOnClick('complete', data?.taskId)}
+          />
           <Dropdown.Item text="Update" />
           <Dropdown.Divider />
           <Dropdown.Item
@@ -56,6 +76,7 @@ const Task = ({ data, optionsOnClick }) => {
           <div className={styles.taskDescription}>
             <div className={styles.content}>
               This is where the task description goes.
+              <div style={{ marginTop: '1rem' }}>Status: {data?.status}</div>
               <div style={{ marginTop: '1rem' }}>
                 Requirements: {data?.requirements}
               </div>

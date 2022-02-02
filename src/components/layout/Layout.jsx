@@ -18,10 +18,10 @@ const Layout = () => {
   useEffect(() => {
     if (keyringOptions) {
       setInitialUsername(
-        keyringOptions?.length > 0 ? keyringOptions[0].text : ''
+        keyringOptions?.length > 0 ? keyringOptions[1].text : ''
       );
       setInitialAddress(
-        keyringOptions?.length > 0 ? keyringOptions[0].value : ''
+        keyringOptions?.length > 0 ? keyringOptions[1].value : ''
       );
       console.log('keyRingOptions', keyringOptions);
     }

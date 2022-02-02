@@ -35,15 +35,11 @@ const ProfileConfiguration = () => {
   };
 
   useEffect(() => {
-    if (
-      !!status &&
-      (status.includes('Current transaction status') ||
-        status.includes('Sending...'))
-    ) {
+    if (!!status && status.includes('Sending...')) {
       setShowLoader(true);
     }
 
-    if (!!status && status.includes('Finalized')) {
+    if (!!status && status.includes('InBlock')) {
       setShowLoader(false);
       setTimeout(() => {
         setStatus('');

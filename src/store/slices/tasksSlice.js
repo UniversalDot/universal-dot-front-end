@@ -17,10 +17,7 @@ const tasksSlice = createSlice({
     setTasks(state, action) {
       state.tasks = action.payload;
     },
-    insertTask(state, action) {
-      state.tasks = [...state.tasks, action.payload];
-    },
-    resetTasks(state, action) {
+    resetTasks(state) {
       state.tasks = [];
     },
     setTaskRequirements(state, action) {
@@ -50,7 +47,6 @@ export const {
   setTaskDeadline,
   setTaskIsEditMode,
   resetTask,
-  insertTask,
   resetTasks,
 } = tasksSlice.actions;
 
