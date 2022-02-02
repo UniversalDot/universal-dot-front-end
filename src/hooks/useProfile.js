@@ -9,6 +9,7 @@ import { setQueryLoader } from '../store/slices/loadersSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
 import { useUtils } from './useUtils';
+import { toast } from 'react-toastify';
 
 const useProfile = () => {
   const dispatch = useDispatch();
@@ -68,22 +69,6 @@ const useProfile = () => {
     }
   }, [api, dispatch, selectedAccountKey, callables, queryResponseHandler]);
 
-  const transactionResponseHandler = ({ status }) => {
-    const callStatus = status;
-
-    callStatus?.isFinalized
-      ? setStatus(
-          `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-        )
-      : callStatus?.isInBlock
-      ? setStatus(`Is in block true?: ${callStatus?.type}`)
-      : setStatus(`Current transaction status: ${callStatus?.type}`);
-    setActionLoading(false);
-  };
-
-  const transactionErrorHandler = err =>
-    setStatus(`😞 Transaction Failed: ${err.toString()}`);
-
   const signedTransaction = async actionType => {
     const accountPair =
       selectedAccountKey &&
@@ -108,6 +93,37 @@ const useProfile = () => {
 
       return fromAcct;
     };
+
+    const transactionResponseHandler = ({ status }) => {
+      const callStatus = status;
+
+      callStatus?.isFinalized
+        ? setStatus(
+            `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
+          )
+        : callStatus?.isInBlock
+        ? setStatus(`Is in block true?: ${callStatus?.type}`)
+        : setStatus(`Current transaction status: ${callStatus?.type}`);
+
+      if (callStatus?.isInBlock) {
+        if (actionType === 'CREATE') {
+          toast('Profile created...');
+        }
+
+        if (actionType === 'UPDATE') {
+          toast('Profile updated...');
+        }
+
+        if (actionType === 'REMOVE') {
+          toast('Profile deleted...');
+        }
+      }
+
+      setActionLoading(false);
+    };
+
+    const transactionErrorHandler = err =>
+      setStatus(`😞 Transaction Failed: ${err.toString()}`);
 
     const fromAcct = await getFromAcct();
 

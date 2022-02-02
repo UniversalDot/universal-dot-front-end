@@ -3,6 +3,7 @@ import { useCallback, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
+import { toast } from 'react-toastify';
 
 import {
   setTasks,
@@ -215,6 +216,24 @@ const useTasks = () => {
         ? setStatus(`Is in block true?: ${callStatus?.type}`)
         : setStatus(`Current transaction status: ${callStatus?.type}`);
 
+      if (callStatus?.isInBlock) {
+        if (actionType === 'CREATE') {
+          toast('Task created...');
+        }
+
+        if (actionType === 'START') {
+          toast('Task started...');
+        }
+
+        if (actionType === 'COMPLETE') {
+          toast('Task closed...');
+        }
+
+        if (actionType === 'REMOVE') {
+          toast('Task deleted...');
+        }
+      }
+
       setActionLoading(false);
     };
 
@@ -235,6 +254,23 @@ const useTasks = () => {
     }
 
     setStatus('Sending...');
+
+    if (actionType === 'CREATE') {
+      toast('Creating task...');
+    }
+
+    if (actionType === 'START') {
+      toast('Initiating task...');
+    }
+
+    if (actionType === 'COMPLETE') {
+      toast('Closing task...');
+    }
+
+    if (actionType === 'REMOVE') {
+      toast('Deleting task...');
+    }
+
     setActionLoading(true);
 
     signedTx(actionType, taskPayload);

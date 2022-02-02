@@ -21,6 +21,9 @@ import { Header, Layout } from './components';
 import { useStatus } from './hooks/useStatus';
 import { useProfile } from './hooks/useProfile';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function App() {
   const loggedIn = true;
   const { status, setStatus } = useStatus();
@@ -80,6 +83,7 @@ export default function App() {
         <Route path="template-resources" element={<TemplateResources />} />
         <Route path="*" element={<Navigate replace to="/" />}></Route>
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   );
 }
