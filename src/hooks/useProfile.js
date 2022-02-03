@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
@@ -10,6 +10,7 @@ import { useUser } from './useUser';
 import { useStatus } from './useStatus';
 import { useUtils } from './useUtils';
 import { toast } from 'react-toastify';
+import { statusTypes, pallets, profileCallables } from '../types';
 
 const useProfile = () => {
   const dispatch = useDispatch();
@@ -18,19 +19,8 @@ const useProfile = () => {
   const [actionLoading, setActionLoading] = useState(false);
 
   const { selectedAccountKey } = useUser();
-  const { setStatus } = useStatus();
+  const { setStatus, setStatusMessage } = useStatus();
   const { transformParams } = useUtils();
-
-  const palletRpc = 'profile';
-  const callables = useMemo(
-    () => ({
-      PROFILES: 'profiles',
-      CREATE_PROFILE: 'createProfile',
-      UPDATE_PROFILE: 'updateProfile',
-      REMOVE_PROFILE: 'removeProfile',
-    }),
-    []
-  );
 
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
@@ -57,17 +47,16 @@ const useProfile = () => {
     dispatch(setQueryLoader(true));
     if (selectedAccountKey) {
       const query = async () => {
-        const unsub = await api.query[palletRpc][callables.PROFILES](
-          selectedAccountKey,
-          queryResponseHandler
-        );
+        const unsub = await api.query[pallets.PROFILE][
+          profileCallables.PROFILES
+        ](selectedAccountKey, queryResponseHandler);
         const cb = () => unsub;
         cb();
       };
 
       query();
     }
-  }, [api, dispatch, selectedAccountKey, callables, queryResponseHandler]);
+  }, [api, dispatch, selectedAccountKey, queryResponseHandler]);
 
   const signedTransaction = async actionType => {
     const accountPair =
@@ -97,33 +86,37 @@ const useProfile = () => {
     const transactionResponseHandler = ({ status }) => {
       const callStatus = status;
 
-      callStatus?.isFinalized
-        ? setStatus(
-            `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-          )
-        : callStatus?.isInBlock
-        ? setStatus(`Is in block true?: ${callStatus?.type}`)
-        : setStatus(`Current transaction status: ${callStatus?.type}`);
+      if (callStatus?.isFinalized) {
+        setStatus(statusTypes.FINALIZED);
+        setTimeout(() => {
+          setStatus('');
+        }, [5000]);
+      }
+      if (callStatus?.isInBlock) {
+        setStatus(statusTypes.IN_BLOCK);
+      }
 
       if (callStatus?.isInBlock) {
-        if (actionType === 'CREATE') {
-          toast('Profile created...');
+        if (actionType === profileCallables.CREATE_PROFILE) {
+          toast('Profile created successfully!');
         }
 
-        if (actionType === 'UPDATE') {
-          toast('Profile updated...');
+        if (actionType === profileCallables.UPDATE_PROFILE) {
+          toast('Profile updated successfully!');
         }
 
-        if (actionType === 'REMOVE') {
-          toast('Profile deleted...');
+        if (actionType === profileCallables.REMOVE_PROFILE) {
+          toast('Profile deleted successfully.');
         }
       }
 
       setActionLoading(false);
     };
 
-    const transactionErrorHandler = err =>
-      setStatus(`😞 Transaction Failed: ${err.toString()}`);
+    const transactionErrorHandler = err => {
+      setStatus(statusTypes.ERROR);
+      setStatusMessage(err.toString());
+    };
 
     const fromAcct = await getFromAcct();
 
@@ -142,17 +135,19 @@ const useProfile = () => {
 
     let txExecute;
 
-    if (actionType === 'CREATE') {
-      txExecute = api.tx[palletRpc][callables.CREATE_PROFILE](...transformed);
+    if (actionType === profileCallables.CREATE_PROFILE) {
+      txExecute = api.tx[pallets.PROFILE][profileCallables.CREATE_PROFILE](
+        ...transformed
+      );
     }
 
-    if (actionType === 'REMOVE') {
-      txExecute = api.tx[palletRpc][callables.REMOVE_PROFILE]();
+    if (actionType === profileCallables.REMOVE_PROFILE) {
+      txExecute = api.tx[pallets.PROFILE][profileCallables.REMOVE_PROFILE]();
     }
 
-    if (actionType === 'UPDATE') {
+    if (actionType === profileCallables.UPDATE_PROFILE) {
       const mockUpdateDataForNow = ['mockData, mockTest'];
-      txExecute = api.tx[palletRpc][callables.UPDATE_PROFILE](
+      txExecute = api.tx[pallets.PROFILE][profileCallables.UPDATE_PROFILE](
         ...mockUpdateDataForNow
       );
     }
@@ -170,7 +165,19 @@ const useProfile = () => {
       setUnsub(null);
     }
 
-    setStatus('Sending...');
+    if (actionType === profileCallables.CREATE_PROFILE) {
+      toast('Creating profile...');
+    }
+
+    if (actionType === profileCallables.UPDATE_PROFILE) {
+      toast('Updating profile...');
+    }
+
+    if (actionType === profileCallables.REMOVE_PROFILE) {
+      toast('Deleting profile...');
+    }
+
+    setStatus(statusTypes.INIT);
     setActionLoading(true);
     dispatch(setFormInterests([]));
     signedTransaction(actionType);

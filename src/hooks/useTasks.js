@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
@@ -16,7 +16,7 @@ import {
 } from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
-import { useUtils } from './useUtils';
+import { statusTypes, pallets, taskCallables } from '../types';
 
 const useTasks = () => {
   const dispatch = useDispatch();
@@ -25,21 +25,7 @@ const useTasks = () => {
   const [actionLoading, setActionLoading] = useState(false);
 
   const { selectedAccountKey } = useUser();
-  const { setStatus } = useStatus();
-  const { transformParams } = useUtils();
-
-  const palletRpc = 'task';
-  const callables = useMemo(
-    () => ({
-      TASKS_OWNED: 'tasksOwned',
-      GET_TASK: 'tasks',
-      CREATE_TASK: 'createTask',
-      START_TASK: 'startTask',
-      COMPLETE_TASK: 'completeTask',
-      REMOVE_TASK: 'removeTask',
-    }),
-    []
-  );
+  const { setStatus, setStatusMessage } = useStatus();
 
   // TODO: reformat it to be DRY;
   const taskValues = useSelector(state => state.tasks.task);
@@ -66,7 +52,7 @@ const useTasks = () => {
   const getTask = useCallback(
     (taskId, responseHandler) => {
       const query = async () => {
-        const unsub = await api?.query[palletRpc][callables.GET_TASK](
+        const unsub = await api?.query[pallets.TASK][taskCallables.GET_TASK](
           taskId,
           responseHandler
         );
@@ -76,7 +62,7 @@ const useTasks = () => {
 
       query();
     },
-    [api, callables]
+    [api]
   );
 
   // const getTaskToEdit = useCallback(
@@ -91,7 +77,7 @@ const useTasks = () => {
   //     };
 
   //     const query = async () => {
-  //       const unsub = await api?.query[palletRpc][callables.GET_TASK](
+  //       const unsub = await api?.query[pallets.TASK][taskCallables.GET_TASK](
   //         taskId,
   //         queryResHandler
   //       );
@@ -101,7 +87,7 @@ const useTasks = () => {
 
   //     query();
   //   },
-  //   [api, callables, dispatch]
+  //   [api, dispatch]
   // );
 
   const queryResponseHandler = useCallback(
@@ -120,7 +106,7 @@ const useTasks = () => {
       const payload = [selectedAccountKey];
 
       const query = async () => {
-        const unsub = await api?.query[palletRpc][callables.TASKS_OWNED](
+        const unsub = await api?.query[pallets.TASK][taskCallables.TASKS_OWNED](
           ...payload,
           queryResponseHandler
         );
@@ -130,7 +116,7 @@ const useTasks = () => {
 
       query();
     }
-  }, [selectedAccountKey, api, callables, queryResponseHandler]);
+  }, [selectedAccountKey, api, queryResponseHandler]);
 
   const signedTx = async (actionType, taskPayload) => {
     const accountPair =
@@ -169,26 +155,26 @@ const useTasks = () => {
 
     let txExecute;
 
-    if (actionType === 'CREATE') {
-      txExecute = api.tx[palletRpc][callables.CREATE_TASK](
+    if (actionType === taskCallables.CREATE_TASK) {
+      txExecute = api.tx[pallets.TASK][actionType](
         ...transformedPayloadForCreate
       );
     }
 
-    if (actionType === 'START') {
-      txExecute = api.tx[palletRpc][callables.START_TASK](
+    if (actionType === taskCallables.START_TASK) {
+      txExecute = api.tx[pallets.TASK][taskCallables.START_TASK](
         ...transformedPayloadForStartCompleteRemove
       );
     }
 
-    if (actionType === 'COMPLETE') {
-      txExecute = api.tx[palletRpc][callables.COMPLETE_TASK](
+    if (actionType === taskCallables.COMPLETE_TASK) {
+      txExecute = api.tx[pallets.TASK][taskCallables.COMPLETE_TASK](
         ...transformedPayloadForStartCompleteRemove
       );
     }
 
-    if (actionType === 'REMOVE') {
-      txExecute = api.tx[palletRpc][callables.REMOVE_TASK](
+    if (actionType === taskCallables.REMOVE_TASK) {
+      txExecute = api.tx[pallets.TASK][taskCallables.REMOVE_TASK](
         ...transformedPayloadForStartCompleteRemove
       );
     }
@@ -200,45 +186,41 @@ const useTasks = () => {
         getAllTasks();
       }
 
-      console.log('status', status);
-
-      // callStatus?.isFinalized
-      //   ? setStatus(
-      //       `😉 Finalized. Block hash: ${callStatus?.asFinalized?.toString()}`
-      //     )
-      //   : callStatus?.isInBlock
-      //   ? setStatus(`Is in block true?: ${callStatus?.type}`)
-      //   : setStatus(`Current transaction status: ${callStatus?.type}`);
-
-      callStatus?.isFinalized
-        ? setStatus('')
-        : callStatus?.isInBlock
-        ? setStatus(`Is in block true?: ${callStatus?.type}`)
-        : setStatus(`Current transaction status: ${callStatus?.type}`);
+      if (callStatus?.isFinalized) {
+        setStatus(statusTypes.FINALIZED);
+        setTimeout(() => {
+          setStatus('');
+        }, [5000]);
+      }
+      if (callStatus?.isInBlock) {
+        setStatus(statusTypes.IN_BLOCK);
+      }
 
       if (callStatus?.isInBlock) {
-        if (actionType === 'CREATE') {
-          toast('Task created...');
+        if (actionType === taskCallables.CREATE_TASK) {
+          toast('Task created successfully!');
         }
 
-        if (actionType === 'START') {
-          toast('Task started...');
+        if (actionType === taskCallables.START_TASK) {
+          toast('Task started successfully!');
         }
 
-        if (actionType === 'COMPLETE') {
-          toast('Task closed...');
+        if (actionType === taskCallables.COMPLETE_TASK) {
+          toast('Task closed successfully!');
         }
 
-        if (actionType === 'REMOVE') {
-          toast('Task deleted...');
+        if (actionType === taskCallables.REMOVE_TASK) {
+          toast('Task deleted successfully!');
         }
       }
 
       setActionLoading(false);
     };
 
-    const transactionErrorHandler = err =>
-      setStatus(`😞 Transaction Failed: ${err.toString()}`);
+    const transactionErrorHandler = err => {
+      setStatus(statusTypes.ERROR);
+      setStatusMessage(err.toString());
+    };
 
     const unsub = await txExecute
       .signAndSend(fromAcct, transactionResponseHandler)
@@ -253,21 +235,21 @@ const useTasks = () => {
       setUnsub(null);
     }
 
-    setStatus('Sending...');
+    setStatus(statusTypes.INIT);
 
-    if (actionType === 'CREATE') {
+    if (actionType === taskCallables.CREATE_TASK) {
       toast('Creating task...');
     }
 
-    if (actionType === 'START') {
+    if (actionType === taskCallables.START_TASK) {
       toast('Initiating task...');
     }
 
-    if (actionType === 'COMPLETE') {
+    if (actionType === taskCallables.COMPLETE_TASK) {
       toast('Closing task...');
     }
 
-    if (actionType === 'REMOVE') {
+    if (actionType === taskCallables.REMOVE_TASK) {
       toast('Deleting task...');
     }
 

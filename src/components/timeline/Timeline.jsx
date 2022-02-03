@@ -12,10 +12,6 @@ const Timeline = () => {
     taskAction,
     actionLoading,
   } = useTasks();
-  const cards = [1, 2, 3, 4, 5];
-  const logsArr = [1, 2, 3];
-  const logsArr2 = [1, 2];
-  const logsArr3 = [1];
 
   const [open, setOpen] = useState(false);
 
@@ -29,19 +25,7 @@ const Timeline = () => {
 
   const tasks = useMemo(() => {
     const handleOptionsOnClick = (actionType, taskId) => {
-      // setOpen(true);
-
-      if (actionType === 'delete') {
-        taskAction('REMOVE', taskId);
-      }
-
-      if (actionType === 'start') {
-        taskAction('START', taskId);
-      }
-
-      if (actionType === 'complete') {
-        taskAction('COMPLETE', taskId);
-      }
+      taskAction(actionType, taskId);
     };
 
     return allTasksReceived.map((taskId, i) => {
@@ -55,29 +39,7 @@ const Timeline = () => {
     });
   }, [allTasksReceived, taskAction]);
 
-  // const tasks = cards.map(testNo => <Task key={testNo} />);
-  const projects = cards.map(testNo => <Project key={testNo} />);
-  const logs1 = logsArr.map((testNo, i) => (
-    <Log
-      key={testNo}
-      isFirst={i === 0}
-      isLast={logsArr.length - 1 === i && logsArr.length > 1}
-    />
-  ));
-  const logs2 = logsArr2.map((testNo, i) => (
-    <Log
-      key={testNo}
-      isFirst={i === 0}
-      isLast={logsArr2.length - 1 === i && logsArr2.length > 1}
-    />
-  ));
-  const logs3 = logsArr3.map((testNo, i) => (
-    <Log
-      key={testNo}
-      isFirst={i === 0}
-      isLast={logsArr3.length - 1 === i && logsArr3.length > 1}
-    />
-  ));
+  const projects = [1, 2, 3].map(testNo => <Project key={testNo} />);
 
   const handleCloseTextEditor = () => {
     setOpen(false);
@@ -146,7 +108,14 @@ const Timeline = () => {
                     <Label as="a" color="blue">
                       13.05.2022
                     </Label>
-                    {logs3}
+                        <Log
+                          isFirst
+                          isLast={false}
+                        />
+                        <Log
+                          isFirst={false}
+                          isLast
+                        />
                   </div> */}
                 </div>
               </div>

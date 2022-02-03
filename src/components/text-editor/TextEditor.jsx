@@ -15,6 +15,7 @@ import {
 import styles from './TextEditor.module.scss';
 import { useTasks } from '../../hooks/useTasks';
 import { useStatus } from '../../hooks/useStatus';
+import { statusTypes, taskCallables } from '../../types';
 
 const TextEditor = ({ open, onClose }) => {
   // TODO: add rich text editor; accept children as props; make it scrollable; add props for control;
@@ -32,17 +33,18 @@ const TextEditor = ({ open, onClose }) => {
   };
 
   useEffect(() => {
-    if (!!status && status.includes('Sending...')) {
+    if (!!status && status === statusTypes.INIT) {
       setShowLoader(true);
     }
 
-    if (!!status && status.includes('InBlock')) {
+    if (!!status && status === statusTypes.IN_BLOCK) {
       setShowLoader(false);
+      onClose();
       setTimeout(() => {
         setStatus('');
       }, 5000);
     }
-  }, [status, setStatus]);
+  }, [status, setStatus, onClose]);
 
   const TxButton = ({ label, color = 'blue', actionType, loading }) => {
     return (
@@ -188,14 +190,18 @@ const TextEditor = ({ open, onClose }) => {
                   <TxButton
                     label={isEditMode ? 'Update task' : 'Create task'}
                     color={isEditMode ? 'green' : 'blue'}
-                    actionType={isEditMode ? 'UPDATE' : 'CREATE'}
+                    actionType={
+                      isEditMode
+                        ? taskCallables.UPDATE_TASK
+                        : taskCallables.CREATE_TASK
+                    }
                     loading={actionLoading}
                   />
                   {isEditMode && (
                     <TxButton
                       label="Remove task"
                       color="red"
-                      actionType="REMOVE"
+                      actionType={taskCallables.REMOVE_TASK}
                     />
                   )}
                 </Card.Content>
@@ -210,19 +216,19 @@ const TextEditor = ({ open, onClose }) => {
                 </Card.Content>
               )}
             </Card>
-            {status && (
+            {/* {status && (
               <div style={{ padding: '0 3rem 2rem 3rem' }}>
                 <Message positive={!showLoader} warning={showLoader} icon>
                   {showLoader && <Icon name="circle notched" loading />}
                   {!showLoader && <Icon name="check" />}
-                  {/* TODO: word-break: break-all only if we show long hashes, otherwise words are breaking OK */}
+                
                   <Message.Content style={{ wordBreak: 'break-all' }}>
                     <Message.Header>Task status</Message.Header>
                     {status}
                   </Message.Content>
                 </Message>
               </div>
-            )}
+            )} */}
           </Segment>
         </Portal>
       </Grid.Column>

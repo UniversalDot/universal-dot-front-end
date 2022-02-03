@@ -16,6 +16,7 @@ import styles from './ProfileConfiguration.module.scss';
 import { useProfile } from '../../hooks/useProfile';
 import { useStatus } from '../../hooks/useStatus';
 import { PageContainer } from '../';
+import { profileCallables, statusTypes } from '../../types';
 
 const ProfileConfiguration = () => {
   const [oneInterest, setOneInterest] = useState('');
@@ -35,11 +36,11 @@ const ProfileConfiguration = () => {
   };
 
   useEffect(() => {
-    if (!!status && status.includes('Sending...')) {
+    if (!!status && status === statusTypes.INIT) {
       setShowLoader(true);
     }
 
-    if (!!status && status.includes('InBlock')) {
+    if (!!status && status === statusTypes.IN_BLOCK) {
       setShowLoader(false);
       setTimeout(() => {
         setStatus('');
@@ -227,14 +228,18 @@ const ProfileConfiguration = () => {
             <TxButton
               label={profileData ? 'Update profile' : 'Create profile'}
               color={profileData ? 'green' : 'blue'}
-              actionType={profileData ? 'UPDATE' : 'CREATE'}
+              actionType={
+                profileData
+                  ? profileCallables.UPDATE_PROFILE
+                  : profileCallables.CREATE_PROFILE
+              }
               loading={actionLoading}
             />
             {profileData && (
               <TxButton
                 label="Remove profile"
                 color="red"
-                actionType="REMOVE"
+                actionType={profileCallables.REMOVE_PROFILE}
               />
             )}
           </Card.Content>
@@ -249,7 +254,7 @@ const ProfileConfiguration = () => {
           </Card.Content>
         )}
       </Card>
-      {status && (
+      {/* {status && (
         <Message positive={!showLoader} warning={showLoader} icon>
           {showLoader && <Icon name="circle notched" loading />}
           {!showLoader && <Icon name="check" />}
@@ -258,7 +263,7 @@ const ProfileConfiguration = () => {
             {status}
           </Message.Content>
         </Message>
-      )}
+      )} */}
     </PageContainer>
   );
 };

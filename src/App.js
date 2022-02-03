@@ -23,6 +23,7 @@ import { useProfile } from './hooks/useProfile';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { statusTypes } from './types';
 
 export default function App() {
   const loggedIn = true;
@@ -31,11 +32,11 @@ export default function App() {
   const { getProfile } = useProfile();
 
   useEffect(() => {
-    if (!!status && status.includes('Sending...')) {
+    if (!!status && status === statusTypes.INIT) {
       setShowLoader(true);
     }
 
-    if (!!status && status.includes('InBlock')) {
+    if (!!status && status === statusTypes.IN_BLOCK) {
       setShowLoader(false);
       setTimeout(() => {
         setStatus('');
@@ -51,11 +52,11 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {showLoader && (
+      {/* {showLoader && (
         <Dimmer active>
           <Loader size="small">{status}</Loader>
         </Dimmer>
-      )}
+      )} */}
       {loggedIn && <Header />}
       <Routes>
         <Route

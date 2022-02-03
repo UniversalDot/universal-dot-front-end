@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import styles from './Task.module.scss';
 import { useTasks } from '../../hooks/useTasks';
+import { taskCallables } from '../../types';
 
 const Task = ({ id, optionsOnClick }) => {
   const { getTask } = useTasks();
@@ -32,18 +33,24 @@ const Task = ({ id, optionsOnClick }) => {
         <Dropdown.Menu style={{ top: '48px' }}>
           <Dropdown.Item
             text="Start"
-            onClick={() => optionsOnClick('start', data?.taskId)}
+            onClick={() =>
+              optionsOnClick(taskCallables.START_TASK, data?.taskId)
+            }
           />
           <Dropdown.Item
             text="Complete"
-            onClick={() => optionsOnClick('complete', data?.taskId)}
+            onClick={() =>
+              optionsOnClick(taskCallables.COMPLETE_TASK, data?.taskId)
+            }
           />
           <Dropdown.Item text="Update" />
           <Dropdown.Divider />
           <Dropdown.Item
             icon="close"
             text="Delete"
-            onClick={() => optionsOnClick('delete', data?.taskId)}
+            onClick={() =>
+              optionsOnClick(taskCallables.REMOVE_TASK, data?.taskId)
+            }
           />
         </Dropdown.Menu>
       </Dropdown>
