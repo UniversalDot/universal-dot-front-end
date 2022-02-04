@@ -5,12 +5,18 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
 
 import { setProfile, setFormInterests } from '../store/slices/profileSlice';
-import { setQueryLoader } from '../store/slices/loadersSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
+import { useLoader } from './useLoader';
 import { useUtils } from './useUtils';
-import { toast } from 'react-toastify';
-import { statusTypes, pallets, profileCallables } from '../types';
+import {
+  statusTypes,
+  pallets,
+  profileCallables,
+  toastTypes,
+  loadingTypes,
+} from '../types';
+import { useToast } from './useToast';
 
 const useProfile = () => {
   const dispatch = useDispatch();
@@ -20,11 +26,12 @@ const useProfile = () => {
 
   const { selectedAccountKey } = useUser();
   const { setStatus, setStatusMessage } = useStatus();
+  const { setLoading } = useLoader();
   const { transformParams } = useUtils();
+  const { toast } = useToast();
 
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
-  const queryLoading = useSelector(state => state.loaders.queryLoading);
 
   const populateFormInterests = useCallback(
     interestsArray => {
@@ -35,17 +42,23 @@ const useProfile = () => {
 
   const queryResponseHandler = useCallback(
     result => {
-      dispatch(setQueryLoader(false));
+      setLoading({ type: loadingTypes.PROFILE, value: false });
+      setStatusMessage('');
       result.isNone
         ? dispatch(setProfile(null))
         : dispatch(setProfile(result.toJSON()));
     },
-    [dispatch]
+    [dispatch, setStatusMessage, setLoading]
   );
 
+  // TODO: figure out how to make it simpler to check when API is availabile so it doesn't crash;
   const getProfile = useCallback(() => {
-    dispatch(setQueryLoader(true));
-    if (selectedAccountKey) {
+    setLoading({ type: loadingTypes.PROFILE, value: true });
+    setStatusMessage('Loading profile...');
+    if (
+      selectedAccountKey &&
+      api?.query?.[pallets.PROFILE]?.[profileCallables.PROFILES]
+    ) {
       const query = async () => {
         const unsub = await api.query[pallets.PROFILE][
           profileCallables.PROFILES
@@ -56,7 +69,14 @@ const useProfile = () => {
 
       query();
     }
-  }, [api, dispatch, selectedAccountKey, queryResponseHandler]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    api?.query?.[pallets.PROFILE]?.[profileCallables.PROFILES],
+    selectedAccountKey,
+    setStatusMessage,
+    setLoading,
+  ]);
 
   const signedTransaction = async actionType => {
     const accountPair =
@@ -98,15 +118,15 @@ const useProfile = () => {
 
       if (callStatus?.isInBlock) {
         if (actionType === profileCallables.CREATE_PROFILE) {
-          toast('Profile created successfully!');
+          toast('Profile created successfully!', toastTypes.SUCCESS);
         }
 
         if (actionType === profileCallables.UPDATE_PROFILE) {
-          toast('Profile updated successfully!');
+          toast('Profile updated successfully!', toastTypes.SUCCESS);
         }
 
         if (actionType === profileCallables.REMOVE_PROFILE) {
-          toast('Profile deleted successfully.');
+          toast('Profile deleted successfully.', toastTypes.SUCCESS);
         }
       }
 
@@ -166,15 +186,15 @@ const useProfile = () => {
     }
 
     if (actionType === profileCallables.CREATE_PROFILE) {
-      toast('Creating profile...');
+      toast('Creating profile...', toastTypes.INFO);
     }
 
     if (actionType === profileCallables.UPDATE_PROFILE) {
-      toast('Updating profile...');
+      toast('Updating profile...', toastTypes.INFO);
     }
 
     if (actionType === profileCallables.REMOVE_PROFILE) {
-      toast('Deleting profile...');
+      toast('Deleting profile...', toastTypes.INFO);
     }
 
     setStatus(statusTypes.INIT);
@@ -191,7 +211,6 @@ const useProfile = () => {
     profileAction,
     actionLoading,
     setActionLoading,
-    queryLoading,
   };
 };
 

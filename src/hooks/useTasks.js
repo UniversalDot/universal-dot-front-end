@@ -3,8 +3,6 @@ import { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
-import { toast } from 'react-toastify';
-
 import {
   setTasks,
   setTaskRequirements,
@@ -16,7 +14,15 @@ import {
 } from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
-import { statusTypes, pallets, taskCallables } from '../types';
+import { useLoader } from './useLoader';
+import {
+  statusTypes,
+  pallets,
+  taskCallables,
+  toastTypes,
+  loadingTypes,
+} from '../types';
+import { useToast } from './useToast';
 
 const useTasks = () => {
   const dispatch = useDispatch();
@@ -26,6 +32,8 @@ const useTasks = () => {
 
   const { selectedAccountKey } = useUser();
   const { setStatus, setStatusMessage } = useStatus();
+  const { setLoading } = useLoader();
+  const { toast } = useToast();
 
   // TODO: reformat it to be DRY;
   const taskValues = useSelector(state => state.tasks.task);
@@ -92,22 +100,25 @@ const useTasks = () => {
 
   const queryResponseHandler = useCallback(
     result => {
+      setLoading({ type: loadingTypes.TASKS, value: false });
+      setStatusMessage('');
+
       if (result.isNone) {
         dispatch(setTasks([]));
       }
 
       dispatch(setTasks(result.toHuman()));
     },
-    [dispatch]
+    [dispatch, setLoading, setStatusMessage]
   );
 
   const getAllTasks = useCallback(() => {
+    setLoading({ type: loadingTypes.TASKS, value: true });
+    setStatusMessage('Loading tasks...');
     if (selectedAccountKey) {
-      const payload = [selectedAccountKey];
-
       const query = async () => {
-        const unsub = await api?.query[pallets.TASK][taskCallables.TASKS_OWNED](
-          ...payload,
+        const unsub = await api.query[pallets.TASK][taskCallables.TASKS_OWNED](
+          selectedAccountKey,
           queryResponseHandler
         );
         const cb = () => unsub;
@@ -116,7 +127,13 @@ const useTasks = () => {
 
       query();
     }
-  }, [selectedAccountKey, api, queryResponseHandler]);
+  }, [
+    selectedAccountKey,
+    api,
+    queryResponseHandler,
+    setLoading,
+    setStatusMessage,
+  ]);
 
   const signedTx = async (actionType, taskPayload) => {
     const accountPair =
@@ -198,19 +215,19 @@ const useTasks = () => {
 
       if (callStatus?.isInBlock) {
         if (actionType === taskCallables.CREATE_TASK) {
-          toast('Task created successfully!');
+          toast('Task created successfully!', toastTypes.SUCCESS);
         }
 
         if (actionType === taskCallables.START_TASK) {
-          toast('Task started successfully!');
+          toast('Task started successfully!', toastTypes.SUCCESS);
         }
 
         if (actionType === taskCallables.COMPLETE_TASK) {
-          toast('Task closed successfully!');
+          toast('Task closed successfully!', toastTypes.SUCCESS);
         }
 
         if (actionType === taskCallables.REMOVE_TASK) {
-          toast('Task deleted successfully!');
+          toast('Task deleted successfully!', toastTypes.SUCCESS);
         }
       }
 
@@ -238,19 +255,19 @@ const useTasks = () => {
     setStatus(statusTypes.INIT);
 
     if (actionType === taskCallables.CREATE_TASK) {
-      toast('Creating task...');
+      toast('Creating task...', toastTypes.INFO);
     }
 
     if (actionType === taskCallables.START_TASK) {
-      toast('Initiating task...');
+      toast('Initiating task...', toastTypes.INFO);
     }
 
     if (actionType === taskCallables.COMPLETE_TASK) {
-      toast('Closing task...');
+      toast('Closing task...', toastTypes.INFO);
     }
 
     if (actionType === taskCallables.REMOVE_TASK) {
-      toast('Deleting task...');
+      toast('Deleting task...', toastTypes.INFO);
     }
 
     setActionLoading(true);

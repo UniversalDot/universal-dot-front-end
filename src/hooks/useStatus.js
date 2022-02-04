@@ -7,6 +7,7 @@ import {
 const useStatus = () => {
   const dispatch = useDispatch();
   const status = useSelector(state => state.status.status);
+  const message = useSelector(state => state.status.message);
   const setStatus = useCallback(
     status => {
       dispatch(setStatusAction(status));
@@ -22,6 +23,7 @@ const useStatus = () => {
 
   return {
     status,
+    message,
     setStatus,
     setStatusMessage,
   };

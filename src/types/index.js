@@ -5,6 +5,19 @@ export const statusTypes = {
   ERROR: 'ERROR',
 };
 
+export const loadingTypes = {
+  PROFILE: 'profile',
+  TASKS: 'tasks',
+};
+
+export const toastTypes = {
+  DEFAULT: '',
+  INFO: 'info',
+  SUCCESS: 'success',
+  WARNING: 'warn',
+  ERROR: 'error',
+};
+
 export const pallets = {
   PROFILE: 'profile',
   TASK: 'task',

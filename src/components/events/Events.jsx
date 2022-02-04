@@ -55,7 +55,7 @@ const Events = () => {
     }
 
     return () => unsub && unsub();
-  }, [api.query.system]);
+  }, [api?.query?.system]);
 
   // eslint-disable-next-line multiline-ternary
   return api?.query?.system?.events ? (

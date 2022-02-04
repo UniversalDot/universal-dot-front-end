@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -15,48 +15,23 @@ import {
   Calendar,
   ProfileConfigure,
 } from './pages';
-import { Dimmer, Loader } from 'semantic-ui-react';
 
-import { Header, Layout } from './components';
-import { useStatus } from './hooks/useStatus';
+import { Header, Layout, LoaderFullPage } from './components';
 import { useProfile } from './hooks/useProfile';
-
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { statusTypes } from './types';
 
 export default function App() {
   const loggedIn = true;
-  const { status, setStatus } = useStatus();
-  const [showLoader, setShowLoader] = useState(false);
+
   const { getProfile } = useProfile();
 
   useEffect(() => {
-    if (!!status && status === statusTypes.INIT) {
-      setShowLoader(true);
-    }
-
-    if (!!status && status === statusTypes.IN_BLOCK) {
-      setShowLoader(false);
-      setTimeout(() => {
-        setStatus('');
-      }, 5000);
-    }
-  }, [status, setStatus]);
-
-  // TODO: bug - when you open a page in a new tab or directly with some routes, and not / api is null or undefined and app crashes;
-  useEffect(() => {
     getProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getProfile]);
 
   return (
     <BrowserRouter>
-      {/* {showLoader && (
-        <Dimmer active>
-          <Loader size="small">{status}</Loader>
-        </Dimmer>
-      )} */}
       {loggedIn && <Header />}
       <Routes>
         <Route
@@ -84,7 +59,8 @@ export default function App() {
         <Route path="template-resources" element={<TemplateResources />} />
         <Route path="*" element={<Navigate replace to="/" />}></Route>
       </Routes>
-      <ToastContainer />
+      <ToastContainer newestOnTop />
+      <LoaderFullPage />
     </BrowserRouter>
   );
 }

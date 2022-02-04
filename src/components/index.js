@@ -12,3 +12,5 @@ export * from './text-editor';
 export * from './events';
 export * from './page-container';
 export * from './kanban-board';
+export * from './loader-full-page';
+export * from './loader-generic';

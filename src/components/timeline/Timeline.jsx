@@ -1,8 +1,10 @@
+/* eslint-disable multiline-ternary */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
-import { Task, Project, Log, Events, TextEditor } from '../';
+import { Task, Project, Log, Events, TextEditor, LoaderGeneric } from '../';
 import { useTasks } from '../../hooks/useTasks';
+import { useLoader } from '../../hooks/useLoader';
 
 const Timeline = () => {
   const {
@@ -13,6 +15,8 @@ const Timeline = () => {
     actionLoading,
   } = useTasks();
 
+  const { loadingTasks } = useLoader();
+
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -20,8 +24,7 @@ const Timeline = () => {
       getAllTasks();
     }
     return () => resetAllTasks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [actionLoading, getAllTasks, resetAllTasks]);
 
   const tasks = useMemo(() => {
     const handleOptionsOnClick = (actionType, taskId) => {
@@ -58,7 +61,9 @@ const Timeline = () => {
                     Upcoming Tasks
                   </span>
                 </div>
-                <div className={styles.body}>{tasks}</div>
+                <div className={styles.body}>
+                  {loadingTasks || actionLoading ? <LoaderGeneric /> : tasks}
+                </div>
               </div>
             </div>
           </Grid.Column>

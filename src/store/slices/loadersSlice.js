@@ -1,19 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  queryLoading: false,
+  profile: false,
+  tasks: false,
 };
 
 const loadersSlice = createSlice({
   name: 'loaders',
   initialState,
   reducers: {
-    setQueryLoader(state, action) {
-      state.queryLoading = action.payload;
+    setLoading(state, action) {
+      state[action.payload.type] = action.payload.value;
     },
   },
 });
 
-export const { setQueryLoader } = loadersSlice.actions;
+export const { setLoading } = loadersSlice.actions;
 
 export default loadersSlice.reducer;
