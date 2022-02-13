@@ -8,6 +8,7 @@ export const statusTypes = {
 export const loadingTypes = {
   PROFILE: 'profile',
   TASKS: 'tasks',
+  DAO: 'dao',
 };
 
 export const toastTypes = {
@@ -40,4 +41,17 @@ export const taskCallables = {
   REMOVE_TASK: 'removeTask',
   // TODO: not present in BE yet;
   UPDATE_TASK: 'updateTask',
+};
+
+export const daoCallables = {
+  ADD_MEMBERS: 'addMembers',
+  ADD_TASKS: 'addTasks',
+  CREATE_ORGANIZATION: 'createOrganization',
+  CREATE_VISION: 'createVision',
+  DISSOLVE_ORGANIZATION: 'dissolveOrganization',
+  REMOVE_MEMBERS: 'removeMembers',
+  REMOVE_TASKS: 'removeTasks',
+  REMOVE_VISION: 'removeVision',
+  SIGN_VISION: 'signVision',
+  UNSIGN_VISION: 'unsignVision',
 };
