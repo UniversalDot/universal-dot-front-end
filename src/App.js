@@ -10,10 +10,11 @@ import {
   SignIn,
   Profile,
   Dashboard,
-  // Tasks,
-  Organization,
   Calendar,
   ProfileConfigure,
+  OrganizationJoined,
+  OrganizationOwn,
+  OrganizationKanban,
 } from './pages';
 
 import { Header, Layout, LoaderFullPage } from './components';
@@ -44,8 +45,11 @@ export default function App() {
           <Route path="profile/configure" element={<ProfileConfigure />} />
 
           <Route path="dashboard" element={<Dashboard />} />
-          {/* <Route path="tasks" element={<Tasks />} /> */}
-          <Route path="organization" element={<Organization />} />
+          <Route path="organization">
+            <Route path="joined" element={<OrganizationJoined />}></Route>
+            <Route path="own" element={<OrganizationOwn />}></Route>
+            <Route path="kanban" element={<OrganizationKanban />}></Route>
+          </Route>
           <Route path="calendar" element={<Calendar />} />
         </Route>
         <Route

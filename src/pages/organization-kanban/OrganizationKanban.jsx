@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PageContainer, KanbanBoard } from '../../components';
 
-const Organization = () => {
+const OrganizationKanban = () => {
   return (
     <PageContainer>
       <KanbanBoard />
@@ -10,6 +10,6 @@ const Organization = () => {
   );
 };
 
-Organization.displayName = 'Organization';
+OrganizationKanban.displayName = 'OrganizationKanban';
 
-export { Organization };
+export { OrganizationKanban };

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Icon, Menu, Sidebar, Container } from 'semantic-ui-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './SidebarComponent.module.scss';
 
 const SidebarComponent = () => {
-  const [sidebarSize, setSidebarSize] = React.useState('thin');
+  const [sidebarSize, setSidebarSize] = useState('thin');
+  const [expOrg, setExpOrg] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ const SidebarComponent = () => {
       navigate('/profile');
     }
   }, [location, navigate]);
+
+  const toggleExpandedMenuItem = () => {
+    setExpOrg(!expOrg);
+  };
 
   return (
     <Sidebar.Pushable
@@ -88,7 +93,7 @@ const SidebarComponent = () => {
             </div>
           </Menu.Item>
         )} */}
-        <Menu.Item
+        {/* <Menu.Item
           as={Link}
           to="/organization"
           active={location.pathname === '/organization'}
@@ -97,7 +102,53 @@ const SidebarComponent = () => {
             <Icon name="clipboard list" />
             <span className={styles.menuItem_content_text}>Organization</span>
           </div>
+        </Menu.Item> */}
+        <Menu.Item as={Menu.Item} onClick={toggleExpandedMenuItem}>
+          <div className={styles.menuItem_content}>
+            <Icon name="clipboard list" />
+            <span className={styles.menuItem_content_text}>Organization</span>
+            <Icon style={{ marginLeft: '0.85rem' }} name="caret down" />
+          </div>
         </Menu.Item>
+        {expOrg && (
+          <Menu.Item
+            style={{ minWidth: '0', paddingLeft: '2rem' }}
+            as={Link}
+            to="/organization/joined"
+            active={location.pathname === '/organization/joined'}
+          >
+            <div style={{ display: 'flex' }}>
+              <Icon name="clipboard list" />
+              <span style={{ marginLeft: '0.85rem' }}>Joined organization</span>
+            </div>
+          </Menu.Item>
+        )}
+        {expOrg && (
+          <Menu.Item
+            style={{ minWidth: '0', paddingLeft: '2rem' }}
+            as={Link}
+            to="/organization/own"
+            active={location.pathname === '/organization/own'}
+          >
+            <div style={{ display: 'flex' }}>
+              <Icon name="clipboard list" />
+              <span style={{ marginLeft: '0.85rem' }}>Own organization</span>
+            </div>
+          </Menu.Item>
+        )}
+        {expOrg && (
+          <Menu.Item
+            style={{ minWidth: '0', paddingLeft: '2rem' }}
+            as={Link}
+            to="/organization/kanban"
+            active={location.pathname === '/organization/kanban'}
+          >
+            <div style={{ display: 'flex' }}>
+              <Icon name="clipboard list" />
+              <span style={{ marginLeft: '0.85rem' }}>DAO Kanban</span>
+            </div>
+          </Menu.Item>
+        )}
         <Menu.Item
           as={Link}
           to="/calendar"

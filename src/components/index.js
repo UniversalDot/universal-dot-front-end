@@ -14,3 +14,4 @@ export * from './page-container';
 export * from './kanban-board';
 export * from './loader-full-page';
 export * from './loader-generic';
+export * from './organizations';
