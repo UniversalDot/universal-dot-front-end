@@ -116,3 +116,9 @@ and [src/ChainState.js](./src/ChainState.js) for a query example.
 The [Account Selector](./src/AccountSelector.js) provides the user with a unified way to
 select their account from a keyring. If the Balances module is installed in the runtime,
 it also displays the user's token balance. It is included in the template already.
+
+
+### Supported by Web3 Foundation 
+![Logo](https://github.com/UniversalDot/documents/blob/9d0a4c0c984bee503e13278f72049da7eae16c14/logo/web3grant/web3%20foundation_grants_badge_black.jpg)
+
+UniversalDot is recipient of the technical grant from Web3 Foundation. 
