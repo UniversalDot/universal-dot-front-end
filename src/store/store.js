@@ -6,12 +6,14 @@ import statusReducer from './slices/statusSlice';
 import tasksReducer from './slices/tasksSlice';
 import daoReducer from './slices/daoSlice';
 import loadersReducer from './slices/loadersSlice';
+import generalReducer from './slices/generalSlice';
 import rootSaga from './saga/index';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
   reducer: {
+    general: generalReducer,
     account: accountReducer,
     profile: profileReducer,
     status: statusReducer,

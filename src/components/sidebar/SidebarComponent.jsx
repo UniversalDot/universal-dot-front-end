@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Icon, Menu, Sidebar, Container } from 'semantic-ui-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './SidebarComponent.module.scss';
+import { useGeneral } from '../../hooks/useGeneral';
 
 const SidebarComponent = () => {
-  const [sidebarSize, setSidebarSize] = useState('thin');
   const [expOrg, setExpOrg] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { sidebarWidth } = useGeneral();
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -32,8 +34,9 @@ const SidebarComponent = () => {
         // onHide={() => setSidebarSize('very thin')}
         vertical
         visible
-        width={sidebarSize}
+        // width={sidebarWidth}
         className={styles.sidebar}
+        style={{ width: `${sidebarWidth}px` }}
       >
         <Menu.Item
           as={Link}
@@ -117,7 +120,10 @@ const SidebarComponent = () => {
             to="/organization/joined"
             active={location.pathname === '/organization/joined'}
           >
-            <div style={{ display: 'flex' }}>
+            <div
+              style={{ display: 'flex' }}
+              className={styles.menuItem_nested_content}
+            >
               <Icon name="clipboard list" />
               <span style={{ marginLeft: '0.85rem' }}>Joined organization</span>
             </div>
@@ -130,7 +136,10 @@ const SidebarComponent = () => {
             to="/organization/own"
             active={location.pathname === '/organization/own'}
           >
-            <div style={{ display: 'flex' }}>
+            <div
+              style={{ display: 'flex' }}
+              className={styles.menuItem_nested_content}
+            >
               <Icon name="clipboard list" />
               <span style={{ marginLeft: '0.85rem' }}>Own organization</span>
             </div>
@@ -143,7 +152,10 @@ const SidebarComponent = () => {
             to="/organization/kanban"
             active={location.pathname === '/organization/kanban'}
           >
-            <div style={{ display: 'flex' }}>
+            <div
+              style={{ display: 'flex' }}
+              className={styles.menuItem_nested_content}
+            >
               <Icon name="clipboard list" />
               <span style={{ marginLeft: '0.85rem' }}>DAO Kanban</span>
             </div>
@@ -163,9 +175,10 @@ const SidebarComponent = () => {
 
       <Sidebar.Pusher
         style={{
-          width: 'calc(100% - 150px)',
+          width: `calc(100% - ${sidebarWidth}px)`,
           height: '100%',
           overflowY: 'auto',
+          transform: `translate3d(${sidebarWidth}px,0,0)`,
         }}
         className={styles.sidebarContent}
       >

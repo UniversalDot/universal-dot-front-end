@@ -10,11 +10,13 @@ import {
 } from 'semantic-ui-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useUser } from '../../hooks/useUser';
+import { useGeneral } from '../../hooks/useGeneral';
 import styles from './Header.module.scss';
 
 const Header = () => {
   const location = useLocation();
   const { selectedAccountUsername } = useUser();
+  const { sidebarWidth } = useGeneral();
 
   const activePage = () => {
     const current = location.pathname.split('/')[1];
@@ -72,7 +74,7 @@ const Header = () => {
         <div
           className={styles.logoContainer}
           style={{
-            width: '150px',
+            width: `${sidebarWidth}px`,
           }}
         >
           <Image
@@ -83,14 +85,19 @@ const Header = () => {
         <div
           className={styles.mainContent}
           style={{
-            width: 'calc(100% - 150px)',
+            width: `calc(100% - ${sidebarWidth}px)`,
             // 300px = 150px of minWidth of activyPage item + sidebar
-            paddingRight: '300px',
+            // paddingRight: '300px',
+            paddingRight: `${sidebarWidth + sidebarWidth}px`,
           }}
         >
           <Menu className={styles.menu}>
             <Menu.Menu>
-              <Menu.Item className={styles.menuItem_activePage} as={'span'}>
+              <Menu.Item
+                className={styles.menuItem_activePage}
+                as={'span'}
+                style={{ minWidth: `${sidebarWidth}px` }}
+              >
                 {activePage()}
               </Menu.Item>
             </Menu.Menu>
