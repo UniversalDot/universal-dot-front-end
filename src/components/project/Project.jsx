@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import styles from './Project.module.scss';
 
-const Project = () => {
+const Project = ({ title, description }) => {
   return (
     <div className={styles.project}>
       <div className={styles.content}>
@@ -10,9 +10,11 @@ const Project = () => {
           <Icon name="folder outline" className={styles.iconComponent} />
         </div>
         <div className={styles.info}>
-          <span className={styles.title}>Project: UniversalDot</span>
+          <span className={styles.title}>
+            {title || 'Project: UniversalDot'}
+          </span>
           <span className={styles.description}>
-            xasCaWH151cx2145Cxwkqp2345pWpqz
+            {description || 'xasCaWH151cx2145Cxwkqp2345pWpqz'}
           </span>
         </div>
         <div className={styles.actions}>

@@ -1,17 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {};
+const initialState = {
+  totalOrganizations: 0,
+  totalVisions: 0,
+  joinedOrganizations: [],
+  suggestedVisions: [],
+};
 
 const daoSlice = createSlice({
   name: 'dao',
   initialState,
   reducers: {
-    todo(state, action) {
-      state.tasks = action.payload;
+    setTotalOrganizations(state, action) {
+      state.totalOrganizations = action.payload;
+    },
+    setTotalVisions(state, action) {
+      state.totalVisions = action.payload;
+    },
+    setJoinedOrganizations(state, action) {
+      state.joinedOrganizations = action.payload;
+    },
+    setSuggestedVisions(state, action) {
+      state.suggestedVisions = action.payload;
     },
   },
 });
 
-export const { todo } = daoSlice.actions;
+export const {
+  setTotalOrganizations,
+  setTotalVisions,
+  setJoinedOrganizations,
+  setSuggestedVisions,
+} = daoSlice.actions;
 
 export default daoSlice.reducer;

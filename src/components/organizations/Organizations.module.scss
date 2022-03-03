@@ -1,3 +1,33 @@
+.gridStats {
+  .row {
+    .column {
+      padding: 1rem;
+    }
+  }
+}
+
+.card {
+  .contentContainer {
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .text {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .description {
+      padding: 2rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+  }
+}
+
 .grid {
   .row {
     .column {

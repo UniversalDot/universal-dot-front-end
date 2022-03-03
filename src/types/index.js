@@ -54,4 +54,9 @@ export const daoCallables = {
   REMOVE_VISION: 'removeVision',
   SIGN_VISION: 'signVision',
   UNSIGN_VISION: 'unsignVision',
+  // QUERY callables:
+  MEMBER_OF: 'memberOf',
+  ORGANIZATION_COUNT: 'organizationCount',
+  VISION: 'vision',
+  VISION_COUNT: 'visionCount',
 };

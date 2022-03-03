@@ -15,8 +15,14 @@ import {
   daoCallables,
 } from '../types';
 import { useToast } from './useToast';
+import {
+  setTotalOrganizations,
+  setTotalVisions,
+  setJoinedOrganizations,
+  setSuggestedVisions,
+} from '../store/slices/daoSlice';
 
-const useTasks = () => {
+const useDao = () => {
   const dispatch = useDispatch();
   const { api, keyring, keyringState } = useSubstrate();
   const [unsub, setUnsub] = useState(null);
@@ -26,6 +32,104 @@ const useTasks = () => {
   const { setStatus, setStatusMessage } = useStatus();
   const { setLoading } = useLoader();
   const { toast } = useToast();
+
+  const totalOrganizations = useSelector(state => state.dao.totalOrganizations);
+  const totalVisions = useSelector(state => state.dao.totalVisions);
+  const joinedOrganizations = useSelector(
+    state => state.dao.joinedOrganizations
+  );
+  const suggestedVisions = useSelector(state => state.dao.suggestedVisions);
+
+  const handleQueryResponse = (dataFromResponse, daoQueryType) => {
+    if (!dataFromResponse.isNone) {
+      switch (daoQueryType) {
+        // TODO: wait for fixed data type from BE, mocked meanwhile:
+        case daoCallables.MEMBER_OF:
+          dispatch(
+            setJoinedOrganizations([
+              'Organization 1',
+              'Organization 2',
+              'Organization 3',
+            ])
+          );
+          break;
+        case daoCallables.ORGANIZATION_COUNT:
+          dispatch(setTotalOrganizations(dataFromResponse.toHuman()));
+          break;
+        case daoCallables.VISION_COUNT:
+          dispatch(setTotalVisions(dataFromResponse.toHuman()));
+          break;
+        case daoCallables.VISION:
+          console.log('dataFromResponse,', dataFromResponse);
+          dispatch(setSuggestedVisions(dataFromResponse.toHuman()));
+          break;
+        default:
+      }
+    }
+  };
+
+  const getJoinedOrganizations = useCallback(
+    (userKey, daoQueryType) => {
+      console.log('userKey:', userKey);
+      const query = async () => {
+        const unsub = await api?.query[pallets.DAO][daoCallables.MEMBER_OF](
+          userKey,
+          resData => handleQueryResponse(resData, daoQueryType)
+        );
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    },
+    [api]
+  );
+
+  const getTotalOrganizations = useCallback(
+    daoQueryType => {
+      const query = async () => {
+        const unsub = await api?.query[pallets.DAO][
+          daoCallables.ORGANIZATION_COUNT
+        ](resData => handleQueryResponse(resData, daoQueryType));
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    },
+    [api]
+  );
+
+  const getTotalVisions = useCallback(
+    daoQueryType => {
+      const query = async () => {
+        const unsub = await api?.query[pallets.DAO][daoCallables.VISION_COUNT](
+          resData => handleQueryResponse(resData, daoQueryType)
+        );
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    },
+    [api]
+  );
+
+  const getSuggestedVisions = useCallback(
+    (userKey, daoQueryType) => {
+      const query = async () => {
+        const unsub = await api?.query[pallets.DAO][daoCallables.VISION](
+          userKey,
+          resData => handleQueryResponse(resData, daoQueryType)
+        );
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    },
+    [api]
+  );
 
   const signedTx = async (actionType, daoPayload) => {
     const accountPair =
@@ -251,7 +355,15 @@ const useTasks = () => {
   return {
     daoAction,
     actionLoading,
+    getJoinedOrganizations,
+    getTotalOrganizations,
+    getTotalVisions,
+    getSuggestedVisions,
+    totalOrganizations,
+    totalVisions,
+    joinedOrganizations,
+    suggestedVisions,
   };
 };
 
-export { useTasks };
+export { useDao };
