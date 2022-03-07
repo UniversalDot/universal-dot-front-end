@@ -1,8 +1,8 @@
 /* eslint-disable multiline-ternary */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
-import { Task, Project, Log, Events, TextEditor, LoaderGeneric } from '../';
+import { Task, Project, Log, Events, LoaderGeneric } from '../';
 import { useTasks } from '../../hooks/useTasks';
 import { useLoader } from '../../hooks/useLoader';
 
@@ -16,8 +16,6 @@ const Timeline = () => {
   } = useTasks();
 
   const { loadingTasks } = useLoader();
-
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!actionLoading) {
@@ -43,10 +41,6 @@ const Timeline = () => {
   }, [allTasksReceived, taskAction]);
 
   const projects = [1, 2, 3].map(testNo => <Project key={testNo} />);
-
-  const handleCloseTextEditor = () => {
-    setOpen(false);
-  };
 
   return (
     <>
@@ -128,7 +122,6 @@ const Timeline = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <TextEditor open={open} onClose={() => handleCloseTextEditor()} />
     </>
   );
 };

@@ -1,14 +1,12 @@
 /* eslint-disable multiline-ternary */
-import React, { useState, useEffect } from 'react';
-import { Grid, Icon, Label, Card, Button } from 'semantic-ui-react';
+import React, { useEffect } from 'react';
+import { Grid, Icon, Card, Button } from 'semantic-ui-react';
 import styles from './Organizations.module.scss';
-import { Project, TextEditor } from '..';
+import { Project } from '..';
 import { useUser } from '../../hooks/useUser';
 import { useDao } from '../../hooks/useDao';
 import { daoCallables } from '../../types';
 const Organizations = () => {
-  const [open, setOpen] = useState(false);
-
   const { selectedAccountKey } = useUser();
   const {
     getJoinedOrganizations,
@@ -20,12 +18,6 @@ const Organizations = () => {
     joinedOrganizations,
     suggestedVisions,
   } = useDao();
-
-  const projects = [1, 2, 3].map(testNo => <Project key={testNo} />);
-
-  const handleCloseTextEditor = () => {
-    setOpen(false);
-  };
 
   useEffect(() => {
     if (selectedAccountKey) {
@@ -139,7 +131,6 @@ const Organizations = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <TextEditor open={open} onClose={() => handleCloseTextEditor()} />
     </>
   );
 };

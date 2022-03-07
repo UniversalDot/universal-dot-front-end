@@ -1,11 +1,23 @@
 /* eslint-disable indent */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Board from 'react-trello';
-import { Button } from 'semantic-ui-react';
-import { TextEditor } from '../';
+import { Button, Grid, Input } from 'semantic-ui-react';
+import { Modal } from '../';
+import { useTasks } from '../../hooks/useTasks';
+import { useStatus } from '../../hooks/useStatus';
+
+import { statusTypes, taskCallables } from '../../types';
+import styles from './KanbanBoard.module.scss';
 
 const KanbanBoard = () => {
   const [open, setOpen] = useState(false);
+
+  const { populateTask, taskValues, taskAction, isEditMode, actionLoading } =
+    useTasks();
+  const { status, setStatus } = useStatus();
+
+  const [showLoader, setShowLoader] = useState(false);
+
   const mockData = {
     lanes: [
       {
@@ -76,9 +88,28 @@ const KanbanBoard = () => {
     );
   };
 
-  const handleCloseTextEditor = () => {
-    setOpen(false);
+  const handleClose = useCallback(() => setOpen(false), []);
+
+  const handleOnChange = (key, value) => {
+    populateTask({
+      key,
+      value,
+    });
   };
+
+  useEffect(() => {
+    if (!!status && status === statusTypes.INIT) {
+      setShowLoader(true);
+    }
+
+    if (!!status && status === statusTypes.IN_BLOCK) {
+      setShowLoader(false);
+      handleClose();
+      setTimeout(() => {
+        setStatus('');
+      }, 5000);
+    }
+  }, [status, setStatus, handleClose]);
 
   return (
     <>
@@ -87,7 +118,63 @@ const KanbanBoard = () => {
         components={{ LaneHeader: custom }}
         data={mockData}
       />
-      <TextEditor open={open} onClose={() => handleCloseTextEditor()} />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        title="Create task"
+        description="Fill the details below to create your task."
+        loading={actionLoading || showLoader}
+        actionButtonLabel={isEditMode ? 'Update task' : 'Create task'}
+        actionButtonColor={isEditMode ? 'green' : 'blue'}
+        actionButtonOnClick={() =>
+          taskAction(
+            isEditMode ? taskCallables.UPDATE_TASK : taskCallables.CREATE_TASK,
+            taskValues
+          )
+        }
+        removeButtonLabel="Remove Task"
+        removeButtonOnClick={taskCallables.REMOVE_TASK}
+        showRemoveButton={isEditMode}
+      >
+        <Grid className={styles.gridContainer}>
+          <Grid.Row>
+            <Grid.Column>
+              <Input
+                placeholder="Enter task requirements..."
+                fluid
+                type="text"
+                label="Requirements:"
+                value={taskValues?.requirements || ''}
+                onChange={e => handleOnChange('requirements', e.target.value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Input
+                placeholder="Enter task budget..."
+                fluid
+                type="text"
+                label="Budget:"
+                value={taskValues?.budget || ''}
+                onChange={e => handleOnChange('budget', e.target.value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Input
+                placeholder="Enter task deadline"
+                fluid
+                type="text"
+                label="Deadline:"
+                value={taskValues?.deadline || ''}
+                onChange={e => handleOnChange('deadline', e.target.value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Modal>
     </>
   );
 };
