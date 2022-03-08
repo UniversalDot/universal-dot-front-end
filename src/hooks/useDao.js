@@ -20,6 +20,7 @@ import {
   setTotalVisions,
   setJoinedOrganizations,
   setSuggestedVisions,
+  setVisionName as setVisionNameForAnAction,
 } from '../store/slices/daoSlice';
 
 const useDao = () => {
@@ -39,6 +40,13 @@ const useDao = () => {
     state => state.dao.joinedOrganizations
   );
   const suggestedVisions = useSelector(state => state.dao.suggestedVisions);
+  const visionNameForAction = useSelector(
+    state => state.dao.visionNameForAction
+  );
+
+  const setVisionName = visionName => {
+    dispatch(setVisionNameForAnAction(visionName));
+  };
 
   const handleQueryResponse = (dataFromResponse, daoQueryType) => {
     if (!dataFromResponse.isNone) {
@@ -363,6 +371,8 @@ const useDao = () => {
     totalVisions,
     joinedOrganizations,
     suggestedVisions,
+    setVisionName,
+    visionNameForAction,
   };
 };
 

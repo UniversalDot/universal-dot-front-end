@@ -1,12 +1,20 @@
 /* eslint-disable multiline-ternary */
-import React, { useEffect } from 'react';
-import { Grid, Icon, Card, Button } from 'semantic-ui-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Grid, Icon, Card, Button, Input } from 'semantic-ui-react';
 import styles from './Organizations.module.scss';
-import { Project } from '..';
+import { Project, Modal } from '..';
 import { useUser } from '../../hooks/useUser';
 import { useDao } from '../../hooks/useDao';
-import { daoCallables } from '../../types';
+import { daoCallables, statusTypes } from '../../types';
+import { useStatus } from '../../hooks/useStatus';
+
 const Organizations = () => {
+  const [open, setOpen] = useState(false);
+  const [visionActionType, setVisionActionType] = useState('');
+  const [showLoader, setShowLoader] = useState(false);
+
+  const { status, setStatus } = useStatus();
+
   const { selectedAccountKey } = useUser();
   const {
     getJoinedOrganizations,
@@ -17,6 +25,10 @@ const Organizations = () => {
     totalVisions,
     joinedOrganizations,
     suggestedVisions,
+    actionLoading,
+    daoAction,
+    setVisionName,
+    visionNameForAction,
   } = useDao();
 
   useEffect(() => {
@@ -38,6 +50,27 @@ const Organizations = () => {
     getTotalVisions,
     getSuggestedVisions,
   ]);
+
+  const handleClose = useCallback(() => setOpen(false), []);
+
+  const visionButtonClick = useCallback(visionActionType => {
+    setVisionActionType(visionActionType);
+    setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!!status && status === statusTypes.INIT) {
+      setShowLoader(true);
+    }
+
+    if (!!status && status === statusTypes.IN_BLOCK) {
+      setShowLoader(false);
+      handleClose();
+      setTimeout(() => {
+        setStatus('');
+      }, 5000);
+    }
+  }, [status, setStatus, handleClose]);
 
   return (
     <>
@@ -125,12 +158,67 @@ const Organizations = () => {
                       description="Lorem ipsum..."
                     />
                   ))}
+                  <div className={styles.visionButtons}>
+                    <Button
+                      color="green"
+                      type="submit"
+                      onClick={() => visionButtonClick('sign')}
+                      // loading={loading}
+                      // disabled={loading}
+                    >
+                      Sign vision
+                    </Button>
+                    <Button
+                      icon="minus"
+                      color="orange"
+                      onClick={() => visionButtonClick('unsign')}
+                      // loading={loading}
+                      // disabled={loading}
+                    >
+                      Unsign vision
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        title={visionActionType === 'sign' ? 'Sign vision' : 'Unsign Vision'}
+        description="Enter an organization's vision name below."
+        loading={actionLoading || showLoader}
+        actionButtonLabel={
+          visionActionType === 'sign' ? 'Sign vision' : 'Unsign vision'
+        }
+        actionButtonColor="blue"
+        actionButtonOnClick={() =>
+          daoAction(
+            visionActionType === 'sign'
+              ? daoCallables.SIGN_VISION
+              : daoCallables.UNSIGN_VISION,
+            visionNameForAction
+          )
+        }
+        showRemoveButton={false}
+      >
+        <Grid className={styles.gridContainer}>
+          <Grid.Row>
+            <Grid.Column>
+              <Input
+                placeholder="Enter an organization's vision name..."
+                fluid
+                type="text"
+                label="Vision name:"
+                value={visionNameForAction || ''}
+                onChange={e => setVisionName(e.target.value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Modal>
     </>
   );
 };

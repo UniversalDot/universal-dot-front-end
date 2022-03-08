@@ -5,6 +5,7 @@ const initialState = {
   totalVisions: 0,
   joinedOrganizations: [],
   suggestedVisions: [],
+  visionNameForAction: '',
 };
 
 const daoSlice = createSlice({
@@ -23,6 +24,9 @@ const daoSlice = createSlice({
     setSuggestedVisions(state, action) {
       state.suggestedVisions = action.payload;
     },
+    setVisionName(state, action) {
+      state.visionNameForAction = action.payload;
+    },
   },
 });
 
@@ -31,6 +35,7 @@ export const {
   setTotalVisions,
   setJoinedOrganizations,
   setSuggestedVisions,
+  setVisionName,
 } = daoSlice.actions;
 
 export default daoSlice.reducer;
