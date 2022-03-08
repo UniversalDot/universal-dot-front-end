@@ -77,7 +77,7 @@ const Task = ({ id, optionsOnClick }) => {
           <div className={styles.parentProject}>
             <div className={styles.content}>
               <Icon name="folder outline" className={styles.icon} />
-              <span className={styles.title}>Project: UniversalDot</span>
+              <span className={styles.title}>{data?.title}</span>
             </div>
           </div>
           <div className={styles.taskDescription}>
@@ -85,7 +85,7 @@ const Task = ({ id, optionsOnClick }) => {
               This is where the task description goes.
               <div style={{ marginTop: '1rem' }}>Status: {data?.status}</div>
               <div style={{ marginTop: '1rem' }}>
-                Requirements: {data?.requirements}
+                Specification: {data?.specification}
               </div>
               <div>budget: {data?.budget}</div>
               <div>Deadline: {data?.deadline}</div>

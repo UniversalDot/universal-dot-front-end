@@ -140,6 +140,18 @@ const KanbanBoard = () => {
           <Grid.Row>
             <Grid.Column>
               <Input
+                placeholder="Enter task title..."
+                fluid
+                type="text"
+                label="Title:"
+                value={taskValues?.title || ''}
+                onChange={e => handleOnChange('title', e.target.value)}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Input
                 placeholder="Enter task requirements..."
                 fluid
                 type="text"

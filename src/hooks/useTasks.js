@@ -5,7 +5,8 @@ import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
 import {
   setTasks,
-  setTaskRequirements,
+  setTaskTitle,
+  setTaskSpecification,
   setTaskBudget,
   setTaskDeadline,
   resetTask,
@@ -44,8 +45,11 @@ const useTasks = () => {
 
   const populateTask = useCallback(
     ({ key, value }) => {
-      if (key === 'requirements') {
-        dispatch(setTaskRequirements(value));
+      if (key === 'title') {
+        dispatch(setTaskTitle(value));
+      }
+      if (key === 'specification') {
+        dispatch(setTaskSpecification(value));
       }
       if (key === 'budget') {
         dispatch(setTaskBudget(value));
@@ -78,7 +82,7 @@ const useTasks = () => {
   //     const queryResHandler = result => {
   //       if (!result.isNone) {
   //         dispatch(setTaskIsEditMode(true));
-  //         dispatch(setTaskRequirements(result.toHuman().requirements));
+  //         dispatch(setTaskSpecification(result.toHuman().specification));
   //         dispatch(setTaskBudget(result.toHuman().budget));
   //         dispatch(setTaskDeadline(result.toHuman().deadline));
   //       }
@@ -163,7 +167,8 @@ const useTasks = () => {
     const fromAcct = await getFromAcct();
 
     const transformedPayloadForCreate = [
-      taskPayload?.requirements || '',
+      taskPayload?.title || '',
+      taskPayload?.specification || '',
       taskPayload?.budget || '',
       taskPayload?.deadline || '',
     ];

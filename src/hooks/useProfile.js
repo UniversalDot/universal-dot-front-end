@@ -4,7 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { web3FromSource } from '@polkadot/extension-dapp';
 import { useSubstrate } from '../substrate-lib';
 
-import { setProfile, setFormInterests } from '../store/slices/profileSlice';
+import {
+  setProfile,
+  setFormInterests,
+  setUsername as setUsernameAction,
+} from '../store/slices/profileSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
 import { useLoader } from './useLoader';
@@ -32,10 +36,18 @@ const useProfile = () => {
 
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
+  const username = useSelector(state => state.profile.form.username);
 
   const populateFormInterests = useCallback(
     interestsArray => {
       dispatch(setFormInterests(interestsArray));
+    },
+    [dispatch]
+  );
+
+  const setUsername = useCallback(
+    username => {
+      dispatch(setUsernameAction(username));
     },
     [dispatch]
   );
@@ -142,9 +154,11 @@ const useProfile = () => {
 
     // TODO: verify if correct;
     const paramFieldsForTransformed = () => [
+      { name: 'username', optional: false, type: 'Bytes' },
       { name: 'interests', optional: false, type: 'Bytes' },
     ];
     const inputParamsForTransformed = () => [
+      { type: 'Bytes', value: username },
       { type: 'Bytes', value: interests.join() },
     ];
 
@@ -200,6 +214,7 @@ const useProfile = () => {
     setStatus(statusTypes.INIT);
     setActionLoading(true);
     dispatch(setFormInterests([]));
+    dispatch(setUsername(''));
     signedTransaction(actionType);
   };
 
@@ -211,6 +226,8 @@ const useProfile = () => {
     profileAction,
     actionLoading,
     setActionLoading,
+    setUsername,
+    username,
   };
 };
 

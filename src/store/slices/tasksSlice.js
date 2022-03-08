@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   tasks: [],
   task: {
-    requirements: '',
+    title: '',
+    specification: '',
     budget: '',
     deadline: '',
   },
@@ -20,8 +21,11 @@ const tasksSlice = createSlice({
     resetTasks(state) {
       state.tasks = [];
     },
-    setTaskRequirements(state, action) {
-      state.task.requirements = action.payload;
+    setTaskTitle(state, action) {
+      state.task.title = action.payload;
+    },
+    setTaskSpecification(state, action) {
+      state.task.specification = action.payload;
     },
     setTaskBudget(state, action) {
       state.task.budget = action.payload;
@@ -42,7 +46,8 @@ const tasksSlice = createSlice({
 
 export const {
   setTasks,
-  setTaskRequirements,
+  setTaskTitle,
+  setTaskSpecification,
   setTaskBudget,
   setTaskDeadline,
   setTaskIsEditMode,
