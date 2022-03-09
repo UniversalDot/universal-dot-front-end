@@ -1,9 +1,13 @@
 import React from 'react';
 
-import { PageContainer } from '../../components';
+import { PageContainer, Organizations } from '../../components';
 
 const OrganizationOwn = () => {
-  return <PageContainer>Own org.</PageContainer>;
+  return (
+    <PageContainer>
+      <Organizations type="own" />
+    </PageContainer>
+  );
 };
 
 OrganizationOwn.displayName = 'OrganizationOwn';

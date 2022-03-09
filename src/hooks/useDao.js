@@ -21,6 +21,8 @@ import {
   setJoinedOrganizations,
   setSuggestedVisions,
   setVisionName as setVisionNameForAnAction,
+  setOrganizationName as setOrganizationNameForAnAction,
+  setMemberOrTask as setMemberOrTaskForAnAction,
 } from '../store/slices/daoSlice';
 
 const useDao = () => {
@@ -43,12 +45,28 @@ const useDao = () => {
   const visionNameForAction = useSelector(
     state => state.dao.visionNameForAction
   );
+  const organizationNameForAction = useSelector(
+    state => state.dao.organizationNameForAction
+  );
+  const memberOrTaskForAction = useSelector(
+    state => state.dao.memberOrTaskForAction
+  );
 
   const setVisionName = visionName => {
     dispatch(setVisionNameForAnAction(visionName));
   };
 
+  const setOrganizationName = orgName => {
+    dispatch(setOrganizationNameForAnAction(orgName));
+  };
+
+  const setMemberOrTask = memberOrTaskId => {
+    dispatch(setMemberOrTaskForAnAction(memberOrTaskId));
+  };
+
   const handleQueryResponse = (dataFromResponse, daoQueryType) => {
+    console.log('data from response', dataFromResponse);
+    console.log('data from response human', dataFromResponse.toHuman());
     if (!dataFromResponse.isNone) {
       switch (daoQueryType) {
         // TODO: wait for fixed data type from BE, mocked meanwhile:
@@ -262,8 +280,9 @@ const useDao = () => {
       );
     }
 
-    const transactionResponseHandler = ({ status }) => {
-      const callStatus = status;
+    const transactionResponseHandler = res => {
+      console.log('res', res.toHuman());
+      const callStatus = res.status;
 
       if (callStatus?.isFinalized) {
         // TODO: make a call to repopulate state with latest changes from the blockchain;
@@ -334,6 +353,7 @@ const useDao = () => {
     };
 
     const transactionErrorHandler = err => {
+      console.log('err', err);
       setStatus(statusTypes.ERROR);
       setStatusMessage(err.toString());
     };
@@ -373,6 +393,10 @@ const useDao = () => {
     suggestedVisions,
     setVisionName,
     visionNameForAction,
+    organizationNameForAction,
+    memberOrTaskForAction,
+    setOrganizationName,
+    setMemberOrTask,
   };
 };
 

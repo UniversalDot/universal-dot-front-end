@@ -152,12 +152,12 @@ const KanbanBoard = () => {
           <Grid.Row>
             <Grid.Column>
               <Input
-                placeholder="Enter task requirements..."
+                placeholder="Enter task specification..."
                 fluid
                 type="text"
-                label="Requirements:"
-                value={taskValues?.requirements || ''}
-                onChange={e => handleOnChange('requirements', e.target.value)}
+                label="Specification:"
+                value={taskValues?.specification || ''}
+                onChange={e => handleOnChange('specification', e.target.value)}
               />
             </Grid.Column>
           </Grid.Row>

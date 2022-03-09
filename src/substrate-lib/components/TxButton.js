@@ -67,8 +67,12 @@ function TxButton({
       ? setStatus(`😉 Finalized. Block hash: ${status.asFinalized.toString()}`)
       : setStatus(`Current transaction status: ${status.type}`);
 
-  const txErrHandler = err =>
+  const txErrHandler = err => {
+    console.log('err in template', err);
+    console.log('err in template human', err.toHuman());
+    console.log('err in template string', err.toString());
     setStatus(`😞 Transaction Failed: ${err.toString()}`);
+  };
 
   const sudoTx = async () => {
     const fromAcct = await getFromAcct();

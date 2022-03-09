@@ -5,7 +5,7 @@ import { PageContainer, Organizations } from '../../components';
 const OrganizationJoined = () => {
   return (
     <PageContainer>
-      <Organizations />
+      <Organizations type="joined" />
     </PageContainer>
   );
 };
