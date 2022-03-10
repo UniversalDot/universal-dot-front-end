@@ -69,7 +69,6 @@ function TxButton({
 
   const txErrHandler = err => {
     console.log('err in template', err);
-    console.log('err in template human', err.toHuman());
     console.log('err in template string', err.toString());
     setStatus(`😞 Transaction Failed: ${err.toString()}`);
   };

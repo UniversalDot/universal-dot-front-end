@@ -1,6 +1,6 @@
 /* eslint-disable multiline-ternary */
 import React, { useEffect, useState, useCallback } from 'react';
-import { Grid, Icon, Card, Button, Input } from 'semantic-ui-react';
+import { Grid, Icon, Card, Button, Input, Search } from 'semantic-ui-react';
 import styles from './Organizations.module.scss';
 import { Project, Modal } from '..';
 import { useUser } from '../../hooks/useUser';
@@ -36,7 +36,11 @@ const Organizations = ({ type }) => {
     memberOrTaskForAction,
     setOrganizationName,
     setMemberOrTask,
+    getApplicants,
+    allApplicants,
   } = useDao();
+
+  const [searchOrg, setSearchOrg] = useState('');
 
   const visionNameTypes = [
     daoCallables.SIGN_VISION,
@@ -195,6 +199,14 @@ const Organizations = ({ type }) => {
       }, 5000);
     }
   }, [status, setStatus, handleClose]);
+
+  const searchOrganization = () => {
+    getApplicants(searchOrg);
+  };
+
+  const handleOnSearchOrg = val => {
+    setSearchOrg(val);
+  };
 
   return (
     <>
@@ -408,6 +420,34 @@ const Organizations = ({ type }) => {
           </Grid.Row>
         </Grid>
       )}
+      <Grid className={styles.gridContainer}>
+        <Grid.Row className={styles.row}>
+          <Grid.Column mobile={16} tablet={16} computer={8}>
+            <Input
+              placeholder="For ex. MyOrg123"
+              action={{
+                icon: 'search',
+                onClick: searchOrganization,
+              }}
+              fluid
+              type="text"
+              label="Search for an organization:"
+              value={searchOrg}
+              onChange={e => handleOnSearchOrg(e.target.value)}
+            />
+          </Grid.Column>
+        </Grid.Row>
+        {allApplicants && (
+          <Grid.Row className={styles.row}>
+            <Grid.Column mobile={16} tablet={16} computer={8}>
+              {allApplicants.map(appl => (
+                <div key={appl}>{appl}</div>
+              ))}
+            </Grid.Column>
+          </Grid.Row>
+        )}
+      </Grid>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -416,7 +456,7 @@ const Organizations = ({ type }) => {
         loading={actionLoading || showLoader}
         actionButtonLabel="Submit"
         actionButtonColor="blue"
-        actionButtonOnClick={() => daoAction(daoType, visionNameForAction)}
+        actionButtonOnClick={() => daoAction(daoType)}
         showRemoveButton={false}
       >
         <Grid className={styles.gridContainer}>

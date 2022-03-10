@@ -23,6 +23,7 @@ import {
   setVisionName as setVisionNameForAnAction,
   setOrganizationName as setOrganizationNameForAnAction,
   setMemberOrTask as setMemberOrTaskForAnAction,
+  setApplicants as setApplicantsToOrg,
 } from '../store/slices/daoSlice';
 
 const useDao = () => {
@@ -50,6 +51,9 @@ const useDao = () => {
   );
   const memberOrTaskForAction = useSelector(
     state => state.dao.memberOrTaskForAction
+  );
+  const allApplicants = useSelector(
+    state => state.dao.applicantsToOrganization
   );
 
   const setVisionName = visionName => {
@@ -89,10 +93,32 @@ const useDao = () => {
           console.log('dataFromResponse,', dataFromResponse);
           dispatch(setSuggestedVisions(dataFromResponse.toHuman()));
           break;
+        case daoCallables.APPLICANTS_TO_ORGANIZATION:
+          console.log('getApplicants response,', dataFromResponse.toHuman());
+          dispatch(setApplicantsToOrg(dataFromResponse.toHuman()));
+          break;
         default:
       }
     }
   };
+
+  const getApplicants = useCallback(
+    organizationName => {
+      console.log('getApplicants organizationName:', organizationName);
+      const query = async () => {
+        const unsub = await api?.query[pallets.DAO][
+          daoCallables.APPLICANTS_TO_ORGANIZATION
+        ](organizationName, resData =>
+          handleQueryResponse(resData, daoCallables.APPLICANTS_TO_ORGANIZATION)
+        );
+        const cb = () => unsub;
+        cb();
+      };
+
+      query();
+    },
+    [api]
+  );
 
   const getJoinedOrganizations = useCallback(
     (userKey, daoQueryType) => {
@@ -157,7 +183,7 @@ const useDao = () => {
     [api]
   );
 
-  const signedTx = async (actionType, daoPayload) => {
+  const signedTx = async actionType => {
     const accountPair =
       selectedAccountKey &&
       keyringState === 'READY' &&
@@ -186,37 +212,37 @@ const useDao = () => {
 
     // TODO: orgName should be refactored to orgId in BE;
     const transformedPayloadAddMembers = [
-      daoPayload?.organizationName || '',
-      daoPayload?.accountId || '',
+      organizationNameForAction || '',
+      memberOrTaskForAction || '',
     ];
 
     // TODO: orgName should be refactored to orgId in BE;
     const transformedPayloadAddTasks = [
-      daoPayload?.organizationName || '',
-      daoPayload?.taskId || '',
+      organizationNameForAction || '',
+      memberOrTaskForAction || '',
     ];
 
-    const transformedPayloadCreateOrg = [daoPayload];
+    const transformedPayloadCreateOrg = [organizationNameForAction];
     // TODO: should accept more data (title, desc, etc.) not just visionDocument;
-    const transformedPayloadCreateVision = [daoPayload];
+    const transformedPayloadCreateVision = [visionNameForAction];
     // TODO: payload is orgName, but should be refactored to orgId in BE;
-    const transformedPayloadDissolveOrg = [daoPayload];
+    const transformedPayloadDissolveOrg = [organizationNameForAction];
     // TODO: orgName should be refactored to orgId in BE;
     const transformedPayloadRemoveMembers = [
-      daoPayload?.organizationName || '',
-      daoPayload?.accountId || '',
+      organizationNameForAction || '',
+      memberOrTaskForAction || '',
     ];
     // TODO: orgName should be refactored to orgId in BE;
     const transformedPayloadRemoveTasks = [
-      daoPayload?.organizationName || '',
-      daoPayload?.taskId || '',
+      organizationNameForAction || '',
+      memberOrTaskForAction || '',
     ];
     // TODO: visionDocument should be refactored to visionId in BE;
-    const transformedPayloadRemoveVision = [daoPayload];
+    const transformedPayloadRemoveVision = [visionNameForAction];
     // TODO: visionDocument should be refactored to visionId in BE;
-    const transformedPayloadSignVision = [daoPayload];
+    const transformedPayloadSignVision = [visionNameForAction];
     // TODO: visionDocument should be refactored to visionId in BE;
-    const transformedPayloadUnsignVision = [daoPayload];
+    const transformedPayloadUnsignVision = [visionNameForAction];
 
     let txExecute;
 
@@ -365,7 +391,7 @@ const useDao = () => {
     setUnsub(() => unsub);
   };
 
-  const daoAction = async (actionType, daoPayload) => {
+  const daoAction = async actionType => {
     if (typeof unsub === 'function') {
       unsub();
       setUnsub(null);
@@ -377,7 +403,7 @@ const useDao = () => {
 
     setActionLoading(true);
 
-    signedTx(actionType, daoPayload);
+    signedTx(actionType);
   };
 
   return {
@@ -397,6 +423,8 @@ const useDao = () => {
     memberOrTaskForAction,
     setOrganizationName,
     setMemberOrTask,
+    allApplicants,
+    getApplicants,
   };
 };
 

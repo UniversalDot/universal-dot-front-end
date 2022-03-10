@@ -59,4 +59,5 @@ export const daoCallables = {
   ORGANIZATION_COUNT: 'organizationCount',
   VISION: 'vision',
   VISION_COUNT: 'visionCount',
+  APPLICANTS_TO_ORGANIZATION: 'applicantsToOrganization',
 };
