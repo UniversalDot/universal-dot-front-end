@@ -199,7 +199,6 @@ const Header = () => {
                       })
                     )
                   }
-                  value="fawfawf"
                 />
               </Menu.Item>
               <Menu.Item style={{ minWidth: '0' }} as={Button}>
