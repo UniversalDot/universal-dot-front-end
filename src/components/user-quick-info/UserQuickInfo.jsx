@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, Image, Icon } from 'semantic-ui-react';
 import styles from './UserQuickInfo.module.scss';
-import { useUser } from '../../hooks/useUser';
+import { useUser } from '../../hooks';
 
 const UserQuickInfo = () => {
-  const { selectedAccountUsername } = useUser();
+  const { selectedKeyring } = useUser();
 
   return (
     <Card fluid raised className={styles.card}>
@@ -17,7 +17,7 @@ const UserQuickInfo = () => {
             circular
           />
           <Card.Header className={styles.name}>
-            {selectedAccountUsername}
+            {selectedKeyring.text}
           </Card.Header>
         </div>
         <div className={styles.divider}></div>

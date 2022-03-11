@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react';
 import { Card, Grid, Button } from 'semantic-ui-react';
 import styles from './Funds.module.scss';
-import { useUser } from '../../hooks/useUser';
+import { useUser } from '../../hooks';
 import { useSubstrate } from '../../substrate-lib';
 import { useDispatch } from 'react-redux';
 import { setBalance } from '../../store/slices/accountSlice';
 
 const Funds = () => {
-  const { selectedAccountKey, selectedAccountBalance } = useUser();
+  const { selectedKeyring, selectedAccountBalance } = useUser();
   const { api } = useSubstrate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     let unsubscribe;
 
-    if (selectedAccountKey && api) {
-      selectedAccountKey &&
+    if (selectedKeyring.value && api) {
+      selectedKeyring.value &&
         api?.query?.system
-          ?.account(selectedAccountKey, balance => {
+          ?.account(selectedKeyring.value, balance => {
             dispatch(setBalance(balance.data.free.toHuman()));
           })
           .then(unsub => {
@@ -27,7 +27,7 @@ const Funds = () => {
     }
 
     return () => unsubscribe && unsubscribe();
-  }, [selectedAccountKey, dispatch, api]);
+  }, [selectedKeyring.value, dispatch, api]);
 
   return (
     <Grid className={styles.grid}>

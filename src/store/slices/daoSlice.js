@@ -39,6 +39,11 @@ const daoSlice = createSlice({
     setApplicants(state, action) {
       state.applicantsToOrganization = action.payload;
     },
+    resetState(state) {
+      state.visionNameForAction = '';
+      state.organizationNameForAction = '';
+      state.memberOrTaskForAction = '';
+    },
   },
 });
 
@@ -51,6 +56,7 @@ export const {
   setOrganizationName,
   setMemberOrTask,
   setApplicants,
+  resetState,
 } = daoSlice.actions;
 
 export default daoSlice.reducer;

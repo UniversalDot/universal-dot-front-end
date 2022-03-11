@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Icon, Dropdown } from 'semantic-ui-react';
 import styles from './Task.module.scss';
-import { useTasks } from '../../hooks/useTasks';
+import { useTasks } from '../../hooks';
 import { taskCallables } from '../../types';
 
 const Task = ({ id, optionsOnClick }) => {

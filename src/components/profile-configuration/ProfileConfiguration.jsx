@@ -13,8 +13,7 @@ import {
 } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import styles from './ProfileConfiguration.module.scss';
-import { useProfile } from '../../hooks/useProfile';
-import { useStatus } from '../../hooks/useStatus';
+import { useProfile, useStatus } from '../../hooks';
 import { PageContainer } from '../';
 import { profileCallables, statusTypes } from '../../types';
 
@@ -88,14 +87,14 @@ const ProfileConfiguration = () => {
   };
 
   return (
-    <PageContainer>
-      <Breadcrumb size="big" className={styles.breadcrumb}>
+    <>
+      {/* <Breadcrumb size="big" className={styles.breadcrumb}>
         <Breadcrumb.Section link as={Link} to="/profile">
           Profile
         </Breadcrumb.Section>
         <Breadcrumb.Divider icon="right chevron" />
         <Breadcrumb.Section active>Profile configuration</Breadcrumb.Section>
-      </Breadcrumb>
+      </Breadcrumb> */}
       <Card fluid raised className={styles.card}>
         {!showLoader && (
           <Card.Content
@@ -276,7 +275,7 @@ const ProfileConfiguration = () => {
           </Message.Content>
         </Message>
       )} */}
-    </PageContainer>
+    </>
   );
 };
 

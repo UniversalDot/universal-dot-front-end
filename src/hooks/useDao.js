@@ -24,6 +24,7 @@ import {
   setOrganizationName as setOrganizationNameForAnAction,
   setMemberOrTask as setMemberOrTaskForAnAction,
   setApplicants as setApplicantsToOrg,
+  resetState,
 } from '../store/slices/daoSlice';
 
 const useDao = () => {
@@ -32,7 +33,7 @@ const useDao = () => {
   const [unsub, setUnsub] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const { selectedAccountKey } = useUser();
+  const { selectedKeyring } = useUser();
   const { setStatus, setStatusMessage } = useStatus();
   const { setLoading } = useLoader();
   const { toast } = useToast();
@@ -68,9 +69,11 @@ const useDao = () => {
     dispatch(setMemberOrTaskForAnAction(memberOrTaskId));
   };
 
+  const resetFields = () => {
+    dispatch(resetState());
+  };
+
   const handleQueryResponse = (dataFromResponse, daoQueryType) => {
-    console.log('data from response', dataFromResponse);
-    console.log('data from response human', dataFromResponse.toHuman());
     if (!dataFromResponse.isNone) {
       switch (daoQueryType) {
         // TODO: wait for fixed data type from BE, mocked meanwhile:
@@ -90,11 +93,9 @@ const useDao = () => {
           dispatch(setTotalVisions(dataFromResponse.toHuman()));
           break;
         case daoCallables.VISION:
-          console.log('dataFromResponse,', dataFromResponse);
           dispatch(setSuggestedVisions(dataFromResponse.toHuman()));
           break;
         case daoCallables.APPLICANTS_TO_ORGANIZATION:
-          console.log('getApplicants response,', dataFromResponse.toHuman());
           dispatch(setApplicantsToOrg(dataFromResponse.toHuman()));
           break;
         default:
@@ -104,7 +105,6 @@ const useDao = () => {
 
   const getApplicants = useCallback(
     organizationName => {
-      console.log('getApplicants organizationName:', organizationName);
       const query = async () => {
         const unsub = await api?.query[pallets.DAO][
           daoCallables.APPLICANTS_TO_ORGANIZATION
@@ -122,7 +122,6 @@ const useDao = () => {
 
   const getJoinedOrganizations = useCallback(
     (userKey, daoQueryType) => {
-      console.log('userKey:', userKey);
       const query = async () => {
         const unsub = await api?.query[pallets.DAO][daoCallables.MEMBER_OF](
           userKey,
@@ -185,9 +184,9 @@ const useDao = () => {
 
   const signedTx = async actionType => {
     const accountPair =
-      selectedAccountKey &&
+      selectedKeyring.value &&
       keyringState === 'READY' &&
-      keyring.getPair(selectedAccountKey);
+      keyring.getPair(selectedKeyring.value);
 
     const getFromAcct = async () => {
       const {
@@ -307,7 +306,6 @@ const useDao = () => {
     }
 
     const transactionResponseHandler = res => {
-      console.log('res', res.toHuman());
       const callStatus = res.status;
 
       if (callStatus?.isFinalized) {
@@ -376,10 +374,12 @@ const useDao = () => {
       }
 
       setActionLoading(false);
+      setVisionName('');
+      setOrganizationName('');
+      setMemberOrTask('');
     };
 
     const transactionErrorHandler = err => {
-      console.log('err', err);
       setStatus(statusTypes.ERROR);
       setStatusMessage(err.toString());
     };
@@ -425,6 +425,7 @@ const useDao = () => {
     setMemberOrTask,
     allApplicants,
     getApplicants,
+    resetFields,
   };
 };
 

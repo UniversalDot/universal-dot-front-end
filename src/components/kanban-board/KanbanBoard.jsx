@@ -3,8 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Board from 'react-trello';
 import { Button, Grid, Input } from 'semantic-ui-react';
 import { Modal } from '../';
-import { useTasks } from '../../hooks/useTasks';
-import { useStatus } from '../../hooks/useStatus';
+import { useTasks, useStatus } from '../../hooks';
 
 import { statusTypes, taskCallables } from '../../types';
 import styles from './KanbanBoard.module.scss';

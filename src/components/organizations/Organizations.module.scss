@@ -67,6 +67,11 @@
 
             .visionButtons {
               margin-top: 1rem;
+              display: flex;
+              justify-content: space-around;
+              .visionButton {
+                margin: 0;
+              }
             }
           }
         }

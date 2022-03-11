@@ -5,6 +5,7 @@ import {
 } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
+import { PageContainer } from '../../components';
 
 const localizer = momentLocalizer(moment);
 
@@ -99,7 +100,7 @@ const Calendar = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <DragAndDropCalendar
         selectable
         localizer={localizer}
@@ -115,7 +116,7 @@ const Calendar = () => {
         onDropFromOutside={onDropFromOutside}
         handleDragStart={handleDragStart}
       />
-    </>
+    </PageContainer>
   );
 };
 

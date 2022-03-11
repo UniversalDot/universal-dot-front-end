@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Icon, Menu, Sidebar, Container } from 'semantic-ui-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styles from './SidebarComponent.module.scss';
-import { useGeneral } from '../../hooks/useGeneral';
+import { useGeneral } from '../../hooks';
 
 const SidebarComponent = () => {
   const [expOrg, setExpOrg] = useState(false);

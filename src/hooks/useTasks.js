@@ -31,7 +31,7 @@ const useTasks = () => {
   const [unsub, setUnsub] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const { selectedAccountKey } = useUser();
+  const { selectedKeyring } = useUser();
   const { setStatus, setStatusMessage } = useStatus();
   const { setLoading } = useLoader();
   const { toast } = useToast();
@@ -119,10 +119,10 @@ const useTasks = () => {
   const getAllTasks = useCallback(() => {
     setLoading({ type: loadingTypes.TASKS, value: true });
     setStatusMessage('Loading tasks...');
-    if (selectedAccountKey) {
+    if (selectedKeyring.value) {
       const query = async () => {
         const unsub = await api.query[pallets.TASK][taskCallables.TASKS_OWNED](
-          selectedAccountKey,
+          selectedKeyring.value,
           queryResponseHandler
         );
         const cb = () => unsub;
@@ -132,7 +132,7 @@ const useTasks = () => {
       query();
     }
   }, [
-    selectedAccountKey,
+    selectedKeyring.value,
     api,
     queryResponseHandler,
     setLoading,
@@ -141,9 +141,9 @@ const useTasks = () => {
 
   const signedTx = async (actionType, taskPayload) => {
     const accountPair =
-      selectedAccountKey &&
+      selectedKeyring.value &&
       keyringState === 'READY' &&
-      keyring.getPair(selectedAccountKey);
+      keyring.getPair(selectedKeyring.value);
 
     const getFromAcct = async () => {
       const {

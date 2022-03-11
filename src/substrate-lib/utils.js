@@ -13,8 +13,6 @@ const utils = {
       'i32',
       'i64',
       'i128',
-      // Note: inserted by us:
-      'Vec<u8>',
     ],
   },
 };

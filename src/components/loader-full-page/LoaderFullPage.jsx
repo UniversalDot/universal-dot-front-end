@@ -1,8 +1,7 @@
 /* eslint-disable multiline-ternary */
 import React from 'react';
 import { Dimmer, Loader } from 'semantic-ui-react';
-import { useStatus } from '../../hooks/useStatus';
-import { useLoader } from '../../hooks/useLoader';
+import { useStatus, useLoader } from '../../hooks';
 
 const LoaderFullPage = () => {
   const { message } = useStatus();

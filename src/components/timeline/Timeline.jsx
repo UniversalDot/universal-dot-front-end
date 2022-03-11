@@ -3,8 +3,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Grid, Icon, Label } from 'semantic-ui-react';
 import styles from './Timeline.module.scss';
 import { Task, Project, Log, Events, LoaderGeneric } from '../';
-import { useTasks } from '../../hooks/useTasks';
-import { useLoader } from '../../hooks/useLoader';
+import { useTasks, useLoader } from '../../hooks';
 
 const Timeline = () => {
   const {

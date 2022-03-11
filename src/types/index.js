@@ -6,6 +6,7 @@ export const statusTypes = {
 };
 
 export const loadingTypes = {
+  KEYRING: 'keyring',
   PROFILE: 'profile',
   TASKS: 'tasks',
   DAO: 'dao',

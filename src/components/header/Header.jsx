@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Image,
   Sticky,
@@ -9,26 +9,47 @@ import {
   Dropdown,
 } from 'semantic-ui-react';
 import { useLocation, Link } from 'react-router-dom';
-import { useUser } from '../../hooks/useUser';
-import { useGeneral } from '../../hooks/useGeneral';
+import { useUser, useGeneral } from '../../hooks';
 import styles from './Header.module.scss';
-
 import { useSubstrate } from '../../substrate-lib';
-import { useDispatch } from 'react-redux';
-import { setAccountSelected } from '../../store/slices/accountSlice';
 
 const Header = () => {
   const location = useLocation();
-  const { selectedAccountUsername } = useUser();
+  const { keyring } = useSubstrate();
+
+  const {
+    setKeyringOptions,
+    keyringOptions,
+    setSelectedKeyring,
+    selectedKeyring,
+  } = useUser();
   const { sidebarWidth } = useGeneral();
 
   const activePage = () => {
     const current = location.pathname.split('/')[1];
     const capitalized = current.charAt(0).toUpperCase() + current.slice(1);
 
+    let icon;
+    switch (current) {
+      case 'profile':
+        icon = 'block layout';
+        break;
+      case 'dashboard':
+        icon = 'briefcase';
+        break;
+      case 'organization':
+        icon = 'clipboard list';
+        break;
+      case 'calendar':
+        icon = 'calendar alternate outline';
+        break;
+      default:
+        icon = '';
+    }
+
     return (
       <div style={{ display: 'flex' }}>
-        <Icon name="block layout" />
+        <Icon name={icon} />
         <span style={{ marginLeft: '0.85rem', fontWeight: 'bold' }}>
           {capitalized}
         </span>
@@ -37,8 +58,6 @@ const Header = () => {
   };
 
   const AccountDropdown = () => {
-    const { selectedAccountUsername } = useUser();
-
     const trigger = (
       <>
         <Image
@@ -56,7 +75,7 @@ const Header = () => {
             disabled
             text={
               <span>
-                Signed in as <strong>{selectedAccountUsername}</strong>
+                Signed in as <strong>{selectedKeyring.text}</strong>
               </span>
             }
           />
@@ -72,69 +91,18 @@ const Header = () => {
     );
   };
 
-  // const friendOptions = [
-  //   {
-  //     key: 'Jenny Hess',
-  //     text: 'Jenny Hess',
-  //     value: 'Jenny Hess',
-  //   },
-  // ];
-
-  const [allAccountOptions, setAllAccountOptions] = useState([]);
-
-  const dispatch = useDispatch();
-  const { keyring } = useSubstrate();
-
-  const [keyringOptions, setKeyringOptions] = useState(undefined);
-
-  // Initial username
-  const [initialUsername, setInitialUsername] = useState('');
-  // Initial account key
-  const [initialAddress, setInitialAddress] = useState('');
-
   useEffect(() => {
-    if (keyringOptions) {
-      console.log('keyringOptions', keyringOptions);
-      setAllAccountOptions(
-        keyringOptions.map(option => {
-          return {
-            key: option.text,
-            text: option.text,
-            value: option.value,
-          };
-        })
-      );
-      setInitialUsername(
-        keyringOptions?.length > 0 ? keyringOptions[1].text : ''
-      );
-      setInitialAddress(
-        keyringOptions?.length > 0 ? keyringOptions[1].value : ''
-      );
-    }
-  }, [keyringOptions]);
-
-  useEffect(() => {
-    // Get the list of accounts we possess the private key for
+    // Get the list of accounts we possess the private key for.
     if (keyring) {
-      const keyringOptionsToSet = keyring?.getPairs()?.map(account => ({
+      const keyringOptions = keyring?.getPairs()?.map(account => ({
         key: account.address,
         value: account.address,
         text: account.meta.name.toUpperCase(),
-        icon: 'user',
       }));
-      setKeyringOptions(keyringOptionsToSet);
+      setKeyringOptions(keyringOptions);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyring]);
-
-  // Set the initial address
-  useEffect(() => {
-    dispatch(
-      setAccountSelected({
-        selectedAccountKey: initialAddress,
-        selectedAccountUsername: initialUsername,
-      })
-    );
-  }, [dispatch, keyring, initialAddress, initialUsername]);
 
   return (
     <Sticky className={styles.header}>
@@ -154,8 +122,7 @@ const Header = () => {
           className={styles.mainContent}
           style={{
             width: `calc(100% - ${sidebarWidth}px)`,
-            // 300px = 150px of minWidth of activyPage item + sidebar
-            // paddingRight: '300px',
+            // paddingRight = px of minWidth of activyPage item + sidebar
             paddingRight: `${sidebarWidth + sidebarWidth}px`,
           }}
         >
@@ -182,23 +149,21 @@ const Header = () => {
               <Menu.Item style={{ minWidth: '0' }} as={Button}>
                 <Icon name="folder outline" />
               </Menu.Item>
-              {/* <Menu.Item className={styles.menuItem_username} as={'span'}>
-                {selectedAccountUsername}
-              </Menu.Item> */}
               <Menu.Item style={{ minWidth: '0' }}>
                 <Dropdown
                   placeholder="Select an account"
-                  fluid
                   selection
-                  options={allAccountOptions}
-                  onChange={(_, otherData) =>
-                    dispatch(
-                      setAccountSelected({
-                        selectedAccountKey: otherData.value,
-                        selectedAccountUsername: 'testtt',
-                      })
-                    )
-                  }
+                  options={keyringOptions || []}
+                  onChange={(_, otherData) => {
+                    setSelectedKeyring({
+                      key: otherData.value,
+                      value: otherData.value,
+                      text: keyringOptions.find(
+                        option => option.key === otherData.value
+                      ).text,
+                    });
+                  }}
+                  value={selectedKeyring.value || ''}
                 />
               </Menu.Item>
               <Menu.Item style={{ minWidth: '0' }} as={Button}>

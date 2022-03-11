@@ -1,26 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  selectedAccountKey: '',
-  selectedAccountUsername: '',
   selectedAccountBalance: '',
+  keyringOptions: [],
+  selectedKeyring: {
+    key: '',
+    value: '',
+    text: '',
+  },
 };
 
 const accountSlice = createSlice({
   name: 'account',
   initialState,
   reducers: {
-    setAccountSelected(state, action) {
-      state.selectedAccountKey = action.payload.selectedAccountKey;
-      state.selectedAccountUsername = action.payload.selectedAccountUsername;
+    setSelectedKeyringAction(state, action) {
+      state.selectedKeyring = action.payload;
     },
     setBalance(state, action) {
       state.selectedAccountBalance = action.payload;
     },
+    setKeyringOptionsAction(state, action) {
+      state.keyringOptions = action.payload;
+    },
   },
 });
 
-export const { changeUsername, setAccountSelected, setBalance } =
-  accountSlice.actions;
+export const {
+  changeUsername,
+  setSelectedKeyringAction,
+  setBalance,
+  setKeyringOptionsAction,
+} = accountSlice.actions;
 
 export default accountSlice.reducer;

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Timeline } from '../../components';
+import { Timeline, PageContainer } from '../../components';
 
 const Dashboard = () => {
   return (
-    <>
+    <PageContainer>
       <Timeline />
-    </>
+    </PageContainer>
   );
 };
 

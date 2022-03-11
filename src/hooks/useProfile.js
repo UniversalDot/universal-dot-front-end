@@ -28,7 +28,7 @@ const useProfile = () => {
   const [unsub, setUnsub] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  const { selectedAccountKey } = useUser();
+  const { selectedKeyring } = useUser();
   const { setStatus, setStatusMessage } = useStatus();
   const { setLoading } = useLoader();
   const { transformParams } = useUtils();
@@ -66,15 +66,15 @@ const useProfile = () => {
   // TODO: figure out how to make it simpler to check when API is availabile so it doesn't crash;
   const getProfile = useCallback(() => {
     setLoading({ type: loadingTypes.PROFILE, value: true });
-    setStatusMessage('Loading profile...');
+    setStatusMessage('Loading account / profile...');
     if (
-      selectedAccountKey &&
+      selectedKeyring.value &&
       api?.query?.[pallets.PROFILE]?.[profileCallables.PROFILES]
     ) {
       const query = async () => {
         const unsub = await api.query[pallets.PROFILE][
           profileCallables.PROFILES
-        ](selectedAccountKey, queryResponseHandler);
+        ](selectedKeyring.value, queryResponseHandler);
         const cb = () => unsub;
         cb();
       };
@@ -85,16 +85,16 @@ const useProfile = () => {
   }, [
     // eslint-disable-next-line react-hooks/exhaustive-deps
     api?.query?.[pallets.PROFILE]?.[profileCallables.PROFILES],
-    selectedAccountKey,
+    selectedKeyring.value,
     setStatusMessage,
     setLoading,
   ]);
 
   const signedTransaction = async actionType => {
     const accountPair =
-      selectedAccountKey &&
+      selectedKeyring.value &&
       keyringState === 'READY' &&
-      keyring.getPair(selectedAccountKey);
+      keyring.getPair(selectedKeyring.value);
 
     const getFromAcct = async () => {
       const {

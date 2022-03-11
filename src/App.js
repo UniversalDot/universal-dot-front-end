@@ -11,14 +11,13 @@ import {
   Profile,
   Dashboard,
   Calendar,
-  ProfileConfigure,
   OrganizationJoined,
   OrganizationOwn,
   OrganizationKanban,
 } from './pages';
 
 import { Header, Layout, LoaderFullPage } from './components';
-import { useProfile } from './hooks/useProfile';
+import { useProfile } from './hooks';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -42,7 +41,10 @@ export default function App() {
           }
         >
           <Route path="profile" element={<Profile />} />
-          <Route path="profile/configure" element={<ProfileConfigure />} />
+          <Route
+            path="profile/configure"
+            element={<div>TODO: some profile related info here...</div>}
+          />
 
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="organization">

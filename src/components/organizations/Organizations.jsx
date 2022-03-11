@@ -1,12 +1,10 @@
 /* eslint-disable multiline-ternary */
 import React, { useEffect, useState, useCallback } from 'react';
-import { Grid, Icon, Card, Button, Input, Search } from 'semantic-ui-react';
+import { Grid, Icon, Card, Button, Input } from 'semantic-ui-react';
 import styles from './Organizations.module.scss';
 import { Project, Modal } from '..';
-import { useUser } from '../../hooks/useUser';
-import { useDao } from '../../hooks/useDao';
+import { useUser, useDao, useStatus } from '../../hooks';
 import { daoCallables, statusTypes } from '../../types';
-import { useStatus } from '../../hooks/useStatus';
 
 const Organizations = ({ type }) => {
   const [open, setOpen] = useState(false);
@@ -18,7 +16,7 @@ const Organizations = ({ type }) => {
 
   const { status, setStatus } = useStatus();
 
-  const { selectedAccountKey } = useUser();
+  const { selectedKeyring } = useUser();
   const {
     getJoinedOrganizations,
     getTotalOrganizations,
@@ -38,6 +36,7 @@ const Organizations = ({ type }) => {
     setMemberOrTask,
     getApplicants,
     allApplicants,
+    resetFields,
   } = useDao();
 
   const [searchOrg, setSearchOrg] = useState('');
@@ -117,19 +116,14 @@ const Organizations = ({ type }) => {
   }, [actionType]);
 
   useEffect(() => {
-    if (selectedAccountKey) {
-      // const handleResponse = dataFromResponse =>
-      //   !dataFromResponse.isNone &&
-      //   setData({ taskId: id, ...dataFromResponse.toHuman() });
-      console.log('selectedAccountKey in org', selectedAccountKey);
-
-      getJoinedOrganizations(selectedAccountKey, daoCallables.MEMBER_OF);
+    if (selectedKeyring.value) {
+      getJoinedOrganizations(selectedKeyring.value, daoCallables.MEMBER_OF);
       getTotalOrganizations(daoCallables.ORGANIZATION_COUNT);
       getTotalVisions(daoCallables.VISION_COUNT);
-      getSuggestedVisions(selectedAccountKey, daoCallables.VISION);
+      getSuggestedVisions(selectedKeyring.value, daoCallables.VISION);
     }
   }, [
-    selectedAccountKey,
+    selectedKeyring.value,
     getJoinedOrganizations,
     getTotalOrganizations,
     getTotalVisions,
@@ -181,10 +175,14 @@ const Organizations = ({ type }) => {
     [setMemberOrTask]
   );
 
-  const buttonClick = useCallback(actionType => {
-    setActionType(actionType);
-    setOpen(true);
-  }, []);
+  const buttonClick = useCallback(
+    actionType => {
+      setActionType(actionType);
+      resetFields();
+      setOpen(true);
+    },
+    [resetFields]
+  );
 
   useEffect(() => {
     if (!!status && status === statusTypes.INIT) {
@@ -298,20 +296,17 @@ const Organizations = ({ type }) => {
                       ))}
                       <div className={styles.visionButtons}>
                         <Button
+                          className={styles.visionButton}
                           color="green"
                           type="submit"
                           onClick={() => buttonClick('joined_sign')}
-                          // loading={loading}
-                          // disabled={loading}
                         >
                           Sign vision
                         </Button>
                         <Button
-                          icon="minus"
+                          className={styles.visionButton}
                           color="orange"
                           onClick={() => buttonClick('joined_unsign')}
-                          // loading={loading}
-                          // disabled={loading}
                         >
                           Unsign vision
                         </Button>
@@ -332,8 +327,6 @@ const Organizations = ({ type }) => {
                 color="green"
                 type="submit"
                 onClick={() => buttonClick('own_createVision')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Create vision
               </Button>
@@ -343,8 +336,6 @@ const Organizations = ({ type }) => {
                 color="green"
                 type="submit"
                 onClick={() => buttonClick('own_createOrganization')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Create organization
               </Button>
@@ -354,8 +345,6 @@ const Organizations = ({ type }) => {
                 color="green"
                 type="submit"
                 onClick={() => buttonClick('own_addMember')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Add member
               </Button>
@@ -365,8 +354,6 @@ const Organizations = ({ type }) => {
                 color="green"
                 type="submit"
                 onClick={() => buttonClick('own_addTask')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Add task
               </Button>
@@ -375,44 +362,32 @@ const Organizations = ({ type }) => {
           <Grid.Row className={styles.row}>
             <Grid.Column className={styles.column}>
               <Button
-                icon="minus"
                 color="orange"
                 onClick={() => buttonClick('own_removeVision')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Remove vision
               </Button>
             </Grid.Column>
             <Grid.Column className={styles.column}>
               <Button
-                icon="minus"
                 color="orange"
                 onClick={() => buttonClick('own_dissolveOrganization')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Dissolve organization
               </Button>
             </Grid.Column>
             <Grid.Column className={styles.column}>
               <Button
-                icon="minus"
                 color="orange"
                 onClick={() => buttonClick('own_removeMembers')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Remove members
               </Button>
             </Grid.Column>
             <Grid.Column className={styles.column}>
               <Button
-                icon="minus"
                 color="orange"
                 onClick={() => buttonClick('own_removeTask')}
-                // loading={loading}
-                // disabled={loading}
               >
                 Remove task
               </Button>
