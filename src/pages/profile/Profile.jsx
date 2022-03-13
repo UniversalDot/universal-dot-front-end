@@ -17,6 +17,8 @@ const Profile = () => {
   // TODO: should also add !accountLoading type of loader;
   return !loadingProfile ? (
     <PageContainer>
+      <UserQuickInfo />
+      <Funds />
       {!profileData && (
         <Message info>
           <Message.Header>
@@ -29,8 +31,6 @@ const Profile = () => {
         </Message>
       )}
       <ProfileConfiguration />
-      <UserQuickInfo />
-      <Funds />
     </PageContainer>
   ) : (
     <></>

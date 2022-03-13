@@ -28,6 +28,10 @@ const Timeline = () => {
       taskAction(actionType, taskId);
     };
 
+    if (allTasksReceived.length === 0) {
+      return <div className={styles.noTasks}>No tasks at the moment...</div>;
+    }
+
     return allTasksReceived.map((taskId, i) => {
       return (
         <Task
@@ -50,7 +54,7 @@ const Timeline = () => {
               <div className={styles.contentContainer}>
                 <div className={styles.header}>
                   <span className={styles.text}>
-                    <Icon name="folder outline" className={styles.icon} />
+                    <Icon name="tasks" className={styles.icon} />
                     Upcoming Tasks
                   </span>
                 </div>
@@ -65,7 +69,10 @@ const Timeline = () => {
               <div className={styles.contentContainer}>
                 <div className={styles.header}>
                   <span className={styles.text}>
-                    <Icon name="folder outline" className={styles.icon} />
+                    <Icon
+                      name="list alternate outline"
+                      className={styles.icon}
+                    />
                     Active Projects
                   </span>
                 </div>
@@ -78,7 +85,7 @@ const Timeline = () => {
               <div className={styles.contentContainer}>
                 <div className={styles.header}>
                   <span className={styles.text}>
-                    <Icon name="folder outline" className={styles.icon} />
+                    <Icon name="clock outline" className={styles.icon} />
                     Log
                   </span>
                 </div>

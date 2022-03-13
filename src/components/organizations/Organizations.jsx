@@ -261,7 +261,7 @@ const Organizations = ({ type }) => {
                   <div className={styles.contentContainer}>
                     <div className={styles.header}>
                       <span className={styles.text}>
-                        <Icon name="folder outline" className={styles.icon} />
+                        <Icon name="globe" className={styles.icon} />
                         Joined organizations
                       </span>
                     </div>
@@ -282,7 +282,7 @@ const Organizations = ({ type }) => {
                   <div className={styles.contentContainer}>
                     <div className={styles.header}>
                       <span className={styles.text}>
-                        <Icon name="folder outline" className={styles.icon} />
+                        <Icon name="file text" className={styles.icon} />
                         Suggested visions
                       </span>
                     </div>
@@ -395,33 +395,35 @@ const Organizations = ({ type }) => {
           </Grid.Row>
         </Grid>
       )}
-      <Grid className={styles.gridContainer}>
-        <Grid.Row className={styles.row}>
-          <Grid.Column mobile={16} tablet={16} computer={8}>
-            <Input
-              placeholder="For ex. MyOrg123"
-              action={{
-                icon: 'search',
-                onClick: searchOrganization,
-              }}
-              fluid
-              type="text"
-              label="Search for an organization:"
-              value={searchOrg}
-              onChange={e => handleOnSearchOrg(e.target.value)}
-            />
-          </Grid.Column>
-        </Grid.Row>
-        {allApplicants && (
+      {type === 'own' && (
+        <Grid className={styles.gridContainer}>
           <Grid.Row className={styles.row}>
             <Grid.Column mobile={16} tablet={16} computer={8}>
-              {allApplicants.map(appl => (
-                <div key={appl}>{appl}</div>
-              ))}
+              <Input
+                placeholder="For ex. MyOrg123"
+                action={{
+                  icon: 'search',
+                  onClick: searchOrganization,
+                }}
+                fluid
+                type="text"
+                label="Search for an organization:"
+                value={searchOrg}
+                onChange={e => handleOnSearchOrg(e.target.value)}
+              />
             </Grid.Column>
           </Grid.Row>
-        )}
-      </Grid>
+          {allApplicants && (
+            <Grid.Row className={styles.row}>
+              <Grid.Column mobile={16} tablet={16} computer={8}>
+                {allApplicants.map(appl => (
+                  <div key={appl}>{appl}</div>
+                ))}
+              </Grid.Column>
+            </Grid.Row>
+          )}
+        </Grid>
+      )}
 
       <Modal
         open={open}

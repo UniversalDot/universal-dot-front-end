@@ -7,7 +7,7 @@ const Project = ({ title, description }) => {
     <div className={styles.project}>
       <div className={styles.content}>
         <div className={styles.icon}>
-          <Icon name="folder outline" className={styles.iconComponent} />
+          <Icon name="circle outline" className={styles.iconComponent} />
         </div>
         <div className={styles.info}>
           <span className={styles.title}>

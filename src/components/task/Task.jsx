@@ -76,7 +76,7 @@ const Task = ({ id, optionsOnClick }) => {
           </div>
           <div className={styles.parentProject}>
             <div className={styles.content}>
-              <Icon name="folder outline" className={styles.icon} />
+              <Icon name="circle outline" className={styles.icon} />
               <span className={styles.title}>{data?.title}</span>
             </div>
           </div>
@@ -98,7 +98,7 @@ const Task = ({ id, optionsOnClick }) => {
         <div className={styles.footer}>
           <Button
             className={styles.button}
-            icon="fork"
+            icon="comment alternate outline"
             label={{ as: 'a', basic: true, content: '2' }}
             labelPosition="left"
           />
