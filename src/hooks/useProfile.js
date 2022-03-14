@@ -213,8 +213,8 @@ const useProfile = () => {
 
     setStatus(statusTypes.INIT);
     setActionLoading(true);
-    dispatch(setFormInterests([]));
-    dispatch(setUsername(''));
+    populateFormInterests([]);
+    setUsername('');
     signedTransaction(actionType);
   };
 
