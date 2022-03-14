@@ -80,12 +80,18 @@ Cypress enables you to write all types of tests:
 * Integration tests
 * Unit tests
 
-To launch the Cypress Test Runner run this command:
+Before running your Cypress Tests, make sure that your front end application is running locally. All tests are configured to run on localhost:8000
+
+```bash
+yarn start
+```
+
+Once your application is running locally, to launch the Cypress Test Runner run this command:
 
 ```bash
 yarn run cypress open
 ```
-
+You can then proceed to the Cypress UI where you can select to run individual tests or run all tests.
 
 
 ### Specifying Connecting Node
