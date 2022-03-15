@@ -13,7 +13,7 @@ const UserQuickInfo = () => {
           <Image
             className={styles.image}
             size="tiny"
-            src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
+            src="https://react.semantic-ui.com/images/avatar/small/matthew.png"
             circular
           />
           <Card.Header className={styles.name}>

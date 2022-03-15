@@ -63,7 +63,7 @@ const Header = () => {
         <Image
           avatar
           spaced="right"
-          src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg"
+          src="https://react.semantic-ui.com/images/avatar/small/matthew.png"
         />
       </>
     );
@@ -114,8 +114,8 @@ const Header = () => {
           }}
         >
           <Image
-            src={`${process.env.PUBLIC_URL}/assets/substrate-logo.png`}
-            size="mini"
+            src={`${process.env.PUBLIC_URL}/assets/UniversalDotLogoText.png`}
+            style={{ width: '112px' }}
           />
         </div>
         <div

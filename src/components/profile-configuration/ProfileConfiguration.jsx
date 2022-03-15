@@ -20,6 +20,7 @@ import { profileCallables, statusTypes } from '../../types';
 const ProfileConfiguration = () => {
   const [oneInterest, setOneInterest] = useState('');
   const [showLoader, setShowLoader] = useState(false);
+  const [usernameEditEnabled, setUsernameEditEnabled] = useState(false);
 
   const {
     profileData,
@@ -35,6 +36,14 @@ const ProfileConfiguration = () => {
   const onPalletCallableParamChange = e => {
     setOneInterest(e.target.value);
   };
+
+  useEffect(() => {
+    if (!profileData) {
+      populateFormInterests([]);
+      setUsername('');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileData]);
 
   useEffect(() => {
     if (!!status && status === statusTypes.INIT) {
@@ -134,14 +143,31 @@ const ProfileConfiguration = () => {
             <Grid className={styles.gridContainer}>
               <Grid.Row>
                 <Grid.Column mobile={16} tablet={16} computer={8}>
-                  <Input
-                    placeholder="For ex. goodguy123"
-                    fluid
-                    type="text"
-                    label="What's your username:"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                  />
+                  {!profileData && (
+                    <Input
+                      placeholder="For ex. richard123"
+                      fluid
+                      type="text"
+                      label="Enter your username:"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                    />
+                  )}
+                  {profileData && (
+                    <Input
+                      placeholder="For ex. richard123"
+                      action={{
+                        icon: 'edit',
+                        onClick: () => setUsernameEditEnabled(true),
+                      }}
+                      fluid
+                      type="text"
+                      label="Your username:"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                      readOnly={!usernameEditEnabled}
+                    />
+                  )}
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -154,7 +180,7 @@ const ProfileConfiguration = () => {
                     }}
                     fluid
                     type="text"
-                    label="Enter your interest:"
+                    label="Add an interest:"
                     value={oneInterest}
                     onChange={e => onPalletCallableParamChange(e)}
                     onKeyDown={onEnter}
@@ -188,34 +214,6 @@ const ProfileConfiguration = () => {
                           <span>Your added interests will show up here...</span>
                         )}
                       </div>
-                      {profileData && (
-                        <div className={styles.options}>
-                          <Label
-                            basic
-                            color="grey"
-                            style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
-                          >
-                            Interest from the block 1
-                            <Icon name="delete" />
-                          </Label>
-                          <Label
-                            basic
-                            color="grey"
-                            style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
-                          >
-                            From the block 2
-                            <Icon name="delete" />
-                          </Label>
-                          <Label
-                            basic
-                            color="grey"
-                            style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
-                          >
-                            From the block 3
-                            <Icon name="delete" />
-                          </Label>
-                        </div>
-                      )}
                     </div>
                   </Card.Content>
                 </Card>

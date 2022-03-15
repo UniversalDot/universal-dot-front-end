@@ -37,6 +37,10 @@ const useProfile = () => {
   const profileData = useSelector(state => state.profile.data);
   const interests = useSelector(state => state.profile.form.interests);
   const username = useSelector(state => state.profile.form.username);
+  const reputationPoints = useSelector(
+    state => state.profile?.data?.reputation
+  );
+  const reputation = reputationPoints?.toString() || 'N/A';
 
   const populateFormInterests = useCallback(
     interestsArray => {
@@ -56,11 +60,16 @@ const useProfile = () => {
     result => {
       setLoading({ type: loadingTypes.PROFILE, value: false });
       setStatusMessage('');
-      result.isNone
-        ? dispatch(setProfile(null))
-        : dispatch(setProfile(result.toJSON()));
+
+      const setAllData = profileData => {
+        dispatch(setProfile(profileData));
+        populateFormInterests(profileData?.interests?.split(','));
+        setUsername(profileData?.name);
+      };
+
+      result.isNone ? dispatch(setProfile(null)) : setAllData(result.toHuman());
     },
-    [dispatch, setStatusMessage, setLoading]
+    [dispatch, setStatusMessage, setLoading, populateFormInterests, setUsername]
   );
 
   // TODO: figure out how to make it simpler to check when API is availabile so it doesn't crash;
@@ -180,9 +189,8 @@ const useProfile = () => {
     }
 
     if (actionType === profileCallables.UPDATE_PROFILE) {
-      const mockUpdateDataForNow = ['mockData, mockTest'];
       txExecute = api.tx[pallets.PROFILE][profileCallables.UPDATE_PROFILE](
-        ...mockUpdateDataForNow
+        ...transformed
       );
     }
 
@@ -228,6 +236,7 @@ const useProfile = () => {
     setActionLoading,
     setUsername,
     username,
+    reputation,
   };
 };
 

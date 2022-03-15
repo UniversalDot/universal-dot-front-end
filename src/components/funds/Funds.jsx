@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { Card, Grid, Button } from 'semantic-ui-react';
 import styles from './Funds.module.scss';
-import { useUser } from '../../hooks';
+import { useUser, useProfile } from '../../hooks';
 import { useSubstrate } from '../../substrate-lib';
 import { useDispatch } from 'react-redux';
 import { setBalance } from '../../store/slices/accountSlice';
 
 const Funds = () => {
   const { selectedKeyring, selectedAccountBalance } = useUser();
+  const { reputation } = useProfile();
   const { api } = useSubstrate();
   const dispatch = useDispatch();
 
@@ -41,13 +42,13 @@ const Funds = () => {
           <Card fluid raised color="purple" className={styles.card}>
             <Card.Content className={styles.contentContainer}>
               <div className={styles.header}>
-                <span className={styles.text}>Fiat currency</span>
+                <span className={styles.text}>Reputation</span>
                 <Button basic className={styles.button}>
                   Details
                 </Button>
               </div>
               <Card.Description className={styles.description}>
-                ${selectedAccountBalance}
+                Points: {reputation}
               </Card.Description>
             </Card.Content>
           </Card>
