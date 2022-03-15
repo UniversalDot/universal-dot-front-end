@@ -1,17 +1,16 @@
-# Substrate Front End Template
+# Universaldot WEB APP: The Front-End of the digital economy
 
 [![CircleCI](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master.svg?style=shield)](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master)
 
-This template allows you to create a front-end application that connects to a
-[Substrate](https://github.com/paritytech/substrate) node back-end with minimal
-configuration. To learn about Substrate itself, visit the
-[Substrate Developer Hub](https://substrate.dev).
+![Logo](https://github.com/UniversalDot/documents/blob/master/logo/rsz_jpg-02.jpg)
 
-The template is built with [Create React App](https://github.com/facebook/create-react-app)
+In the past, people have created organizations and corporations by obtaining legal status from a government or a state. In the future, organizations and corporations will be created digitally and will have global instead of local reach. UNIVERSALDOT Foundation provides the needed infrastructure for people to organize themselves by creating digital identities and tasks. We enable the creation of a new digital future.
+
+This repository represents the front-end of the application. It is built with [Substrate-frontend-template](https://github.com/substrate-developer-hub/substrate-front-end-template), [Create React App](https://github.com/facebook/create-react-app)
 and [Polkadot js API](https://polkadot.js.org/api/). Familiarity with these tools
-will be helpful, but the template strives to be self-explanatory.
+will be helpful, but not mandatory.
 
-## Using The Template
+## Using The Web Application
 
 ### Installation
 
