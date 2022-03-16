@@ -19,13 +19,11 @@ describe('profile', () => {
 
   it('displays current user information', () => {
 
-    // Verify that the user information is shown
-    cy.get('div.ui div.header').first().should('have.text', 'ALICE')
+    cy.get('div.ui div.header.UserQuickInfo_name__1S3sM').first().should('have.text', 'ALICE')
   })
 
   it('displays info message for creating profiles', () => {
 
-    // Verify we have header that prompts user to create a profile
     cy.get('div.ui.info.message div.header')
       .first()
       .should('have.text', `It seems you haven't created a profile yet...`)
@@ -36,14 +34,6 @@ describe('profile', () => {
 
     const username = 'MrBond'
     const interests = 'web development'
-
-    // Verify that the user can create a profile
-    // cy.get('div.ui.info.message a')
-    //   .should('have.attr', 'href')
-
-
-    cy.get('div.ui.fluid.labeled.input')
-      .type(username)
 
     cy.get('div.ui.fluid.action.labeled.input')
       .type(interests)
@@ -71,14 +61,4 @@ describe('profile', () => {
     cy.get('button.ui.blue.button')
       .click({force: true})
   })
-
-  // it('user can remove their profile', () => {
-
-  //   const typedText = 'example'
-
-
-  //   cy.get('button.ui.red.button')
-  //     .click({force: true})
-  // })
-
 })
