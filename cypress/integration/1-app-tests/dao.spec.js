@@ -58,8 +58,6 @@ describe('Dao', () => {
 
     cy.get('body > div.ui.raised.segment > div > div.extra.content > button')
       .click({force: true})
-
-
   })
 
 
