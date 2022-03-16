@@ -80,5 +80,6 @@ To create your own DAO navigate to the `Organization` tab in the menu and then c
 Clicking on `Create organization` open a modal dialog where you can fill out organizational details.
 
 See example in the image below.
+
 ![Task](https://i.imgur.com/U1UW4mW.gif)
 
