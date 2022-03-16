@@ -52,7 +52,22 @@ describe('task', () => {
   it('should check task information in Dashboard', () => {
 
     cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(2) > div > span')
-    .click({force: true})
+      .click({force: true})
+  })
+
+  it('should be able to start a task', () => {
+
+
+  })
+
+  it('should be able to complete a task', () => {
+
+
+  })
+
+  it('should be able to remove a task', () => {
+
+
   })
 
 
