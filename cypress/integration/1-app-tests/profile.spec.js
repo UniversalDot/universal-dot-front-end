@@ -14,7 +14,7 @@
 describe('profile', () => {
   beforeEach(() => {
 
-    cy.visit('http://localhost:8000/profile')
+    cy.visit('http://universaldot.me')
   })
 
   it('displays info message for creating profiles', () => {
@@ -24,32 +24,30 @@ describe('profile', () => {
       .first()
       .should('have.text', `It seems you haven't created a profile yet...`)
     
-    cy.get('div.ui.info.message a')
-      .should('have.attr', 'href')
   })
 
-  it('user can navigate to screen to create profile', () => {
+  // it('user can navigate to screen to create profile', () => {
 
-    // Verify that the user can create a profile
-    cy.get('div.ui.info.message a')
-      .should('have.attr', 'href')
+  //   // Verify that the user can create a profile
+  //   cy.get('div.ui.info.message a')
+  //     .should('have.attr', 'href')
 
 
-    cy.get('div.ui.info.message a')
-      .click()
-  })
+  //   cy.get('div.ui.info.message a')
+  //     .click()
+  // })
 
   it('user fill out his interests', () => {
 
     const typedText = 'web development'
 
     // Verify that the user can create a profile
-    cy.get('div.ui.info.message a')
-      .should('have.attr', 'href')
+    // cy.get('div.ui.info.message a')
+    //   .should('have.attr', 'href')
 
 
-    cy.get('div.ui.info.message a')
-      .click()
+    // cy.get('div.ui.info.message a')
+    //   .click()
 
     cy.get('div.ui.fluid.action.labeled.input')
       .type(typedText)
