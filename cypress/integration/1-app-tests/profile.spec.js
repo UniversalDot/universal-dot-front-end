@@ -17,6 +17,12 @@ describe('profile', () => {
     cy.visit('http://universaldot.me')
   })
 
+  it('displays current user information', () => {
+
+    // Verify that the user information is shown
+    cy.get('div.ui div.header').first().should('have.text', 'ALICE')
+  })
+
   it('displays info message for creating profiles', () => {
 
     // Verify we have header that prompts user to create a profile
@@ -26,49 +32,32 @@ describe('profile', () => {
     
   })
 
-  // it('user can navigate to screen to create profile', () => {
-
-  //   // Verify that the user can create a profile
-  //   cy.get('div.ui.info.message a')
-  //     .should('have.attr', 'href')
-
-
-  //   cy.get('div.ui.info.message a')
-  //     .click()
-  // })
-
   it('user fill out his interests', () => {
 
-    const typedText = 'web development'
+    const username = 'MrBond'
+    const interests = 'web development'
 
     // Verify that the user can create a profile
     // cy.get('div.ui.info.message a')
     //   .should('have.attr', 'href')
 
 
-    // cy.get('div.ui.info.message a')
-    //   .click()
+    cy.get('div.ui.fluid.labeled.input')
+      .type(username)
 
     cy.get('div.ui.fluid.action.labeled.input')
-      .type(typedText)
+      .type(interests)
 
     cy.get('button.ui.icon.button')
       .click({force: true})
 
     cy.get('div.ui.blue.basic.label')
-      .should('have.text', typedText)
+      .should('have.text', interests)
   })
 
   it('user can create profile', () => {
 
     const typedText = 'example'
-
-    // Verify that the user can create a profile
-    cy.get('div.ui.info.message a')
-      .should('have.attr', 'href')
-
-    cy.get('div.ui.info.message a')
-      .click()
 
     cy.get('div.ui.fluid.action.labeled.input')
       .type(typedText)
@@ -83,9 +72,13 @@ describe('profile', () => {
       .click({force: true})
   })
 
-  it('displays current user information', () => {
+  // it('user can remove their profile', () => {
 
-    // Verify that the user information is shown
-    cy.get('div.ui div.header').last().should('have.text', 'ALICE')
-  })
+  //   const typedText = 'example'
+
+
+  //   cy.get('button.ui.red.button')
+  //     .click({force: true})
+  // })
+
 })
