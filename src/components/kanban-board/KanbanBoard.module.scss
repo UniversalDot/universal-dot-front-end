@@ -1,0 +1,6 @@
+.gridContainer {
+  margin: 0;
+  + .gridContainer {
+    margin: 0;
+  }
+}

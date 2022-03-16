@@ -1,0 +1,49 @@
+.card {
+  .contentContainer {
+    display: flex;
+    align-items: center;
+
+    .user {
+      display: flex;
+      align-items: center;
+
+      .image {
+        margin-left: 1rem;
+      }
+
+      .name {
+        margin-left: 2rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+
+    .divider {
+      width: 1px;
+      background: #d8d8d9;
+      height: 80px;
+      margin: 0 2rem;
+    }
+
+    .role {
+      flex-grow: 1;
+    }
+
+    .log {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        font-size: 2rem;
+        margin-right: 1rem;
+        height: 0.65em;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        margin-right: 1rem;
+      }
+    }
+  }
+}

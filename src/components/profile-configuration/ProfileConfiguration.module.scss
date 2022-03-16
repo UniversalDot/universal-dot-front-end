@@ -1,0 +1,26 @@
+.breadcrumb {
+  margin-bottom: 1rem !important;
+}
+
+.gridContainer {
+  margin: 0;
+  + .gridContainer {
+    margin: 0;
+  }
+}
+
+.card {
+  .body {
+    padding: 1rem 0;
+  }
+
+  .search {
+    margin-top: 1rem;
+  }
+  .pills {
+    .selected {
+    }
+    .options {
+    }
+  }
+}

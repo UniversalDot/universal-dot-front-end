@@ -1,0 +1,49 @@
+.task {
+  box-shadow: 0 0 0 1px #d4d4d5;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 2rem;
+  .content {
+    .status {
+      display: flex;
+      justify-content: flex-end;
+      .content {
+        font-size: 1rem;
+        .descriptor {
+          font-weight: 400;
+        }
+      }
+    }
+    .parentProject {
+      margin-top: 0.5rem;
+      display: flex;
+
+      .content {
+        font-size: 1rem;
+        .icon {
+          margin-right: 0.5rem;
+        }
+        .title {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .taskDescription {
+      .content {
+        margin-top: 0.5rem;
+        font-size: 1rem;
+        font-weight: 400;
+        text-align: left;
+      }
+    }
+  }
+  .footer {
+    margin-top: 2rem;
+    display: flex;
+
+    .button {
+      font-size: 12px;
+    }
+  }
+}

@@ -1,91 +1,72 @@
-import React, { useState, createRef } from 'react';
-import { Container, Dimmer, Loader, Grid, Sticky, Message } from 'semantic-ui-react';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
 import 'semantic-ui-css/semantic.min.css';
+import './styles/styles.scss';
 
-import { SubstrateContextProvider, useSubstrate } from './substrate-lib';
-import { DeveloperConsole } from './substrate-lib/components';
+import {
+  TemplateResources,
+  SignUp,
+  SignIn,
+  Profile,
+  Dashboard,
+  Calendar,
+  OrganizationJoined,
+  OrganizationOwn,
+  OrganizationKanban,
+} from './pages';
 
-import AccountSelector from './AccountSelector';
-import Balances from './Balances';
-import BlockNumber from './BlockNumber';
-import Events from './Events';
-import Interactor from './Interactor';
-import Metadata from './Metadata';
-import NodeInfo from './NodeInfo';
-import TemplateModule from './TemplateModule';
-import Transfer from './Transfer';
-import Upgrade from './Upgrade';
+import { Header, Layout, LoaderFullPage } from './components';
+import { useProfile } from './hooks';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Main () {
-  const [accountAddress, setAccountAddress] = useState(null);
-  const { apiState, keyring, keyringState, apiError } = useSubstrate();
-  const accountPair =
-    accountAddress &&
-    keyringState === 'READY' &&
-    keyring.getPair(accountAddress);
+export default function App() {
+  const loggedIn = true;
 
-  const loader = text =>
-    <Dimmer active>
-      <Loader size='small'>{text}</Loader>
-    </Dimmer>;
+  const { getProfile } = useProfile();
 
-  const message = err =>
-    <Grid centered columns={2} padded>
-      <Grid.Column>
-        <Message negative compact floating
-          header='Error Connecting to Substrate'
-          content={`${JSON.stringify(err, null, 4)}`}
+  useEffect(() => {
+    getProfile();
+  }, [getProfile]);
+
+  return (
+    <BrowserRouter>
+      {loggedIn && <Header />}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            loggedIn ? <Layout /> : <Navigate replace to="/auth/sign-in" />
+          }
+        >
+          <Route path="profile" element={<Profile />} />
+          <Route
+            path="profile/configure"
+            element={<div>TODO: some profile related info here...</div>}
+          />
+
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="organization">
+            <Route path="joined" element={<OrganizationJoined />}></Route>
+            <Route path="own" element={<OrganizationOwn />}></Route>
+            <Route path="kanban" element={<OrganizationKanban />}></Route>
+          </Route>
+          <Route path="calendar" element={<Calendar />} />
+        </Route>
+        <Route
+          path="/auth/sign-in"
+          element={!loggedIn ? <SignIn /> : <Navigate replace to="/" />}
         />
-      </Grid.Column>
-    </Grid>;
-
-  if (apiState === 'ERROR') return message(apiError);
-  else if (apiState !== 'READY') return loader('Connecting to Substrate');
-
-  if (keyringState !== 'READY') {
-    return loader('Loading accounts (please review any extension\'s authorization)');
-  }
-
-  const contextRef = createRef();
-
-  return (
-    <div ref={contextRef}>
-      <Sticky context={contextRef}>
-        <AccountSelector setAccountAddress={setAccountAddress} />
-      </Sticky>
-      <Container>
-        <Grid stackable columns='equal'>
-          <Grid.Row stretched>
-            <NodeInfo />
-            <Metadata />
-            <BlockNumber />
-            <BlockNumber finalized />
-          </Grid.Row>
-          <Grid.Row stretched>
-            <Balances />
-          </Grid.Row>
-          <Grid.Row>
-            <Transfer accountPair={accountPair} />
-            <Upgrade accountPair={accountPair} />
-          </Grid.Row>
-          <Grid.Row>
-            <Interactor accountPair={accountPair} />
-            <Events />
-          </Grid.Row>
-          <Grid.Row>
-            <TemplateModule accountPair={accountPair} />
-          </Grid.Row>
-        </Grid>
-      </Container>
-      <DeveloperConsole />
-    </div>
-  );
-}
-
-export default function App () {
-  return (
-    <SubstrateContextProvider>
-      <Main />
-    </SubstrateContextProvider>
+        <Route
+          path="/auth/sign-up"
+          element={!loggedIn ? <SignUp /> : <Navigate replace to="/" />}
+        />
+        <Route path="template-resources" element={<TemplateResources />} />
+        <Route path="*" element={<Navigate replace to="/" />}></Route>
+      </Routes>
+      <ToastContainer newestOnTop />
+      <LoaderFullPage />
+    </BrowserRouter>
   );
 }
