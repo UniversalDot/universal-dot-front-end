@@ -4,12 +4,13 @@
   "private": true,
   "author": "Parity Technologies <admin@parity.io>",
   "license": "Unlicense",
-  "homepage": "",
+  "homepage": "https://github.com/UniversalDot/universaldot.github.io",
   "bugs": {
     "url": "https://github.com/substrate-developer-hub/substrate-front-end-template/issues"
   },
   "keywords": [
     "substrate",
+    "universaldot",
     "substrate-ui",
     "polkadot-js"
   ],
@@ -21,6 +22,7 @@
     "lint": "eslint src/**/*.js",
     "lint:ci": "eslint src/**/*.js --max-warnings=0",
     "lint:fix": "eslint --fix src/**/*.js",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build -m '[ci skip] Updates'"
   },
   "dependencies": {
