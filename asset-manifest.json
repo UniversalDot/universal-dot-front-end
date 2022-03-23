@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/UniversalDot/universaldot.github.io/static/css/main.286651ed.chunk.css",
-    "main.js": "/UniversalDot/universaldot.github.io/static/js/main.f6449a7e.chunk.js",
-    "main.js.map": "/UniversalDot/universaldot.github.io/static/js/main.f6449a7e.chunk.js.map",
-    "runtime-main.js": "/UniversalDot/universaldot.github.io/static/js/runtime-main.2915f6a0.js",
-    "runtime-main.js.map": "/UniversalDot/universaldot.github.io/static/js/runtime-main.2915f6a0.js.map",
-    "static/css/2.d2aaf21c.chunk.css": "/UniversalDot/universaldot.github.io/static/css/2.d2aaf21c.chunk.css",
-    "static/js/2.83332fc4.chunk.js": "/UniversalDot/universaldot.github.io/static/js/2.83332fc4.chunk.js",
-    "static/js/2.83332fc4.chunk.js.map": "/UniversalDot/universaldot.github.io/static/js/2.83332fc4.chunk.js.map",
-    "index.html": "/UniversalDot/universaldot.github.io/index.html",
-    "static/css/2.d2aaf21c.chunk.css.map": "/UniversalDot/universaldot.github.io/static/css/2.d2aaf21c.chunk.css.map",
-    "static/css/main.286651ed.chunk.css.map": "/UniversalDot/universaldot.github.io/static/css/main.286651ed.chunk.css.map",
-    "static/js/2.83332fc4.chunk.js.LICENSE.txt": "/UniversalDot/universaldot.github.io/static/js/2.83332fc4.chunk.js.LICENSE.txt",
-    "static/media/semantic.min.css": "/UniversalDot/universaldot.github.io/static/media/outline-icons.ddae9b1b.woff"
+    "main.css": "/universal-dot-front-end/static/css/main.286651ed.chunk.css",
+    "main.js": "/universal-dot-front-end/static/js/main.febab752.chunk.js",
+    "main.js.map": "/universal-dot-front-end/static/js/main.febab752.chunk.js.map",
+    "runtime-main.js": "/universal-dot-front-end/static/js/runtime-main.fc06a851.js",
+    "runtime-main.js.map": "/universal-dot-front-end/static/js/runtime-main.fc06a851.js.map",
+    "static/css/2.0c873a29.chunk.css": "/universal-dot-front-end/static/css/2.0c873a29.chunk.css",
+    "static/js/2.588a755f.chunk.js": "/universal-dot-front-end/static/js/2.588a755f.chunk.js",
+    "static/js/2.588a755f.chunk.js.map": "/universal-dot-front-end/static/js/2.588a755f.chunk.js.map",
+    "index.html": "/universal-dot-front-end/index.html",
+    "static/css/2.0c873a29.chunk.css.map": "/universal-dot-front-end/static/css/2.0c873a29.chunk.css.map",
+    "static/css/main.286651ed.chunk.css.map": "/universal-dot-front-end/static/css/main.286651ed.chunk.css.map",
+    "static/js/2.588a755f.chunk.js.LICENSE.txt": "/universal-dot-front-end/static/js/2.588a755f.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/universal-dot-front-end/static/media/outline-icons.ddae9b1b.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.2915f6a0.js",
-    "static/css/2.d2aaf21c.chunk.css",
-    "static/js/2.83332fc4.chunk.js",
+    "static/js/runtime-main.fc06a851.js",
+    "static/css/2.0c873a29.chunk.css",
+    "static/js/2.588a755f.chunk.js",
     "static/css/main.286651ed.chunk.css",
-    "static/js/main.f6449a7e.chunk.js"
+    "static/js/main.febab752.chunk.js"
   ]
 }
