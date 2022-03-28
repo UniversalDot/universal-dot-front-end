@@ -14,7 +14,7 @@
 describe('task', () => {
   beforeEach(() => {
 
-    cy.visit('http://universaldot.me')
+    cy.visit('https://universaldot.github.io/universal-dot-front-end/')
   })
 
   it('create task from Kanban', () => {
