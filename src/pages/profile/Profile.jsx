@@ -21,7 +21,7 @@ const Profile = () => {
       <Funds />
       {!profileData && (
         <Message info>
-          <Message.Header>
+          <Message.Header data-cy='createProfilePrompt'>
             It seems you haven't created a profile yet...
           </Message.Header>
           {/* <Link to="configure">Click here to create your profile.</Link> */}

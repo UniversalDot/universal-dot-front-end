@@ -393,6 +393,7 @@ const Organizations = ({ type }) => {
               <Button
                 color="green"
                 type="submit"
+                data-cy='createOrganization'
                 onClick={() => buttonClick('own_createOrganization')}
               >
                 Create organization
@@ -402,6 +403,7 @@ const Organizations = ({ type }) => {
               <Button
                 color="green"
                 type="submit"
+                data-cy='addMember'
                 onClick={() => buttonClick('own_addMember')}
               >
                 Add member
@@ -429,6 +431,7 @@ const Organizations = ({ type }) => {
             <Grid.Column className={styles.column}>
               <Button
                 color="orange"
+                data-cy='dissolveOrganization'
                 onClick={() => buttonClick('own_dissolveOrganization')}
               >
                 Dissolve organization
@@ -516,6 +519,7 @@ const Organizations = ({ type }) => {
                   fluid
                   type="text"
                   label="Organization name:"
+                  data-cy="modalOrganizationName"
                   value={organizationNameForAction || ''}
                   onChange={e =>
                     handleTopInputOnChange(daoType, e.target.value)
@@ -531,6 +535,7 @@ const Organizations = ({ type }) => {
                   placeholder="Enter value..."
                   fluid
                   type="text"
+                  data-cy='modalTaskMember'
                   label={taskTypes.includes(daoType) ? 'Task:' : 'Member:'}
                   value={memberOrTaskForAction || ''}
                   onChange={e =>

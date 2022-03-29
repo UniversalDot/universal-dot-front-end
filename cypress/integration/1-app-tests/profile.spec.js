@@ -14,17 +14,17 @@
 describe('profile', () => {
   beforeEach(() => {
 
-    cy.visit('https://universaldot.github.io/universal-dot-front-end/')
+    cy.visit('http://localhost:8000')
   })
 
   it('displays current user information', () => {
 
-    cy.get('div.ui div.header.UserQuickInfo_name__1S3sM').first().should('have.text', 'ALICE')
+    cy.get('[data-cy=nameInHeader]').should('have.text', 'ALICE')
   })
 
   it('displays info message for creating profiles', () => {
 
-    cy.get('div.ui.info.message div.header')
+    cy.get('[data-cy=createProfilePrompt]')
       .first()
       .should('have.text', `It seems you haven't created a profile yet...`)
     
@@ -35,30 +35,30 @@ describe('profile', () => {
     const username = 'MrBond'
     const interests = 'web development'
 
-    cy.get('div.ui.fluid.action.labeled.input')
+    cy.get('[data-cy=inputInterests]')
       .type(interests)
 
     cy.get('button.ui.icon.button')
       .click({force: true})
 
-    cy.get('div.ui.blue.basic.label')
+    cy.get('[data-cy=interestCard]')
       .should('have.text', interests)
   })
 
   it('user can create profile', () => {
 
-    const typedText = 'example'
+    const typedText = 'Substrate'
 
-    cy.get('div.ui.fluid.action.labeled.input')
+    cy.get('[data-cy=inputInterests]')
       .type(typedText)
 
     cy.get('button.ui.icon.button')
       .click({force: true})
 
-    cy.get('div.ui.blue.basic.label')
+    cy.get('[data-cy=interestCard]')
       .should('have.text', typedText)
 
-    cy.get('button.ui.blue.button')
+    cy.get('[data-cy=createProfileButton]')
       .click({force: true})
   })
 })

@@ -16,7 +16,7 @@ const UserQuickInfo = () => {
             src="https://react.semantic-ui.com/images/avatar/small/matthew.png"
             circular
           />
-          <Card.Header className={styles.name}>
+          <Card.Header data-cy='nameInHeader' className={styles.name}>
             {selectedKeyring.text}
           </Card.Header>
         </div>

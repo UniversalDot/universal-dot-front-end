@@ -79,7 +79,7 @@ const KanbanBoard = () => {
           }}
         >
           <div>Backlog</div>
-          <Button primary onClick={() => setOpen(true)}>
+          <Button data-cy='addNewTask' primary onClick={() => setOpen(true)}>
             Add new task
           </Button>
         </div>
@@ -155,6 +155,7 @@ const KanbanBoard = () => {
                 fluid
                 type="text"
                 label="Title:"
+                data-cy='taskTitle'
                 value={taskValues?.title || ''}
                 onChange={e => handleOnChange('title', e.target.value)}
               />
@@ -166,6 +167,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task specification..."
                 fluid
                 type="text"
+                data-cy='taskSpecification'
                 label="Specification:"
                 value={taskValues?.specification || ''}
                 onChange={e => handleOnChange('specification', e.target.value)}
@@ -178,6 +180,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task budget..."
                 fluid
                 type="text"
+                data-cy='taskBudget'
                 label="Budget:"
                 value={taskValues?.budget || ''}
                 onChange={e => handleOnChange('budget', e.target.value)}
@@ -196,6 +199,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task deadline"
                 fluid
                 type="text"
+                data-cy='taskDeadline'
                 label="Deadline:"
                 value={taskValues?.deadline || ''}
                 onChange={e => handleOnChange('deadline', e.target.value)}

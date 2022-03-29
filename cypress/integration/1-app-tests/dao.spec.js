@@ -14,49 +14,49 @@
 describe('Dao', () => {
   beforeEach(() => {
 
-    cy.visit('https://universaldot.github.io/universal-dot-front-end/')
+    cy.visit('http://localhost:8000')
   })
 
   it('should be able to create an organization', () => {
       
     // Navigate to correct window
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(3) > div > span')
+    cy.get('[data-cy=menuOrganization]')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(5) > div > span')
+    cy.get('[data-cy=menuOwnOrganization]')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.pusher.SidebarComponent_sidebarContent__3Szbj > div > div > div.ui.stackable.four.column.grid.Organizations_grid__32fRb > div:nth-child(1) > div:nth-child(2) > button')
+    cy.get('[data-cy=createOrganization]')
       .click({force: true})
 
     // Create dao
     const name = 'UNIVERSALDOT FOUNDATION'
 
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div > div > div > input[type=text]')
+    cy.get('[data-cy=modalOrganizationName]')
       .type(name)
 
-    cy.get('body > div.ui.raised.segment > div > div.extra.content > button')
+    cy.get('[data-cy=modalSubmit]')
       .click({force: true})
   })
 
   it('should be able to add member to an organization', () => {
     
     // Navigate to correct window
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(3) > div > span')
+    cy.get('[data-cy=menuOrganization]')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(5) > div > span')
+    cy.get('[data-cy=menuOwnOrganization]')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.pusher.SidebarComponent_sidebarContent__3Szbj > div > div > div.ui.stackable.four.column.grid.Organizations_grid__32fRb > div:nth-child(1) > div:nth-child(3) > button')
+    cy.get('[data-cy=addMember]')
       .click({force: true})
 
     // Type name and member of organization to add
     const name = 'UNIVERSALDOT FOUNDATION'
     const member = '5CDHUFkZ1Xchman33gXeimyMu14nJeT4CUd1KLVkgGgH6adv'
 
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(1) > div > div > input[type=text]')
+    cy.get('[data-cy=modalOrganizationName]')
       .type(name)
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(2) > div > div > input[type=text]')
+    cy.get('[data-cy=modalTaskMember]')
       .type(member)
 
-    cy.get('body > div.ui.raised.segment > div > div.extra.content > button')
+    cy.get('[data-cy=modalSubmit]')
       .click({force: true})
   })
 
@@ -64,19 +64,50 @@ describe('Dao', () => {
   it('should be able to remove an organization', () => {
 
     // Navigate to correct window
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(3) > div > span')
+    cy.get('[data-cy=menuOrganization]')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(5) > div > span')
+    cy.get('[data-cy=menuOwnOrganization')
       .click({force: true})
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.pusher.SidebarComponent_sidebarContent__3Szbj > div > div > div.ui.stackable.four.column.grid.Organizations_grid__32fRb > div:nth-child(2) > div:nth-child(2) > button')
+    cy.get('[data-cy=dissolveOrganization]')
       .click({force: true})
 
     const name = 'UNIVERSALDOT FOUNDATION'
 
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div > div > div > input[type=text]')
+    cy.get('[data-cy=modalOrganizationName]')
       .type(name)
 
-    cy.get('body > div.ui.raised.segment > div > div.extra.content > button')
+    cy.get('[data-cy=modalSubmit]')
       .click({force: true})
+  })
+
+  //TODO: Implement the integration tests below
+  it('should be able to remove a member from an organization', () => {
+
+
+  })
+
+  it('should be able to create vision document', () => {
+
+
+  })
+
+  it('should be able to remove vision document', () => {
+
+
+  })
+
+  it('should be able to search for accounts that have signed a vision document', () => {
+
+
+  })
+
+  it('should be able to add task to an organization', () => {
+
+
+  })
+
+  it('should be able to remove task from an organization', () => {
+
+
   })
 })
