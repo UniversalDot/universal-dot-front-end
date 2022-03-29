@@ -14,20 +14,20 @@
 describe('task', () => {
   beforeEach(() => {
 
-    cy.visit('https://universaldot.github.io/universal-dot-front-end/')
+    cy.visit('http://localhost:8000')
   })
 
   it('create task from Kanban', () => {
 
     // Navigate to correct window
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(3) > div > span')
+    cy.get('[data-cy=menuOrganization]')
       .click({force: true})
 
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(6) > div > span')
+    cy.get('[data-cy=menuDaoKanban]')
       .click({force: true})
 
     // Click the add new task button
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.pusher.SidebarComponent_sidebarContent__3Szbj > div > div > div.sc-jRQBWg.fGabQO.react-trello-board > div > div > section:nth-child(1) > div:nth-child(1) > button')
+    cy.get('[data-cy=addNewTask]')
       .click({force: true})
 
     // Fill out task data information
@@ -36,22 +36,23 @@ describe('task', () => {
     const budget = '77777'
     const deadline = '1000'
 
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(1) > div > div > input[type=text]')
+    cy.get('[data-cy=taskTitle]')
       .type(title)
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(2) > div > div > input[type=text]')
+    cy.get('[data-cy=taskSpecification]')
       .type(specification)
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(3) > div > div > input[type=text]')
+    cy.get('[data-cy=taskBudget]')
       .type(budget)
-    cy.get('body > div.ui.raised.segment > div > div.content.Modal_body__2rGrQ > div > div:nth-child(4) > div > div > input[type=text]')
+    cy.get('[data-cy=taskDeadline]')
       .type(deadline)
 
-    cy.get('body > div.ui.raised.segment > div > div.extra.content > button')
+    cy.get('[data-cy=modalSubmit]')
       .click({force: true})
   })
 
+  // Todo: Complete the integration tests bellow
   it('should check task information in Dashboard', () => {
 
-    cy.get('#root > div.pushable.SidebarComponent_sidebarComponent__2URF8 > div.ui.vertical.labeled.icon.ui.push.left.visible.sidebar.SidebarComponent_sidebar__tt_QJ.menu > a:nth-child(2) > div > span')
+    cy.get('[data-cy=menuDashboard]')
       .click({force: true})
   })
 
