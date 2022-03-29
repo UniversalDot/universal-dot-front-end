@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import React, { useState, useEffect, useCallback } from 'react';
 import Board from 'react-trello';
-import { Button, Grid, Input } from 'semantic-ui-react';
+import { Button, Grid, Input, Label } from 'semantic-ui-react';
 import { Modal } from '../';
 import { useTasks, useStatus } from '../../hooks';
 
@@ -11,8 +11,14 @@ import styles from './KanbanBoard.module.scss';
 const KanbanBoard = () => {
   const [open, setOpen] = useState(false);
 
-  const { populateTask, taskValues, taskAction, isEditMode, actionLoading } =
-    useTasks();
+  const {
+    populateTask,
+    taskValues,
+    taskAction,
+    isEditMode,
+    actionLoading,
+    taskErrors,
+  } = useTasks();
   const { status, setStatus } = useStatus();
 
   const [showLoader, setShowLoader] = useState(false);
@@ -131,6 +137,12 @@ const KanbanBoard = () => {
             taskValues
           )
         }
+        actionButtonDisabled={
+          !taskValues?.title ||
+          !taskValues?.specification ||
+          !taskValues?.budget ||
+          !taskValues?.deadline
+        }
         removeButtonLabel="Remove Task"
         removeButtonOnClick={taskCallables.REMOVE_TASK}
         showRemoveButton={isEditMode}
@@ -169,7 +181,13 @@ const KanbanBoard = () => {
                 label="Budget:"
                 value={taskValues?.budget || ''}
                 onChange={e => handleOnChange('budget', e.target.value)}
+                error={taskErrors?.budget}
               />
+              {taskErrors?.budget && (
+                <Label basic color="red" pointing>
+                  {taskErrors.budget}
+                </Label>
+              )}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -182,6 +200,11 @@ const KanbanBoard = () => {
                 value={taskValues?.deadline || ''}
                 onChange={e => handleOnChange('deadline', e.target.value)}
               />
+              {taskErrors?.deadline && (
+                <Label basic color="red" pointing>
+                  {taskErrors.deadline}
+                </Label>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>

@@ -58,7 +58,13 @@ const ProfileConfiguration = () => {
     }
   }, [status, setStatus]);
 
-  const TxButton = ({ label, color = 'blue', actionType, loading }) => {
+  const TxButton = ({
+    label,
+    color = 'blue',
+    actionType,
+    loading,
+    disabled,
+  }) => {
     return (
       <Button
         color={color}
@@ -68,7 +74,7 @@ const ProfileConfiguration = () => {
           setOneInterest('');
         }}
         loading={loading}
-        disabled={showLoader}
+        disabled={showLoader || disabled}
       >
         {label}
       </Button>
@@ -247,6 +253,7 @@ const ProfileConfiguration = () => {
                   : profileCallables.CREATE_PROFILE
               }
               loading={actionLoading}
+              disabled={interests.length === 0 || !username}
             />
             {profileData && (
               <TxButton

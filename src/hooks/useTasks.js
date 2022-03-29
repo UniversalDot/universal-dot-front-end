@@ -12,6 +12,7 @@ import {
   resetTask,
   resetTasks,
   // setTaskIsEditMode,
+  setError,
 } from '../store/slices/tasksSlice';
 import { useUser } from './useUser';
 import { useStatus } from './useStatus';
@@ -40,11 +41,38 @@ const useTasks = () => {
   const taskValues = useSelector(state => state.tasks.task);
   const isEditMode = useSelector(state => state.tasks.isEditMode);
   const tasks = useSelector(state => state.tasks.tasks);
+  const taskErrors = useSelector(state => state.tasks.errors);
 
   const resetAllTasks = useCallback(() => dispatch(resetTasks()), [dispatch]);
 
   const populateTask = useCallback(
     ({ key, value }) => {
+      // Validate input
+      if (key === 'budget' || key === 'deadline') {
+        if (!isNaN(value) && parseInt(value) < 0) {
+          dispatch(
+            setError({
+              input: key,
+              error: 'Negative numbers are not allowed',
+            })
+          );
+        } else if (value && isNaN(value)) {
+          dispatch(
+            setError({
+              input: key,
+              error: 'Enter a valid number',
+            })
+          );
+        } else {
+          dispatch(
+            setError({
+              input: key,
+              error: '',
+            })
+          );
+        }
+      }
+
       if (key === 'title') {
         dispatch(setTaskTitle(value));
       }
@@ -291,6 +319,7 @@ const useTasks = () => {
     getAllTasks,
     tasks,
     resetAllTasks,
+    taskErrors,
   };
 };
 
