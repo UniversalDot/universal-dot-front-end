@@ -62,6 +62,7 @@ const ProfileConfiguration = () => {
     return (
       <Button
         color={color}
+        data-cy='createProfileButton'
         type="submit"
         onClick={() => {
           profileAction(actionType);
@@ -180,6 +181,7 @@ const ProfileConfiguration = () => {
                     }}
                     fluid
                     type="text"
+                    data-cy="inputInterests"
                     label="Add an interest:"
                     value={oneInterest}
                     onChange={e => onPalletCallableParamChange(e)}
@@ -200,6 +202,7 @@ const ProfileConfiguration = () => {
                           <Label
                             basic
                             color="blue"
+                            data-cy="interestCard"
                             style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
                             key={`${interest}+${i}`}
                           >
