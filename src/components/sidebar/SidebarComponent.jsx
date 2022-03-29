@@ -46,7 +46,7 @@ const SidebarComponent = () => {
         >
           <div className={styles.menuItem_content}>
             <Icon name="block layout" />
-            <span className={styles.menuItem_content_text}>Profile</span>
+            <span data-cy='menuProfile' className={styles.menuItem_content_text}>Profile</span>
           </div>
         </Menu.Item>
         <Menu.Item
@@ -56,7 +56,7 @@ const SidebarComponent = () => {
         >
           <div className={styles.menuItem_content}>
             <Icon name="briefcase" />
-            <span className={styles.menuItem_content_text}>Dashboard</span>
+            <span data-cy='menuDashboard' className={styles.menuItem_content_text}>Dashboard</span>
           </div>
         </Menu.Item>
         {/* <Menu.Item
@@ -109,7 +109,7 @@ const SidebarComponent = () => {
         <Menu.Item as={Menu.Item} onClick={toggleExpandedMenuItem}>
           <div className={styles.menuItem_content}>
             <Icon name="clipboard list" />
-            <span className={styles.menuItem_content_text}>Organization</span>
+            <span data-cy='menuOrganization' className={styles.menuItem_content_text}>Organization</span>
             <Icon style={{ marginLeft: '0.85rem' }} name="caret down" />
           </div>
         </Menu.Item>
@@ -125,7 +125,7 @@ const SidebarComponent = () => {
               className={styles.menuItem_nested_content}
             >
               <Icon name="clipboard list" />
-              <span style={{ marginLeft: '0.85rem' }}>Joined organization</span>
+              <span data-cy='menuJoinedOrganization' style={{ marginLeft: '0.85rem' }}>Joined organization</span>
             </div>
           </Menu.Item>
         )}
@@ -141,7 +141,7 @@ const SidebarComponent = () => {
               className={styles.menuItem_nested_content}
             >
               <Icon name="clipboard list" />
-              <span style={{ marginLeft: '0.85rem' }}>Own organization</span>
+              <span data-cy='menuOwnOrganization' style={{ marginLeft: '0.85rem' }}>Own organization</span>
             </div>
           </Menu.Item>
         )}
@@ -157,7 +157,7 @@ const SidebarComponent = () => {
               className={styles.menuItem_nested_content}
             >
               <Icon name="clipboard list" />
-              <span style={{ marginLeft: '0.85rem' }}>DAO Kanban</span>
+              <span data-cy='menuDaoKanban' style={{ marginLeft: '0.85rem' }}>DAO Kanban</span>
             </div>
           </Menu.Item>
         )}
@@ -168,7 +168,7 @@ const SidebarComponent = () => {
         >
           <div className={styles.menuItem_content}>
             <Icon name="calendar alternate outline" />
-            <span className={styles.menuItem_content_text}>Calendar</span>
+            <span data-cy='menuCalendar' className={styles.menuItem_content_text}>Calendar</span>
           </div>
         </Menu.Item>
       </Sidebar>
