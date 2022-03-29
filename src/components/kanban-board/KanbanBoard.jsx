@@ -79,7 +79,7 @@ const KanbanBoard = () => {
           }}
         >
           <div>Backlog</div>
-          <Button data-cy='addNewTask' primary onClick={() => setOpen(true)}>
+          <Button data-cy="addNewTask" primary onClick={() => setOpen(true)}>
             Add new task
           </Button>
         </div>
@@ -141,7 +141,9 @@ const KanbanBoard = () => {
           !taskValues?.title ||
           !taskValues?.specification ||
           !taskValues?.budget ||
-          !taskValues?.deadline
+          !taskValues?.deadline ||
+          !!taskErrors?.budget ||
+          !!taskErrors?.deadline
         }
         removeButtonLabel="Remove Task"
         removeButtonOnClick={taskCallables.REMOVE_TASK}
@@ -155,7 +157,7 @@ const KanbanBoard = () => {
                 fluid
                 type="text"
                 label="Title:"
-                data-cy='taskTitle'
+                data-cy="taskTitle"
                 value={taskValues?.title || ''}
                 onChange={e => handleOnChange('title', e.target.value)}
               />
@@ -167,7 +169,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task specification..."
                 fluid
                 type="text"
-                data-cy='taskSpecification'
+                data-cy="taskSpecification"
                 label="Specification:"
                 value={taskValues?.specification || ''}
                 onChange={e => handleOnChange('specification', e.target.value)}
@@ -180,11 +182,11 @@ const KanbanBoard = () => {
                 placeholder="Enter task budget..."
                 fluid
                 type="text"
-                data-cy='taskBudget'
+                data-cy="taskBudget"
                 label="Budget:"
                 value={taskValues?.budget || ''}
                 onChange={e => handleOnChange('budget', e.target.value)}
-                error={taskErrors?.budget}
+                error={!!taskErrors?.budget}
               />
               {taskErrors?.budget && (
                 <Label basic color="red" pointing>
@@ -199,7 +201,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task deadline"
                 fluid
                 type="text"
-                data-cy='taskDeadline'
+                data-cy="taskDeadline"
                 label="Deadline:"
                 value={taskValues?.deadline || ''}
                 onChange={e => handleOnChange('deadline', e.target.value)}
