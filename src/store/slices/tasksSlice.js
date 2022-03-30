@@ -8,6 +8,12 @@ const initialState = {
     budget: '',
     deadline: '',
   },
+  errors: {
+    title: '',
+    specification: '',
+    budget: '',
+    deadline: '',
+  },
   isEditMode: false,
 };
 
@@ -36,9 +42,18 @@ const tasksSlice = createSlice({
     setTaskIsEditMode(state, action) {
       state.isEditMode = action.payload;
     },
+    setError(state, action) {
+      state.errors = {
+        ...state.errors,
+        [action.payload.input]: action.payload.error,
+      };
+    },
     resetTask(state) {
       state.task = {
         ...initialState.task,
+      };
+      state.errors = {
+        ...initialState.errors,
       };
     },
   },
@@ -53,6 +68,7 @@ export const {
   setTaskIsEditMode,
   resetTask,
   resetTasks,
+  setError,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

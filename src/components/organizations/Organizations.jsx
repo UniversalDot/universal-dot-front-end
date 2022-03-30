@@ -13,6 +13,7 @@ const Organizations = ({ type }) => {
 
   const [modalTitle, setModalTitle] = useState('');
   const [daoType, setDaoType] = useState('');
+  const [isActionButtonDisabled, setIsActionButtonDisabled] = useState(false);
 
   const { status, setStatus } = useStatus();
 
@@ -67,53 +68,110 @@ const Organizations = ({ type }) => {
     if (actionType) {
       let title = '';
       let daoType = '';
+      let isButtonDisabled;
       switch (actionType) {
         case 'joined_sign':
           title = 'Sign vision';
           daoType = daoCallables.SIGN_VISION;
+
+          if (!visionNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'joined_unsign':
           title = 'Unsign vision';
           daoType = daoCallables.UNSIGN_VISION;
+
+          if (!visionNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_createVision':
           title = 'Create vision';
           daoType = daoCallables.CREATE_VISION;
+
+          if (!visionNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_createOrganization':
           title = 'Create organization';
           daoType = daoCallables.CREATE_ORGANIZATION;
+
+          if (!organizationNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_addMember':
           title = 'Add member';
           daoType = daoCallables.ADD_MEMBERS;
+
+          if (!organizationNameForAction || !memberOrTaskForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_addTask':
           title = 'Add task';
           daoType = daoCallables.ADD_TASKS;
+
+          if (!organizationNameForAction || !memberOrTaskForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_removeVision':
           title = 'Remove vision';
           daoType = daoCallables.REMOVE_VISION;
+
+          if (!visionNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_dissolveOrganization':
           title = 'Dissolve organization';
           daoType = daoCallables.DISSOLVE_ORGANIZATION;
+
+          if (!organizationNameForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_removeMembers':
           title = 'Remove members';
           daoType = daoCallables.REMOVE_MEMBERS;
+
+          if (!organizationNameForAction || !memberOrTaskForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         case 'own_removeTask':
           title = 'Remove task';
           daoType = daoCallables.REMOVE_TASKS;
+
+          if (!organizationNameForAction || !memberOrTaskForAction) {
+            isButtonDisabled = true;
+          }
+
           break;
         default:
       }
       setModalTitle(title);
       setDaoType(daoType);
+      setIsActionButtonDisabled(isButtonDisabled);
     }
-  }, [actionType]);
+  }, [
+    actionType,
+    memberOrTaskForAction,
+    visionNameForAction,
+    organizationNameForAction,
+  ]);
 
   useEffect(() => {
     if (selectedKeyring.value) {
@@ -335,6 +393,7 @@ const Organizations = ({ type }) => {
               <Button
                 color="green"
                 type="submit"
+                data-cy='createOrganization'
                 onClick={() => buttonClick('own_createOrganization')}
               >
                 Create organization
@@ -344,6 +403,7 @@ const Organizations = ({ type }) => {
               <Button
                 color="green"
                 type="submit"
+                data-cy='addMember'
                 onClick={() => buttonClick('own_addMember')}
               >
                 Add member
@@ -371,6 +431,7 @@ const Organizations = ({ type }) => {
             <Grid.Column className={styles.column}>
               <Button
                 color="orange"
+                data-cy='dissolveOrganization'
                 onClick={() => buttonClick('own_dissolveOrganization')}
               >
                 Dissolve organization
@@ -434,6 +495,7 @@ const Organizations = ({ type }) => {
         actionButtonLabel="Submit"
         actionButtonColor="blue"
         actionButtonOnClick={() => daoAction(daoType)}
+        actionButtonDisabled={isActionButtonDisabled}
         showRemoveButton={false}
       >
         <Grid className={styles.gridContainer}>
@@ -457,6 +519,7 @@ const Organizations = ({ type }) => {
                   fluid
                   type="text"
                   label="Organization name:"
+                  data-cy="modalOrganizationName"
                   value={organizationNameForAction || ''}
                   onChange={e =>
                     handleTopInputOnChange(daoType, e.target.value)
@@ -472,6 +535,7 @@ const Organizations = ({ type }) => {
                   placeholder="Enter value..."
                   fluid
                   type="text"
+                  data-cy='modalTaskMember'
                   label={taskTypes.includes(daoType) ? 'Task:' : 'Member:'}
                   value={memberOrTaskForAction || ''}
                   onChange={e =>

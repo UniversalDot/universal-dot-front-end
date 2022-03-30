@@ -58,17 +58,24 @@ const ProfileConfiguration = () => {
     }
   }, [status, setStatus]);
 
-  const TxButton = ({ label, color = 'blue', actionType, loading }) => {
+  const TxButton = ({
+    label,
+    color = 'blue',
+    actionType,
+    loading,
+    disabled,
+  }) => {
     return (
       <Button
         color={color}
+        data-cy='createProfileButton'
         type="submit"
         onClick={() => {
           profileAction(actionType);
           setOneInterest('');
         }}
         loading={loading}
-        disabled={showLoader}
+        disabled={showLoader || disabled}
       >
         {label}
       </Button>
@@ -180,6 +187,7 @@ const ProfileConfiguration = () => {
                     }}
                     fluid
                     type="text"
+                    data-cy="inputInterests"
                     label="Add an interest:"
                     value={oneInterest}
                     onChange={e => onPalletCallableParamChange(e)}
@@ -200,6 +208,7 @@ const ProfileConfiguration = () => {
                           <Label
                             basic
                             color="blue"
+                            data-cy="interestCard"
                             style={{ margin: '0.5rem 0.5rem 0.5rem 0' }}
                             key={`${interest}+${i}`}
                           >
@@ -247,6 +256,7 @@ const ProfileConfiguration = () => {
                   : profileCallables.CREATE_PROFILE
               }
               loading={actionLoading}
+              disabled={interests.length === 0 || !username}
             />
             {profileData && (
               <TxButton

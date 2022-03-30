@@ -19,6 +19,7 @@ const Modal = ({
   actionButtonLabel,
   actionButtonColor,
   actionButtonOnClick,
+  actionButtonDisabled,
   removeButtonLabel,
   removeButtonOnClick,
   showRemoveButton,
@@ -98,9 +99,10 @@ const Modal = ({
                   <Button
                     color={actionButtonColor || 'blue'}
                     type="submit"
+                    data-cy='modalSubmit'
                     onClick={actionButtonOnClick}
                     loading={loading}
-                    disabled={loading}
+                    disabled={loading || actionButtonDisabled}
                   >
                     {actionButtonLabel}
                   </Button>

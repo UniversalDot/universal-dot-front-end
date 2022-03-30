@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import React, { useState, useEffect, useCallback } from 'react';
 import Board from 'react-trello';
-import { Button, Grid, Input } from 'semantic-ui-react';
+import { Button, Grid, Input, Label } from 'semantic-ui-react';
 import { Modal } from '../';
 import { useTasks, useStatus } from '../../hooks';
 
@@ -11,8 +11,14 @@ import styles from './KanbanBoard.module.scss';
 const KanbanBoard = () => {
   const [open, setOpen] = useState(false);
 
-  const { populateTask, taskValues, taskAction, isEditMode, actionLoading } =
-    useTasks();
+  const {
+    populateTask,
+    taskValues,
+    taskAction,
+    isEditMode,
+    actionLoading,
+    taskErrors,
+  } = useTasks();
   const { status, setStatus } = useStatus();
 
   const [showLoader, setShowLoader] = useState(false);
@@ -73,7 +79,7 @@ const KanbanBoard = () => {
           }}
         >
           <div>Backlog</div>
-          <Button primary onClick={() => setOpen(true)}>
+          <Button data-cy="addNewTask" primary onClick={() => setOpen(true)}>
             Add new task
           </Button>
         </div>
@@ -131,6 +137,14 @@ const KanbanBoard = () => {
             taskValues
           )
         }
+        actionButtonDisabled={
+          !taskValues?.title ||
+          !taskValues?.specification ||
+          !taskValues?.budget ||
+          !taskValues?.deadline ||
+          !!taskErrors?.budget ||
+          !!taskErrors?.deadline
+        }
         removeButtonLabel="Remove Task"
         removeButtonOnClick={taskCallables.REMOVE_TASK}
         showRemoveButton={isEditMode}
@@ -143,6 +157,7 @@ const KanbanBoard = () => {
                 fluid
                 type="text"
                 label="Title:"
+                data-cy="taskTitle"
                 value={taskValues?.title || ''}
                 onChange={e => handleOnChange('title', e.target.value)}
               />
@@ -154,6 +169,7 @@ const KanbanBoard = () => {
                 placeholder="Enter task specification..."
                 fluid
                 type="text"
+                data-cy="taskSpecification"
                 label="Specification:"
                 value={taskValues?.specification || ''}
                 onChange={e => handleOnChange('specification', e.target.value)}
@@ -166,10 +182,17 @@ const KanbanBoard = () => {
                 placeholder="Enter task budget..."
                 fluid
                 type="text"
+                data-cy="taskBudget"
                 label="Budget:"
                 value={taskValues?.budget || ''}
                 onChange={e => handleOnChange('budget', e.target.value)}
+                error={!!taskErrors?.budget}
               />
+              {taskErrors?.budget && (
+                <Label basic color="red" pointing>
+                  {taskErrors.budget}
+                </Label>
+              )}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -178,10 +201,16 @@ const KanbanBoard = () => {
                 placeholder="Enter task deadline"
                 fluid
                 type="text"
+                data-cy="taskDeadline"
                 label="Deadline:"
                 value={taskValues?.deadline || ''}
                 onChange={e => handleOnChange('deadline', e.target.value)}
               />
+              {taskErrors?.deadline && (
+                <Label basic color="red" pointing>
+                  {taskErrors.deadline}
+                </Label>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
