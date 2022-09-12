@@ -1,5 +1,7 @@
 # Universaldot WEB APP: The Front-End of the digital economy
 
+### UPDATE: This repository has been archived. The front-end application has been moved to https://github.com/UniversalDot/front-end.
+
 [![CircleCI](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master.svg?style=shield)](https://circleci.com/gh/UniversalDot/universal-dot-front-end/tree/universal-master)
 
 ![Logo](https://github.com/UniversalDot/documents/blob/master/logo/rsz_jpg-02.jpg)
